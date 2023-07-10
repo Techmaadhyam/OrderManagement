@@ -206,9 +206,9 @@ useEffect(() => {
     setRackDesc(event.target.value);
   };
 
-  const mappedOptions = userData.map(({ rackName, rackId}) => ({
-    label: rackName,
-    value: rackId
+  const mappedOptions = userData.map(({ rack}) => ({
+    label: rack.name,
+    value: rack.id
   }));
 
   const rackIdSet = new Set(); 

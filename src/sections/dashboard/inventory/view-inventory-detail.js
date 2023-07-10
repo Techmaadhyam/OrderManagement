@@ -52,9 +52,12 @@ export const ViewInventoryDetail = (props) => {
       });
   }, []);
 
-  const matchingObject = userData.find(item => item.inventoryId === state?.id || state?.inventoryId);
+
+  const matchingObject = userData.find(item => item.id === state?.id );
   const warehouseName = matchingObject?.warehouseName;
-  const productName = matchingObject?.productName;
+  const productName = matchingObject?.product?.productName;
+
+  console.log(matchingObject)
 
 
   const handleWarehouseNavigation = () => {
@@ -207,7 +210,7 @@ export const ViewInventoryDetail = (props) => {
                   style={{ cursor: "pointer" }}
                 >
                   <Typography variant="subtitle2">
-                    {state?.productName || productName}
+                    {state?.productName || productName || state?.product?.productName}
                   </Typography>
                 </Link>
               </PropertyListItem>

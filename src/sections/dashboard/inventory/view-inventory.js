@@ -72,8 +72,9 @@ const ViewInventory = () => {
         console.error(error);
       });
   }, []);
+  console.log(userData)
 
-  const dataWithKeys = userData.map((item) => ({ ...item, key: item.inventoryId }));
+  const dataWithKeys = userData.map((item) => ({ ...item, key: item.id }));
 
   const filteredData = selectedCategory
   ? dataWithKeys.filter((item) => item.productType === selectedCategory)
@@ -101,7 +102,7 @@ const notify = (type, message) => {
 const handleRemoveRow = (id) => async () => {
   try {
     await axios.delete(apiUrl +`deleteInventoryById/${id}`);
-    const updatedRows = userData.filter(item => item.inventoryId  !== id);
+    const updatedRows = userData.filter(item => item.id  !== id);
     setUserData(updatedRows);
     notify(
       "success",
@@ -158,9 +159,9 @@ const handleCategoryCancel = () => {
 };
 
 const filteredProducts = filteredData.filter(product => {
-  const productNameMatch = product.productName.toLowerCase().includes(searchText.toLowerCase());
-  const warehouseNameMatch = product.warehouseName.toLowerCase().includes(warehouseText.toLowerCase());
-  const categoryNameMatch = product.categoryName.toLowerCase().includes(categoryText.toLowerCase());
+  const productNameMatch = product?.product?.productName?.toLowerCase().includes(searchText.toLowerCase());
+  const warehouseNameMatch = product?.warehouseName?.toLowerCase().includes(warehouseText.toLowerCase());
+  const categoryNameMatch = product.category?.name?.toLowerCase().includes(categoryText.toLowerCase());
 
   return (
     (searchText === '' || productNameMatch) &&
@@ -168,6 +169,8 @@ const filteredProducts = filteredData.filter(product => {
     (categoryText === '' || categoryNameMatch)
   );
 });
+  
+  console.log(filteredProducts)
  
 
   const columns = [
@@ -197,11 +200,11 @@ const filteredProducts = filteredData.filter(product => {
           )}
         </div>
     ),
-      dataIndex: 'productName',
-      key: 'productName',
+      dataIndex: 'product',
+      key: 'produc',
       render: (name, record) => {
         const handleNavigation = () => {
-          navigate(`/dashboard/inventory/viewDetail/${record.inventoryId}`, { state: record });
+          navigate(`/dashboard/inventory/viewDetail/${record.id}`, { state: record });
         };
         
         return (
@@ -209,13 +212,12 @@ const filteredProducts = filteredData.filter(product => {
             color="primary"
             onClick={handleNavigation}
             sx={{
-              alignItems: 'center',
-              textAlign: 'center',
+              alignItems: "center",
+              textAlign: "center",
             }}
             underline="hover"
           >
-            <Typography variant="subtitle1">{name}</Typography>
-         
+            <Typography variant="subtitle1">{name.productName}</Typography>
           </Link>
         );
       },
@@ -286,8 +288,9 @@ const filteredProducts = filteredData.filter(product => {
           )}
         </div>
     ),
-      key: 'categoryName',
-      dataIndex: 'categoryName',
+      key: 'category',
+      dataIndex: 'category',
+      render: (text)=> text.name
     },
     {
       title: 'Cost',
@@ -309,7 +312,7 @@ const filteredProducts = filteredData.filter(product => {
       dataIndex: 'actionDelete',
       key: 'actionDelete',
       render: (_, row) => (
-        <IconButton onClick={handleRemoveRow(row.inventoryId)}>
+        <IconButton onClick={handleRemoveRow(row.id)}>
           <Icon>
             <Delete />
           </Icon>

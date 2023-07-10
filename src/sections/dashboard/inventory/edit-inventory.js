@@ -59,7 +59,7 @@ export const EditInventory = (props) => {
 
   const [hsnCode, setHsnCode] = useState(state.hsncode||'');
   const [size, setSize] = useState(state.size||"");
-  const [rack,  setRack]= useState(state.rackId||'')
+  const [rack,  setRack]= useState(state.rack?.id||'')
   const [weight, setWeight] = useState(state.weight||'');
   const [createdDate, setCreatedDate] = useState('');
   const [quantity, setQuantity] = useState(state.quantity||'');
@@ -69,7 +69,7 @@ export const EditInventory = (props) => {
   const [cgst, setCgst] = useState(state.cgst||'');
   const [description, setDescription] = useState(state.description||'');
 
-  const [rackName, setRackName] =useState(state.rackName||'')
+  const [rackName, setRackName] =useState(state.rack?.name||'')
   const [rackDesc, setRackDesc] =useState('')
 
   const [userData, setUserData]= useState([])
@@ -112,35 +112,45 @@ export const EditInventory = (props) => {
   }, [state?.purchaseOrderId]);
 //get category
   useEffect(() => {
-    axios.get(apiUrl +`getAllCategorys/${userId}`)
-      .then(response => {
+    axios
+      .get(apiUrl + `getAllCategorys/${userId}`)
+      .then((response) => {
         setCategory(response.data);
         console.log(response.data);
 
-        const selectedPurchaseId = response.data.find((option) => option.id === state?.categoryId);
-        const selectedPurchase = selectedPurchaseId ? selectedPurchaseId.id :'';
-       setCategoryId(selectedPurchase)
+        const selectedPurchaseId = response.data.find(
+          (option) => option.id === state?.category.id
+        );
+        const selectedPurchase = selectedPurchaseId
+          ? selectedPurchaseId.id
+          : "";
+        setCategoryId(selectedPurchase);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
-  }, [state?.categoryId]);
+  }, [state?.category.id]);
 
   //get Product
   useEffect(() => {
-    axios.get(apiUrl +`getAllItem/${userId}`)
-      .then(response => {
+    axios
+      .get(apiUrl + `getAllItem/${userId}`)
+      .then((response) => {
         setProduct(response.data);
         console.log(response.data);
 
-           const selectedPurchaseId = response.data.find((option) => option.id === state?.productId);
-        const selectedPurchase = selectedPurchaseId ? selectedPurchaseId.id :'';
-       setSelectedId(selectedPurchase)
+        const selectedPurchaseId = response.data.find(
+          (option) => option.id === state?.product.id
+        );
+        const selectedPurchase = selectedPurchaseId
+          ? selectedPurchaseId.id
+          : "";
+        setSelectedId(selectedPurchase);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
-  }, [state?.productId]);
+  }, [state?.product.id]);
 
   //  get date
  useEffect(() => {
@@ -228,10 +238,11 @@ useEffect(() => {
     setRackDesc(event.target.value);
   };
 
-  const mappedOptions = userData.map(({ rackName, rackId}) => ({
-    label: rackName,
-    value: rackId
+  const mappedOptions = userData.map(({ rack}) => ({
+    label: rack.name,
+    value: rack.id
   }));
+
 
   const rackIdSet = new Set(); 
   const updatedUserOptions = userOptions.concat(mappedOptions.filter(newOption => {
@@ -266,7 +277,7 @@ useEffect(() => {
 
     let inventory = {
       inventory: {
-        id: state?.inventoryId,
+        id: state?.id,
         quantity: parseFloat(quantity),
         weight: weight,
         size: size,
@@ -298,7 +309,7 @@ useEffect(() => {
   let inventoryWithRack = {
     inventory: {
       quantity: parseFloat(quantity),
-      id: state?.inventoryId,
+      id: state?.id,
       weight: weight,
       size: size,
       hsncode: hsnCode,
@@ -342,7 +353,7 @@ useEffect(() => {
          response.json().then(data => {
   
           console.log(data)
-          navigate(`/dashboard/inventory/viewDetail/${state?.inventoryId}`, { state: data });
+          navigate(`/dashboard/inventory/viewDetail/${state?.id}`, { state: data });
         });
         } 
       } catch (error) {
