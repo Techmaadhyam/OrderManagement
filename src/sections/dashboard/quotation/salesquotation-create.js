@@ -424,7 +424,7 @@ export const QuotationOrderCreateForm = (props) => {
     e.preventDefault();
 
     const selectedOption = userData2.find(
-      (option) => option.inventoryId === inventoryId
+      (option) => option.id === inventoryId
     );
 
     if (parseInt(quantity) > selectedOption.quantity) {
@@ -861,10 +861,10 @@ export const QuotationOrderCreateForm = (props) => {
                             onChange={(e) => {
                               const selectedOption = userData2.find(
                                 (option) =>
-                                  option.inventoryId === e.target.value
+                                  option.id === e.target.value
                               );
                               if (selectedOption) {
-                                setProductId(selectedOption.productId);
+                                setProductId(selectedOption.product.id);
                                 setProductName(e.target.value);
                                 setWeight(selectedOption.weight);
                                 setSgst(selectedOption.sgst);
@@ -874,12 +874,12 @@ export const QuotationOrderCreateForm = (props) => {
                                 setHsn(selectedOption.hsncode);
                                 setSize(selectedOption.size);
                                 setPrice(selectedOption.price);
-                                setInventoryId(selectedOption.inventoryId);
+                                setInventoryId(selectedOption.id);
                                 setDescription(
-                                  selectedOption.productDescription
+                                  selectedOption.product.description
                                 );
                                 setProductDescription(
-                                  selectedOption.productDescription
+                                  selectedOption.product.description
                                 );
                               }
                             }}
@@ -887,10 +887,10 @@ export const QuotationOrderCreateForm = (props) => {
                           >
                             {userData2.map((option) => (
                               <MenuItem
-                                key={option.inventoryId}
-                                value={option.inventoryId}
+                                key={option.id}
+                                value={option.id}
                               >
-                                {option.productName}
+                                {option.product.productName}
                               </MenuItem>
                             ))}
                           </TextField>

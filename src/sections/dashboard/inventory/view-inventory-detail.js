@@ -53,7 +53,7 @@ export const ViewInventoryDetail = (props) => {
   }, []);
 
 
-  const matchingObject = userData.find(item => item.id === state?.id );
+  const matchingObject = userData.find(item => item.id === state?.id || state?.inventoryId );
   const warehouseName = matchingObject?.warehouseName;
   const productName = matchingObject?.product?.productName;
 
@@ -183,7 +183,7 @@ export const ViewInventoryDetail = (props) => {
                 value={
                   state?.categoryName ||
                   state?.category?.name ||
-                  matchingObject?.categoryName
+                  matchingObject?.category.name
                 }
               />
               <Divider />
@@ -196,7 +196,7 @@ export const ViewInventoryDetail = (props) => {
                 value={
                   state?.rackName ||
                   state?.rack?.name ||
-                  matchingObject?.rackName
+                  matchingObject?.rack.name
                 }
               />
               <Divider />

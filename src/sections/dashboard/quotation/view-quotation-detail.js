@@ -53,13 +53,21 @@ console.log(state)
       render: (name, record) => {
         let handleNavigation;
   
-        if (state?.category ||state?.quotation?.category === 'Purchase Quotation') {
+        if (
+          state?.category === "Purchase Quotation" ||
+          state?.quotation?.category === "Purchase Quotation"
+        ) {
           handleNavigation = () => {
-            navigate(`/dashboard/products/viewDetail/${record?.productId}`, { state: record });
+            navigate(`/dashboard/products/viewDetail/${record?.productId}`, {
+              state: record,
+            });
           };
         } else {
           handleNavigation = () => {
-            navigate(`/dashboard/inventory/viewDetail/${record?.inventoryId}`, { state: record });
+            navigate(
+              `/dashboard/inventory/viewDetail/${record?.inventoryId}`,
+              { state: record }
+            );
           };
         }
   
@@ -209,7 +217,7 @@ console.log(state)
           try {
             parsedProduct = JSON.parse(obj.product);
             parsedInventory = JSON.parse(obj.inventory);
-          console.log(parsedInventory)
+          console.log(parsedInventory);
             
           } catch (error) {
             console.error("Error parsing inventory JSON for object:", obj, error);
@@ -236,6 +244,8 @@ console.log(state)
         console.error(error);
       });
   }, [state?.id, state?.quotation?.id]);
+
+   console.log(rowData);
 
   function formatDate(dateString) {
     const parsedDate = new Date(dateString);

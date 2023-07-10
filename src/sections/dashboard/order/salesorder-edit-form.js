@@ -644,7 +644,7 @@ const notify = (type, message) => {
       weight &&
       size
     ) {
-     const selectedOption = inventoryData.find((option) => option.inventoryId === inventoryId);
+     const selectedOption = inventoryData.find((option) => option.id === inventoryId);
   
     if (parseInt(quantity) > selectedOption.quantity) {
       notify(
@@ -1122,10 +1122,10 @@ const notify = (type, message) => {
                             onChange={(e) => {
                               const selectedOption = inventoryData.find(
                                 (option) =>
-                                  option.inventoryId === e.target.value
+                                  option.id === e.target.value
                               );
                               if (selectedOption) {
-                                setProductId(selectedOption.productId);
+                                setProductId(selectedOption.product.id);
                                 setProductName(e.target.value);
                                 setWeight(selectedOption.weight);
                                 setSgst(selectedOption.sgst);
@@ -1135,12 +1135,12 @@ const notify = (type, message) => {
                                 setSize(selectedOption.size);
                                 setPrice(selectedOption.price);
                                 setDiscount(0);
-                                setInventoryId(selectedOption.inventoryId);
+                                setInventoryId(selectedOption.id);
                                 setDescription(
-                                  selectedOption.productDescription
+                                  selectedOption.product.description
                                 );
                                 setProductDescription(
-                                  selectedOption.productDescription
+                                  selectedOption.product.description
                                 );
                               }
                             }}
@@ -1148,10 +1148,10 @@ const notify = (type, message) => {
                           >
                             {inventoryData.map((option) => (
                               <MenuItem
-                                key={option.inventoryId}
-                                value={option.inventoryId}
+                                key={option.id}
+                                value={option.id}
                               >
-                                {option.productName}
+                                {option.product.productName}
                               </MenuItem>
                             ))}
                           </TextField>
