@@ -22,6 +22,9 @@ const Logo = () => {
                   fileType: response.data.documents[0].fileType,
                   company: response.data.loggedIUser[0].companyName,
                   gstn: response.data.loggedIUser[0].gstNumber,
+                  firstName: response.data.loggedIUser[0].firstName,
+                  lastName: response.data.loggedIUser[0].lastName,
+                  userName: response.data.loggedIUser[0].userName,
                 });
             })
             .catch((error) => {

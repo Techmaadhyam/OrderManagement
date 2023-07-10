@@ -9,33 +9,20 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { apiUrl } from 'src/config';
 import { useNavigate } from 'react-router-dom';
+import { useContext } from "react";
+import { LogoContext } from "src/utils/logoContext";
 
-const mail = sessionStorage.getItem('mail')
+
 
 const User = () => {
   const navigate = useNavigate();
 
-  const [userData, setUserData]= useState()
+    const { logo } = useContext(LogoContext);
 
-  useEffect(() => {
-    axios.get(apiUrl + `getUserByUsername/${mail}`)
-      .then(response => {
-    
-        setUserData(response.data.loggedIUser[0]);
- 
-     
-     
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }, []);
 
   const handleClick =() =>{
     
-    navigate('/dashboard/social/profile', {
-      state: userData,
-    });
+    navigate('/dashboard/social/profile');
   }
 
   return (
@@ -54,8 +41,8 @@ const User = () => {
         </ButtonBase>
         <div className="popup-content">
           <span className='title'>TechMaadhyam</span>
-          <span className='user'>User: {userData?.firstName+' '+userData?.lastName}</span>
-          <span className='mail'>Mail: {userData?.userName}</span>
+          <span className='user'>User: {logo?.firstName+' '+logo?.lastName}</span>
+          <span className='mail'>Mail: {logo?.userName}</span>
         </div>
       </Box>
     </Link>
