@@ -29,4 +29,6 @@ export const mapboxConfig = {
   apiKey: process.env.REACT_APP_MAPBOX_API_KEY
 };
 
-export const apiUrl = 'https://techmaadhyam.store/techmadhyam/';
+// export const apiUrl = 'https://techmaadhyam.store/techmadhyam/';
+export const apiUrl = 'http://54.249.72.60:8080/techmadhyam/';
+// export const apiUrl = 'https://samplejar.el.r.appspot.com/techmadhyam/';
