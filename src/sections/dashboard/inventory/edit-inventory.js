@@ -85,7 +85,7 @@ export const EditInventory = (props) => {
         setWarehouse(response.data)
 
 
-        const selectedWarehouseId = response.data.find((option) => option.id === state?.warehouseId);
+        const selectedWarehouseId = response.data.find((option) => option.id === state?.warehouse?.id);
         const selectedWarehouse = selectedWarehouseId ? selectedWarehouseId.id :'';
        setWarehouseId(selectedWarehouse)
 
@@ -288,11 +288,14 @@ useEffect(() => {
         //productId: selectedId,
         product: { id: selectedId },
         purchaseOrderId: purchaseId,
-        warehouseId: warehouseId,
+
         sgst: parseFloat(sgst) || 0,
         cgst: parseFloat(cgst) || 0,
         igst: parseFloat(igst) || 0,
         lastModifiedByUser: { id: userId },
+      },
+      warehouse: {
+        id: warehouseId,
       },
 
       rack: {
@@ -319,13 +322,16 @@ useEffect(() => {
       //productId: selectedId,
       product: { id: selectedId },
       purchaseOrderId: purchaseId,
-      warehouseId: warehouseId,
+
       sgst: parseFloat(sgst) || 0,
       cgst: parseFloat(cgst) || 0,
       igst: parseFloat(igst) || 0,
       lastModifiedByUser: { id: userId },
     },
-
+    
+    warehouse: {
+      id: warehouseId,
+    },
     rack: {
       id: rack,
     },
