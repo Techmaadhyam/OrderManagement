@@ -53,7 +53,7 @@ export const InventoryList = (props) => {
   const { messages } = props;
   console.log(messages);
   const filteredMessages = messages?.filter(message =>
-      message?.productName?.toLowerCase().includes(searchText?.toLowerCase())
+      message?.product.productName?.toLowerCase().includes(searchText?.toLowerCase())
   );
 
 //company search
@@ -131,7 +131,7 @@ return (
       {currentMessages?.map((message) => {
         return (
           <ListItem
-            key={message.inventoryId}
+            key={message.id}
             onClick={() => handleNavigate(message)}
             sx={{
               "&:hover": {
@@ -156,7 +156,7 @@ return (
                   }}
                   variant="subtitle2"
                 >
-                  {message?.productName}
+                  {message?.product?.productName}
                 </Typography>
               }
               secondary={
@@ -169,7 +169,7 @@ return (
                   }}
                   variant="body2"
                 >
-                  {message?.warehouseName}
+                  {message?.warehouse?.name}
                 </Typography>
               }
               sx={{ pr: 2 }}
