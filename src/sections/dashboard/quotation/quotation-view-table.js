@@ -460,7 +460,7 @@ const handleQuotation = async (record) => {
       if (record.category === 'Service Quotation') {
         return{
           id: index + 1,
-          productDescription: product.description,
+          productDescription: `${product.product.productName}(${product.product.partnumber})`,
           workstationCount: product.workstationCount,
           price: product.price,
           igst: product.igst,
@@ -468,7 +468,7 @@ const handleQuotation = async (record) => {
       }else{
         return {
           id: index + 1,
-          productDescription: product.description,
+          productDescription: `${product.product.productName}(${product.product.partnumber})`,
           hsn: product.id,
           quantity: product.quantity,
           weight: product.weight,
@@ -576,7 +576,7 @@ const rowData = response.data.map((product, index) => {
   if (record.category === 'Service Quotation') {
     return[
       {text: index +1 , style: 'tableCell'},
-      {text: product.description, style: 'tableCell'},
+      {text: `${product.product.productName}(${product.product.partnumber})`, style: 'tableCell'},
       {text: product.workstationCount, style: 'tableCell'},
       {text: product.igst, style: 'tableCell'},
       {text: product.price, style: 'tableCell'},
@@ -584,7 +584,7 @@ const rowData = response.data.map((product, index) => {
   }
   return [
     {text: index +1 , style: 'tableCell'},
-    {text: product.description, style: 'tableCell'},
+    {text: `${product.product.productName}(${product.product.partnumber})`, style: 'tableCell'},
     {text: product.id, style: 'tableCell'},
     {text: product.quantity, style: 'tableCell'},
     {text: product.weight, style: 'tableCell'},

@@ -30,7 +30,6 @@ import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "../pdfAssets/vfs_fonts";
 import Logo from "../logo/logo";
 import {LogoContext} from 'src/utils/logoContext'
-import imgUrl from "../pdfAssets/imageDataUrl";
 
 
 const userId = sessionStorage.getItem("user") || localStorage.getItem("user");
@@ -205,7 +204,7 @@ const SalesOrderViewList = () => {
       console.log(response.data);
 
       const rowData = response.data.map((product, index) => {
-        let invent = JSON.parse(product.inventory);
+        // let invent = JSON.parse(product.inventory);
         let TotalBD = product.price * product.quantity;
         let discount = (TotalBD * product.discountpercent) / 100;
         let TotalAD = TotalBD - discount;
@@ -213,8 +212,8 @@ const SalesOrderViewList = () => {
         let TotalGSTAmount = (TotalAD * TotalGST) / 100;
         return [
                     { text: index + 1, style: 'tableCell'},
-                    { text: product.description, style: 'tableCell' },
-                    { text: invent.hsncode, style: 'tableCell' },
+                    { text: `${product.inventory.product.productName}(${product.inventory.product.partnumber})`, style: 'tableCell' },
+                    { text: product.inventory.hsncode, style: 'tableCell' },
                     { text: product.price, style: 'tableCell' },
                     { text: product.quantity, style: 'tableCell' },
                     { text: TotalBD, style: 'tableCell' },
@@ -684,7 +683,7 @@ const SalesOrderViewList = () => {
       const rowData = response.data.map((product, index) => {
         return [
           {text: index+1, style: 'tableCell'},
-          {text: product.description, style: 'tableCell'},
+          {text: `${product.inventory.product.productName}(${product.inventory.product.partnumber})`, style: 'tableCell'},
           {text: "", style: 'tableCell'},
           {text: product.quantity, style: 'tableCell'},
         ];
