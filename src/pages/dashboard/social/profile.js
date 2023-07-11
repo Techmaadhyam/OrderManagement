@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useCallback, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 import {
   Box,
@@ -8,51 +8,32 @@ import {
   Card,
   CardHeader,
   Typography,
-} from '@mui/material';
+} from "@mui/material";
 
-import { socialApi } from 'src/api/social';
-import { Seo } from 'src/components/seo';
-import { useMounted } from 'src/hooks/use-mounted';
-import { usePageView } from 'src/hooks/use-page-view';
-import { paths } from 'src/paths';
-import { PropertyList } from 'src/components/property-list';
-import { PropertyListItem } from 'src/components/property-list-item';
-import axios from 'axios';
-import { apiUrl } from 'src/config';
-
-
-const mail = sessionStorage.getItem("mail");
+import { socialApi } from "src/api/social";
+import { Seo } from "src/components/seo";
+import { useMounted } from "src/hooks/use-mounted";
+import { usePageView } from "src/hooks/use-page-view";
+import { paths } from "src/paths";
+import { PropertyList } from "src/components/property-list";
+import { PropertyListItem } from "src/components/property-list-item";
+import { useContext } from "react";
+import { LogoContext } from "src/utils/logoContext";
 
 export const Page = () => {
- 
-  const [userData, setUserData] = useState();
+  const { logo } = useContext(LogoContext);
 
+  //logout
+  const handleLogout = () => {
+    // Clear the session storage
+    sessionStorage.clear();
+    localStorage.removeItem("accessToken");
+    const broadcastChannel = new BroadcastChannel("logoutChannel");
+    broadcastChannel.postMessage("logout");
+    window.location.href = paths.index;
+  };
 
-
-
-  
-  useEffect(() => {
-    axios
-      .get(apiUrl + `getUserByUsername/${mail}`)
-      .then((response) => {
-        setUserData(response.data.loggedIUser[0]);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
-
-//logout
-const handleLogout = () => {
-  // Clear the session storage
-  sessionStorage.clear();
-  localStorage.removeItem('accessToken');
-  const broadcastChannel = new BroadcastChannel('logoutChannel');
-  broadcastChannel.postMessage('logout');
-  window.location.href = paths.index;
-};
-
-  const align = 'horizontal' 
+  const align = "horizontal";
 
   return (
     <>
@@ -70,49 +51,49 @@ const handleLogout = () => {
       <Card sx={{ m: 3, mt: 2 }}>
         <PropertyList>
           <PropertyListItem align={align} label="First Name">
-            <Typography variant="subtitle2">{userData?.firstName}</Typography>
+            <Typography variant="subtitle2">{logo?.firstName}</Typography>
           </PropertyListItem>
           <Divider />
           <PropertyListItem
             align={align}
             label="Last Name"
-            value={userData?.lastName}
+            value={logo?.lastName}
           />
           <Divider />
           <PropertyListItem
             align={align}
             label="Email"
-            value={userData?.userName}
+            value={logo?.userName}
           />
           <Divider />
-          <PropertyListItem align={align} label="Phone" value={userData?.mobile} />
+          <PropertyListItem align={align} label="Phone" value={logo?.mobile} />
           <Divider />
           <PropertyListItem
             align={align}
             label="Company"
-            value={userData?.companyName}
+            value={logo?.company}
           />
           <Divider />
-          <PropertyListItem align={align} label="Type" value={userData?.type} />
+          <PropertyListItem align={align} label="Type" value={logo?.type} />
           <Divider />
           <PropertyListItem
             align={align}
             label="Address"
             value={
-              userData?.address +
+              logo?.address +
               ", " +
-              userData?.city +
+              logo?.city +
               ", " +
-              userData?.userData +
+              logo?.state +
               ", " +
-              userData?.country
+              logo?.country
             }
           />
           <Divider />
           <PropertyListItem
             align={align}
             label="ZipCode"
-            value={userData?.pincode}
+            value={logo?.pincode}
           ></PropertyListItem>
         </PropertyList>
         <Divider />

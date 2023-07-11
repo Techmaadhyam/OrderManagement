@@ -25,6 +25,13 @@ const Logo = () => {
                   firstName: response.data.loggedIUser[0].firstName,
                   lastName: response.data.loggedIUser[0].lastName,
                   userName: response.data.loggedIUser[0].userName,
+                  mobile: response.data.loggedIUser[0].mobile,
+                  pincode: response.data.loggedIUser[0].pincode,
+                  type: response.data.loggedIUser[0].type,
+                  address: response.data.loggedIUser[0].address,
+                  city: response.data.loggedIUser[0].city,
+                  state: response.data.loggedIUser[0].state,
+                  country: response.data.loggedIUser[0].country,
                 });
             })
             .catch((error) => {
