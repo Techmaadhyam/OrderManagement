@@ -89,25 +89,25 @@ import {
     const hasError = touched && !emailRegex.test(email);
   
     //handle next and back button
-    const handleNext = async (e) => {
-      e.preventDefault();
-    
-      const response = await fetch(apiUrl + `getUserByUsername/${email}`);
-    
-      if (response.ok) {
-        const data = await response.json();
-        if (data.length === 0) {
-          alert('No user found with the provided email');
-        } else {
-          const firstUser = data[0];
-          setRegisteredData(firstUser)
-          console.log(data); 
-          setStep(step + 1);
-        }
-      } else {
-        alert('Failed to fetch user data. Please try again.');
-      }
-    };
+   const handleNext = async (e) => {
+     e.preventDefault();
+
+     const response = await fetch(apiUrl + `getUserByUsername/${email}`);
+
+     if (response.ok) {
+       const data = await response.json();
+       if (data.loggedIUser.length === 0) {
+         alert("No user found with the provided email");
+       } else {
+         const firstUser = data.loggedIUser[0];
+         setRegisteredData(firstUser);
+         console.log(data);
+         setStep(step + 1);
+       }
+     } else {
+       alert("Failed to fetch user data. Please try again.");
+     }
+   };
   
     const handleBack = (e) => {
       e.preventDefault()
