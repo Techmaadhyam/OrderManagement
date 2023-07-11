@@ -211,8 +211,8 @@ const handleWarehouseDownload = async (record) => {
           { text: 'Description', bold: true },
         ],
         ...inventoryData.map((item) => [
-          item.productName,
-          item.rackName,
+          item.product.productName,
+          item.rack.name,
           item.quantity,
           item.weight,
           item.size,
