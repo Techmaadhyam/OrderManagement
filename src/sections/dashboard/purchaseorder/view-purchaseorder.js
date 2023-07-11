@@ -71,6 +71,7 @@ export const ViewPurchaseOrder = (props) => {
       description: obj.description,
       comments: state?.comments,
       size: obj.size,
+      purchaseOrderId: obj.purchaseOrderId,
       quantity: obj.quantity,
       createdDate: obj.createdDate,
       lastModifiedDate: obj.lastModifiedDate,
@@ -234,6 +235,8 @@ export const ViewPurchaseOrder = (props) => {
           }`
       )
       .then((response) => {
+
+        console.log(response.data)
         const modifiedData = response.data.map((item) => {
           const { quantity, price, cgst, igst, sgst } = item;
           const netAmount = (
@@ -249,10 +252,10 @@ export const ViewPurchaseOrder = (props) => {
         const updatedData = modifiedData.map((obj) => {
           let parsedProduct;
           try {
-            parsedProduct = JSON.parse(obj.product);
+            parsedProduct = obj.product;
           } catch (error) {
             console.error(
-              "Error parsing inventory JSON for object:",
+              "Error parsing product JSON for object:",
               obj,
               error
             );

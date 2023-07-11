@@ -54,7 +54,7 @@ export const ViewInventoryDetail = (props) => {
 
 
   const matchingObject = userData.find(item => item.id === state?.id || state?.inventoryId );
-  const warehouseName = matchingObject?.warehouseName;
+  const warehouseName = matchingObject?.warehouse.name;
   const productName = matchingObject?.product?.productName;
 
   console.log(matchingObject)
@@ -65,7 +65,7 @@ export const ViewInventoryDetail = (props) => {
     axios
     .get(apiUrl + `getAllWareHouse/${userId}`)
     .then(response => {
-      const matchedData = response.data.filter(obj => obj.id === state?.warehouseId  );
+      const matchedData = response.data.filter(obj => obj.id === matchingObject?.warehouse.id );
 
       if (matchedData.length > 0) {
         navigate(`/dashboard/invoices/viewDetail`, { state: matchedData[0] });
@@ -159,7 +159,7 @@ export const ViewInventoryDetail = (props) => {
                   style={{ cursor: "pointer" }}
                 >
                   <Typography variant="subtitle2">
-                    {state?.warehouseName || warehouseName}
+                    {state?.warehouse?.name || state?.inventory.warehouse.name || warehouseName}
                   </Typography>
                 </Link>
               </PropertyListItem>

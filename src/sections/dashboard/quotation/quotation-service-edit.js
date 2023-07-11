@@ -189,7 +189,7 @@ const [productName, setProductName] = useState('');
           let parsedProductId;
           let parsedProductName;
           try {
-            const parsedProduct = JSON.parse(obj.product);
+            const parsedProduct = obj.product;
             parsedProductId = parsedProduct.id;
             parsedProductName = parsedProduct.productName
           } catch (error) {

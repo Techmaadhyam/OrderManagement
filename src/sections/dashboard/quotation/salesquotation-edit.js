@@ -227,7 +227,7 @@ const [productName, setProductName] = useState('');
         let parsedInventoryId;
         let parsedHSN
         try {
-          const parsedInventory = JSON.parse(obj.inventory);
+          const parsedInventory = obj.inventory;
           parsedInventoryId = parsedInventory.id;
           parsedHSN =parsedInventory.hsncode
         } catch (error) {

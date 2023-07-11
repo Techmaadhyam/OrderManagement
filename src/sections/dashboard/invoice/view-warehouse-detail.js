@@ -37,11 +37,11 @@ export const ViewWarehouseDetail = (props) => {
   const columns = [
     {
       title: 'Part Name',
-      dataIndex: 'productName',
-      key: 'productName',
+      dataIndex: 'product',
+      key: 'product',
       render: (name, record) => {
         const handleNavigation = () => {
-          navigate(`/dashboard/inventory/viewDetail/${record.inventoryId}`, { state: record } );
+          navigate(`/dashboard/inventory/viewDetail/${record.id}`, { state: record } );
         };
         
         return (
@@ -54,7 +54,7 @@ export const ViewWarehouseDetail = (props) => {
             }}
             underline="hover"
           >
-            <Typography variant="subtitle2">{name}</Typography>
+            <Typography variant="subtitle2">{name.productName}</Typography>
           </Link>
         );
       },
@@ -62,8 +62,9 @@ export const ViewWarehouseDetail = (props) => {
     
     {
       title: 'Rack',
-      dataIndex: "rackName",
-      key: 'rackName'
+      dataIndex: "rack",
+      key: 'rack',
+      render: (text)=>text.name
     },
     {
         title: 'Quantity',
@@ -219,7 +220,7 @@ export const ViewWarehouseDetail = (props) => {
               columns={columns}
               dataSource={rowData?.map((row) => ({
                 ...row,
-                key: row.inventoryId,
+                key: row.id,
               }))}
             ></Table>
           </Scrollbar>

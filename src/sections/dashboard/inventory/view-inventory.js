@@ -160,8 +160,8 @@ const handleCategoryCancel = () => {
 
 const filteredProducts = filteredData.filter(product => {
   const productNameMatch = product?.product?.productName?.toLowerCase().includes(searchText.toLowerCase());
-  const warehouseNameMatch = product?.warehouseName?.toLowerCase().includes(warehouseText.toLowerCase());
-  const categoryNameMatch = product.category?.name?.toLowerCase().includes(categoryText.toLowerCase());
+  const warehouseNameMatch = product?.warehouse?.name?.toLowerCase().includes(warehouseText.toLowerCase());
+  const categoryNameMatch = product?.category?.name?.toLowerCase().includes(categoryText.toLowerCase());
 
   return (
     (searchText === '' || productNameMatch) &&
@@ -176,7 +176,7 @@ const filteredProducts = filteredData.filter(product => {
   const columns = [
     {
       title: (
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div style={{ display: "flex", alignItems: "center" }}>
           {!isSearching ? (
             <>
               <Typography variant="subtitle2">Part Name</Typography>
@@ -199,14 +199,16 @@ const filteredProducts = filteredData.filter(product => {
             </>
           )}
         </div>
-    ),
-      dataIndex: 'product',
-      key: 'produc',
+      ),
+      dataIndex: "product",
+      key: "product",
       render: (name, record) => {
         const handleNavigation = () => {
-          navigate(`/dashboard/inventory/viewDetail/${record.id}`, { state: record });
+          navigate(`/dashboard/inventory/viewDetail/${record.id}`, {
+            state: record,
+          });
         };
-        
+
         return (
           <Link
             color="primary"
@@ -224,8 +226,8 @@ const filteredProducts = filteredData.filter(product => {
     },
     {
       title: (
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          {!isSearchingWarehouse? (
+        <div style={{ display: "flex", alignItems: "center" }}>
+          {!isSearchingWarehouse ? (
             <>
               <Typography variant="subtitle2">Warehouse</Typography>
               <IconButton onClick={handleWarehouseClick}>
@@ -247,24 +249,25 @@ const filteredProducts = filteredData.filter(product => {
             </>
           )}
         </div>
-    ),
-      key: 'warehouseName',
-      dataIndex: 'warehouseName',
+      ),
+      key: "warehouse",
+      dataIndex: "warehouse",
+      render: (text) => text.name,
     },
     {
-      title: 'Available Stock',
-      key: 'quantity',
-      dataIndex: 'quantity',
+      title: "Available Stock",
+      key: "quantity",
+      dataIndex: "quantity",
     },
     {
-      title: 'HSN Code',
-      key: 'hsncode',
-      dataIndex: 'hsncode',
+      title: "HSN Code",
+      key: "hsncode",
+      dataIndex: "hsncode",
     },
 
     {
       title: (
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div style={{ display: "flex", alignItems: "center" }}>
           {!isSearchingCategory ? (
             <>
               <Typography variant="subtitle2">Model</Typography>
@@ -287,19 +290,19 @@ const filteredProducts = filteredData.filter(product => {
             </>
           )}
         </div>
-    ),
-      key: 'category',
-      dataIndex: 'category',
-      render: (text)=> text.name
+      ),
+      key: "category",
+      dataIndex: "category",
+      render: (text) => text.name,
     },
     {
-      title: 'Cost',
-      key: 'price',
-      dataIndex: 'price',
+      title: "Cost",
+      key: "price",
+      dataIndex: "price",
     },
     {
-      dataIndex: 'actionEdit',
-      key: 'actionEdit',
+      dataIndex: "actionEdit",
+      key: "actionEdit",
       render: (_, record) => (
         <IconButton onClick={() => handleNavigation(record)}>
           <Icon>
@@ -309,8 +312,8 @@ const filteredProducts = filteredData.filter(product => {
       ),
     },
     {
-      dataIndex: 'actionDelete',
-      key: 'actionDelete',
+      dataIndex: "actionDelete",
+      key: "actionDelete",
       render: (_, row) => (
         <IconButton onClick={handleRemoveRow(row.id)}>
           <Icon>

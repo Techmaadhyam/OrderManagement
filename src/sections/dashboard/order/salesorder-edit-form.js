@@ -223,7 +223,7 @@ const [productName, setProductName] = useState('');
         const updatedData = response.data.map((obj) => {
           let parsedInventoryId;
           try {
-            const parsedInventory = JSON.parse(obj.inventory);
+            const parsedInventory = obj.inventory;
             parsedInventoryId = parsedInventory.id;
           } catch (error) {
             console.error(

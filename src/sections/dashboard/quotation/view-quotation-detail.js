@@ -215,8 +215,8 @@ console.log(state)
           let parsedProduct;
           let parsedInventory;
           try {
-            parsedProduct = JSON.parse(obj.product);
-            parsedInventory = JSON.parse(obj.inventory);
+            parsedProduct = obj.product;
+            parsedInventory = obj.inventory;
           console.log(parsedInventory);
             
           } catch (error) {

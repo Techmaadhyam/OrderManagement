@@ -242,38 +242,38 @@ useEffect(() => {
     //   lastModifiedDate: createdDate
     // }
    
-    let inventory={
-      inventory:{
-          
-        quantity:parseFloat(quantity),
-        weight:weight,
-        size:size,
-        hsncode:hsnCode,
-        price:parseFloat(cost),
-        description:description,
+    let inventory = {
+      inventory: {
+        quantity: parseFloat(quantity),
+        weight: weight,
+        size: size,
+        hsncode: hsnCode,
+        price: parseFloat(cost),
+        description: description,
         createdBy: parseFloat(userId),
-        product: {id: selectedId},
-        purchaseOrderId:purchaseId,
-        warehouseId:warehouseId,
-        sgst:parseFloat(sgst) || 0,
-        cgst:parseFloat(cgst) || 0,
-        igst:parseFloat(igst) || 0,
+        product: { id: selectedId },
+        purchaseOrderId: purchaseId,
+
+        sgst: parseFloat(sgst) || 0,
+        cgst: parseFloat(cgst) || 0,
+        igst: parseFloat(igst) || 0,
         createdDate: new Date(),
-        lastModifiedByUser: {id: userId},
+        lastModifiedByUser: { id: userId },
+      },
+      warehouse: {
+        id: warehouseId
       },
 
-      rack:{
-            name: rackName,
-            description: rackDesc,
-            createdBy:parseFloat(userId),
+      rack: {
+        name: rackName,
+        description: rackDesc,
+        createdBy: parseFloat(userId),
       },
 
-      category:{
-          id: categoryId
-      }
-
-      
-  }
+      category: {
+        id: categoryId,
+      },
+    };
   let inventoryWithRack = {
     inventory: {
       quantity: parseFloat(quantity),
@@ -286,12 +286,15 @@ useEffect(() => {
       //productId: selectedId,
       product: { id: selectedId },
       purchaseOrderId: purchaseId,
-      warehouseId: warehouseId,
+
       sgst: parseFloat(sgst) || 0,
       cgst: parseFloat(cgst) || 0,
       igst: parseFloat(igst) || 0,
       createdDate: new Date(),
       lastModifiedByUser: { id: userId },
+    },
+    warehouse: {
+      id: warehouseId
     },
 
     rack: {
@@ -302,7 +305,7 @@ useEffect(() => {
       id: categoryId,
     },
   };
-
+    debugger;
     if ( showAdditionalFields &&  warehouseId && quantity && weight && hsnCode && cost && userId) {
       try {
         const response = await fetch(apiUrl +'addInventory', {
@@ -326,6 +329,7 @@ useEffect(() => {
       } catch (error) {
         console.error('API call failed:', error);
       }
+      debugger;
     } else if (showAdditionalFields === false){
       try {
         const response = await fetch(apiUrl +'addInventory', {

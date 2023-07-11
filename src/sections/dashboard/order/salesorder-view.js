@@ -64,7 +64,9 @@ export const ViewSalesOrder = (props) => {
 
    const handleEditClick = () => {
      setIsEditable(true);
-   };
+  };
+  
+
 
   const convertedArray = updatedRows.map((obj) => {
 
@@ -79,6 +81,7 @@ export const ViewSalesOrder = (props) => {
     description: obj.description,
     comments: state?.comments,
     size: obj.size,
+    salesOrderId: obj.salesOrderId,
     quantity: obj.quantity,
     createdDate: obj.createdDate,
     createdBy: userId,
@@ -171,8 +174,8 @@ export const ViewSalesOrder = (props) => {
         const updatedData = modifiedData.map(obj => {
           let parsedInventory;
           try {
-            parsedInventory = JSON.parse(obj.inventory);
-            console.log(parsedInventory)
+            parsedInventory = obj.inventory;
+   
             
           } catch (error) {
             console.error("Error parsing inventory JSON for object:", obj, error);
@@ -182,7 +185,6 @@ export const ViewSalesOrder = (props) => {
           return {
             ...obj,
             inventoryId: parsedInventory.id,
-            warehouseId: parsedInventory?.warehouseId,
             productId: parsedInventory?.product?.id,
           };
         });
