@@ -23,6 +23,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SearchIcon from "@mui/icons-material/Search";
 import { apiUrl } from "src/config";
+import CircularProgress from "@mui/material/CircularProgress";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 // import imgUrl from "../pdfAssets/imageDataUrl.js";
 // import techMaadhyam from "../pdfAssets/imageDataUrl2";
@@ -1273,14 +1274,27 @@ const SalesOrderViewList = () => {
       </div>
 
       <Box sx={{ position: "relative", overflowX: "auto" }}>
-        <Scrollbar>
-          <Table
-            sx={{ minWidth: 800, overflowX: "auto" }}
-            columns={columns}
-            dataSource={filteredData}
-            rowClassName={() => "table-data-row"}
-          ></Table>
-        </Scrollbar>
+        {userData.length !== 0 ? (
+          <Scrollbar>
+            <Table
+              sx={{ minWidth: 800, overflowX: "auto" }}
+              columns={columns}
+              dataSource={filteredData}
+              rowClassName={() => "table-data-row"}
+            ></Table>
+          </Scrollbar>
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100px",
+            }}
+          >
+            <CircularProgress />
+          </div>
+        )}
         <ToastContainer
           position="top-right"
           autoClose={2000}

@@ -25,7 +25,7 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import './inventory.css'
 import { apiUrl } from 'src/config';
 import Logo from '../logo/logo';
-
+import CircularProgress from "@mui/material/CircularProgress";
   //get userid 
   const userId = sessionStorage.getItem('user') || localStorage.getItem('user');
 
@@ -65,7 +65,7 @@ const ViewInventory = () => {
   useEffect(() => {
     axios.get(apiUrl +`getInventoryByUserId/${userId}`)
       .then(response => {
-        setUserData(response.data);
+  setUserData(response.data)
 
       })
       .catch(error => {
@@ -325,14 +325,14 @@ const filteredProducts = filteredData.filter(product => {
   ];
 
   return (
-    <div style={{ minWidth: '100%' }}>
-     <div
+    <div style={{ minWidth: "100%" }}>
+      <div
         style={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          marginTop: '1rem',
-          marginBottom: '1rem'
+          marginTop: "1rem",
+          marginBottom: "1rem",
         }}
       >
         <div style={{ flex: 1 }}>
@@ -345,7 +345,7 @@ const filteredProducts = filteredData.filter(product => {
           <IconWithPopup />
         </div>
       </div>
-      
+
       {/* <TextField
       label="Type"
       name="type"
@@ -362,29 +362,44 @@ const filteredProducts = filteredData.filter(product => {
           </MenuItem>
         ))}
       </TextField> */}
-      <Box sx={{ position: 'relative', overflowX: 'auto', marginTop:'30px' }}>
-        <Scrollbar>
-          <Table
-            sx={{ minWidth: 800, overflowX: 'auto' }}
-            columns={columns}
-            dataSource={filteredProducts}
-            rowClassName={() => 'table-data-row'}
+      <Box sx={{ position: "relative", overflowX: "auto", marginTop: "30px" }}>
+        {userData.length !== 0 ? (
+          <Scrollbar>
+            <Table
+              sx={{ minWidth: 800, overflowX: "auto" }}
+              columns={columns}
+              dataSource={filteredProducts}
+              rowClassName={() => "table-data-row"}
             ></Table>
-            </Scrollbar>
-            <ToastContainer
-                     position="top-right"
-                     autoClose={2000}
-                     hideProgressBar={false}
-                     newestOnTop={false}
-                     closeOnClick
-                     rtl={false}
-                     pauseOnFocusLoss
-                     draggable
-                     pauseOnHover
-                     theme="light"/>
-          </Box>
-        </div>
-      );
+          </Scrollbar>
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+                alignItems: "center",
+              height: '100px'
+    
+            }}
+          >
+            <CircularProgress />
+          </div>
+        )}
+        <ToastContainer
+          position="top-right"
+          autoClose={2000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
+      </Box>
+    </div>
+  );
     };
     
     export default ViewInventory;

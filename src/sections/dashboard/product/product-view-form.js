@@ -22,6 +22,7 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import './product.css'
 import { apiUrl } from 'src/config';
 import Logo from '../logo/logo';
+import CircularProgress from "@mui/material/CircularProgress";
 
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, MenuItem, InputBase } from '@mui/material';
 
@@ -520,14 +521,27 @@ const columns = [
         ))}
       </TextField> */}
       <Box sx={{ position: "relative", overflowX: "auto", marginTop: "30px" }}>
-        <Scrollbar>
-          <Table
-            sx={{ minWidth: 800, overflowX: "auto" }}
-            columns={columns}
-            dataSource={filteredProducts}
-            rowClassName={() => "table-data-row"}
-          ></Table>
-        </Scrollbar>
+        {userData.length !== 0 ? (
+          <Scrollbar>
+            <Table
+              sx={{ minWidth: 800, overflowX: "auto" }}
+              columns={columns}
+              dataSource={filteredProducts}
+              rowClassName={() => "table-data-row"}
+            ></Table>
+          </Scrollbar>
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100px",
+            }}
+          >
+            <CircularProgress />
+          </div>
+        )}
         <ToastContainer
           position="top-right"
           autoClose={2000}

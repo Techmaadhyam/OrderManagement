@@ -24,7 +24,8 @@ import {
   import SearchIcon from '@mui/icons-material/Search';
   import HighlightOffIcon from '@mui/icons-material/HighlightOff';
   import { apiUrl } from 'src/config';
-  import Logo from '../logo/logo';
+import Logo from '../logo/logo';
+  import CircularProgress from "@mui/material/CircularProgress";
   
   const userId = sessionStorage.getItem('user') || localStorage.getItem('user');
   
@@ -252,53 +253,66 @@ import {
      
   
     return (
-      <div style={{ minWidth: '100%' }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginTop: "1rem",
-          marginBottom: "1rem",
-        }}
-      >
-        <div style={{ flex: 1 }}>
-          <h2 style={{ margin: 0 }}>View Work Order</h2>
-        </div>
-        <div style={{ flex: 1, textAlign: "center" }}>
-          <Logo />
-        </div>
-        <div style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
-          <IconWithPopup />
-        </div>
-      </div>
-        
-      
-        <Box sx={{  position: 'relative' , overflowX: "auto", marginTop:'30px'}}>
-   
-             
-          <Scrollbar>
-            <Table
-              sx={{ minWidth: 800, overflowX: 'auto'}}
-              columns={columns}
-              dataSource={filteredList}
-              rowClassName={() => 'table-data-row'}
-              ></Table>
-              </Scrollbar>
-              <ToastContainer
-                       position="top-right"
-                       autoClose={2000}
-                       hideProgressBar={false}
-                       newestOnTop={false}
-                       closeOnClick
-                       rtl={false}
-                       pauseOnFocusLoss
-                       draggable
-                       pauseOnHover
-                       theme="light"/>
-            </Box>
+      <div style={{ minWidth: "100%" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginTop: "1rem",
+            marginBottom: "1rem",
+          }}
+        >
+          <div style={{ flex: 1 }}>
+            <h2 style={{ margin: 0 }}>View Work Order</h2>
           </div>
-        );
+          <div style={{ flex: 1, textAlign: "center" }}>
+            <Logo />
+          </div>
+          <div style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
+            <IconWithPopup />
+          </div>
+        </div>
+
+        <Box
+          sx={{ position: "relative", overflowX: "auto", marginTop: "30px" }}
+        >
+          {userData.length !== 0 ? (
+            <Scrollbar>
+              <Table
+                sx={{ minWidth: 800, overflowX: "auto" }}
+                columns={columns}
+                dataSource={filteredList}
+                rowClassName={() => "table-data-row"}
+              ></Table>
+            </Scrollbar>
+          ) : (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100px",
+              }}
+            >
+              <CircularProgress />
+            </div>
+          )}
+          <ToastContainer
+            position="top-right"
+            autoClose={2000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
+        </Box>
+      </div>
+    );
       };
       
       export default  WorkOrderViewTable;

@@ -24,6 +24,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from '../pdfAssets/vfs_fonts';
 import Logo from '../logo/logo';
+import CircularProgress from "@mui/material/CircularProgress";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@mui/material';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -484,14 +485,27 @@ const columns = [
       </div>
 
       <Box sx={{ position: "relative", overflowX: "auto" }}>
-        <Scrollbar>
-          <Table
-            sx={{ minWidth: 800, overflowX: "auto" }}
-            columns={columns}
-            dataSource={dataWithKeys}
-            rowClassName={() => "table-data-row"}
-          ></Table>
-        </Scrollbar>
+        {userData.length !== 0 ? (
+          <Scrollbar>
+            <Table
+              sx={{ minWidth: 800, overflowX: "auto" }}
+              columns={columns}
+              dataSource={dataWithKeys}
+              rowClassName={() => "table-data-row"}
+            ></Table>
+          </Scrollbar>
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100px",
+            }}
+          >
+            <CircularProgress />
+          </div>
+        )}
         <ToastContainer
           position="top-right"
           autoClose={2000}

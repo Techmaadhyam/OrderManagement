@@ -30,6 +30,7 @@ import Logo from '../logo/logo';
 // import imgUrl from '../pdfAssets/imageDataUrl';
 import pdfFonts from '../pdfAssets/vfs_fonts';
 import { LogoContext } from 'src/utils/logoContext';
+import CircularProgress from "@mui/material/CircularProgress";
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 pdfMake.fonts = {
   Helvetica: {
@@ -736,14 +737,27 @@ const handleWorkInvoice = async (record) => {
       </div>
 
       <Box sx={{ position: "relative", overflowX: "auto", marginTop: "30px" }}>
-        <Scrollbar>
-          <Table
-            sx={{ minWidth: 800, overflowX: "auto" }}
-            columns={columns}
-            dataSource={filteredList}
-            rowClassName={() => "table-data-row"}
-          ></Table>
-        </Scrollbar>
+        {userData.length !== 0 ? (
+          <Scrollbar>
+            <Table
+              sx={{ minWidth: 800, overflowX: "auto" }}
+              columns={columns}
+              dataSource={filteredList}
+              rowClassName={() => "table-data-row"}
+            ></Table>
+          </Scrollbar>
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100px",
+            }}
+          >
+            <CircularProgress />
+          </div>
+        )}
         <ToastContainer
           position="top-right"
           autoClose={2000}

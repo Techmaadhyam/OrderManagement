@@ -31,6 +31,7 @@ import pdfFonts from '../pdfAssets/vfs_fonts';
 import { apiUrl } from 'src/config';
 import Logo from '../logo/logo';
 import { LogoContext } from 'src/utils/logoContext';
+import CircularProgress from "@mui/material/CircularProgress";
 
 
 
@@ -1113,22 +1114,34 @@ if (deliveryDateIndex !== -1 && filteredList.some(item => item.category === "Ser
         select
       >
         {categoryBuySell.map((option) => (
-          <MenuItem key={option.value} 
-          value={option.value}>
+          <MenuItem key={option.value} value={option.value}>
             {option.label}
           </MenuItem>
         ))}
       </TextField>
 
       <Box sx={{ position: "relative", overflowX: "auto", marginTop: "30px" }}>
-        <Scrollbar>
-          <Table
-            sx={{ minWidth: 800, overflowX: "auto" }}
-            columns={columns}
-            dataSource={filteredList}
-            rowClassName={() => "table-data-row"}
-          ></Table>
-        </Scrollbar>
+        {userData.length !== 0 ? (
+          <Scrollbar>
+            <Table
+              sx={{ minWidth: 800, overflowX: "auto" }}
+              columns={columns}
+              dataSource={filteredList}
+              rowClassName={() => "table-data-row"}
+            ></Table>
+          </Scrollbar>
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100px",
+            }}
+          >
+            <CircularProgress />
+          </div>
+        )}
         <ToastContainer
           position="top-right"
           autoClose={2000}
