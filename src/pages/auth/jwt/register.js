@@ -343,7 +343,7 @@ console.log(uploadFile)
               pandcard: pan,
               pincode: zipcode,
               createdDate: new Date(),
-              unpdatedDate: new Date(),
+              updatedDate: new Date(),
             }),
           });
 

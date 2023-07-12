@@ -88,6 +88,19 @@ import {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const hasError = touched && !emailRegex.test(email);
   
+
+        const notify = (type, message) => {
+          toast[type](message, {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        };
     //handle next and back button
    const handleNext = async (e) => {
      e.preventDefault();
@@ -97,7 +110,10 @@ import {
      if (response.ok) {
        const data = await response.json();
        if (data.loggedIUser.length === 0) {
-         alert("No user found with the provided email");
+           notify(
+             "error",
+             "User does not exist. Please try again with registered email."
+           );
        } else {
          const firstUser = data.loggedIUser[0];
          setRegisteredData(firstUser);
@@ -142,18 +158,7 @@ import {
       return () => clearInterval(intervalId);
     }, [handleImageChange]);
   
-    const notify = (type, message) => {
-      toast[type](message, {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-    };
+
 
     const handleToHome = async (event) => {
       event.preventDefault();
@@ -170,7 +175,6 @@ import {
               body: JSON.stringify({
                 id: registeredData.id,
                 password: password,
-        
                 companyName: registeredData.companyName,
                 userName : registeredData.emailId,
                 firstName: registeredData.firstName,
@@ -187,7 +191,7 @@ import {
                 pandcard: registeredData.pandcard,
                 createdDate: registeredData.createdDate,
                 pincode:registeredData.pincode,
-                unpdatedDate:new Date()
+                updatedDate:new Date()
               })
             });
             
@@ -518,17 +522,7 @@ import {
                            >
                            Save
                            </Button>
-                           <ToastContainer
-                            position="top-right"
-                            autoClose={2000}
-                            hideProgressBar={false}
-                            newestOnTop={false}
-                            closeOnClick
-                            rtl={false}
-                            pauseOnFocusLoss
-                            draggable
-                            pauseOnHover
-                            theme="light"/>
+                         
                    </Box>
 
              </Card>
@@ -548,93 +542,100 @@ import {
   
   
     return (
-     <>
-      <Box
-      sx={{
-        backgroundColor: 'background.default',
-        display: 'flex',
-        flex: '1 1 auto',
-        overflow: 'hidden',
-    
-        flexDirection: {
-          xs: 'column-reverse',
-          md: 'row'
-        }
-      }}
-      >   
+      <>
         <Box
-    sx={{
-      alignItems: 'center',
-      backgroundColor: 'neutral.800',
-      backgroundImage: 'url("/assets/gradient-bg.svg")',
-      backgroundPosition: 'top center',
-      backgroundRepeat: 'no-repeat',
-      color: 'common.white',
-      display: 'flex',
-      flex: {
-        xs: '0 0 auto',
-        md: '1 1 auto'
-      },
-      justifyContent: 'center',
-      p: {
-        xs: 4,
-        md: 8
-      },
-      position: 'sticky', 
-      top: 0, 
-  
-   
-    }}
-        >
-          <Box maxWidth="md">
-            <Stack
-              alignItems="center"
-              direction="row"
-              flexWrap="wrap"
-              gap={4}
-              sx={{
-                color: 'text.primary',
-                '& > *': {
-                  color: 'neutral.400',
-                  flex: '0 0 auto'
-                }
-              }}
-            >
-              <img
-                alt=""
-                src={images[currentImage]}
-                style={{width: 450 , height: 'auto'}}
-              />
-            </Stack>
-          </Box>
-  
-  
-        </Box>
-        <Box
-           sx={{
-            backgroundColor: 'background.paper',
-            display: 'flex',
-            flex: {
-              xs: '1 1 auto',
-              md: '0 0 auto'
+          sx={{
+            backgroundColor: "background.default",
+            display: "flex",
+            flex: "1 1 auto",
+            overflow: "hidden",
+
+            flexDirection: {
+              xs: "column-reverse",
+              md: "row",
             },
-            flexDirection: 'column',
-            maxWidth: '100%',
-            p: {
-              xs: 4,
-              md: 3
-            },
-            width: {
-              md: 750
-            },
-            overflowY: 'hidden' 
           }}
         >
-        {renderFormStep()}
+          <Box
+            sx={{
+              alignItems: "center",
+              backgroundColor: "neutral.800",
+              backgroundImage: 'url("/assets/gradient-bg.svg")',
+              backgroundPosition: "top center",
+              backgroundRepeat: "no-repeat",
+              color: "common.white",
+              display: "flex",
+              flex: {
+                xs: "0 0 auto",
+                md: "1 1 auto",
+              },
+              justifyContent: "center",
+              p: {
+                xs: 4,
+                md: 8,
+              },
+              position: "sticky",
+              top: 0,
+            }}
+          >
+            <Box maxWidth="md">
+              <Stack
+                alignItems="center"
+                direction="row"
+                flexWrap="wrap"
+                gap={4}
+                sx={{
+                  color: "text.primary",
+                  "& > *": {
+                    color: "neutral.400",
+                    flex: "0 0 auto",
+                  },
+                }}
+              >
+                <img
+                  alt=""
+                  src={images[currentImage]}
+                  style={{ width: 450, height: "auto" }}
+                />
+              </Stack>
+            </Box>
+          </Box>
+          <Box
+            sx={{
+              backgroundColor: "background.paper",
+              display: "flex",
+              flex: {
+                xs: "1 1 auto",
+                md: "0 0 auto",
+              },
+              flexDirection: "column",
+              maxWidth: "100%",
+              p: {
+                xs: 4,
+                md: 3,
+              },
+              width: {
+                md: 750,
+              },
+              overflowY: "hidden",
+            }}
+          >
+            <ToastContainer
+              position="top-right"
+              autoClose={2000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="light"
+            />
+            {renderFormStep()}
+          </Box>
         </Box>
-  
-      </Box>
-    </>
+      </>
     );
   
   };
