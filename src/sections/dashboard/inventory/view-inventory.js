@@ -110,6 +110,10 @@ const handleRemoveRow = (id) => async () => {
     );
   } catch (error) {
     console.error('Error deleting row:', error.message);
+    notify(
+      "error",
+      `This record is linked with a Sales Quotation or Sales Order.`
+    );
   }
 };
 

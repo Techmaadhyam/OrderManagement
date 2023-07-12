@@ -106,10 +106,10 @@ const notify = (type, message) => {
 };
 
 
-const handleRemoveRow = (id) => async () => {
+const handleRemoveRow = (row) => async () => {
   try {
-    await axios.delete(apiUrl +`deleteTempUserId/${id}`);
-    const updatedRows = userData.filter(item => item.id !== id);
+    await axios.delete(apiUrl +`deleteTempUserId/${row.id}`);
+    const updatedRows = userData.filter(item => item.id !== row.id);
     setUserData(updatedRows);
     notify(
       "success",
@@ -117,6 +117,17 @@ const handleRemoveRow = (id) => async () => {
     );
   } catch (error) {
     console.error('Error deleting row:', error.message);
+    if (row.type === "Customer") {
+      notify(
+        "error",
+        `This record is linked with Sales Order or Quotation or AMC.`
+      );
+    }else{
+      notify(
+        "error",
+        `This record is linked with Purchase Order or Quotation.`
+      );
+    }
   }
 };
 
@@ -308,7 +319,7 @@ const handleCompanyCancel = () => {
       dataIndex: 'actionDelete',
       key: 'actionDelete', 
       render: (_, row) => (
-        <IconButton onClick={handleRemoveRow(row.id)}>
+        <IconButton onClick={handleRemoveRow(row)}>
           <Icon>
             <Delete />
           </Icon>
