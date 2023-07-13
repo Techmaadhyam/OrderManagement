@@ -162,6 +162,9 @@ export const SalesOrderCreateForm = (props) => {
   const [description, setDescription] = useState("");
   const [netAmount, setNetAmount] = useState()
   const [discount, setDiscount] = useState()
+    const [totalCgst, setTotalCgst] = useState(0);
+    const [totalIgst, setTotalIgst] = useState(0);
+    const [totalSgst, setTotalSgst] = useState(0);
 
   const [rows, setRows] = useState([]);
   const [showForm, setShowForm] = useState(false);
@@ -408,6 +411,37 @@ export const SalesOrderCreateForm = (props) => {
       (total, row) => total + row.netAmount,
       0
     );
+  
+
+    const calcTotalCgst = updatedRows.reduce(
+      (total, row) =>
+        total +
+        row.quantity * row.price +
+        (row.quantity * row.price * row.cgst) / 100,
+
+      0
+    );
+    const calcTotalIgst = updatedRows.reduce(
+      (total, row) =>
+        total +
+        row.quantity * row.price +
+        (row.quantity * row.price * row.igst) / 100,
+
+      0
+    );
+    const calcTotalSgst = updatedRows.reduce(
+      (total, row) =>
+        total +
+        row.quantity * row.price +
+        (row.quantity * row.price * row.sgst) / 100,
+
+      0
+    );
+
+    setTotalAmount(calculatedTotalAmount);
+    setTotalCgst(calcTotalCgst);
+    setTotalIgst(calcTotalIgst);
+    setTotalSgst(calcTotalSgst);
 
     setTotalAmount(calculatedTotalAmount);
   };
@@ -496,16 +530,45 @@ export const SalesOrderCreateForm = (props) => {
       setEditIndex(null);
 
       const calculatedTotalAmount = updatedRows.reduce(
-        (total, row) =>
-          total +
-          row.netAmount,
+        (total, row) => total + row.netAmount,
         0
       );
+
+      const calcTotalCgst = updatedRows.reduce(
+        (total, row) =>
+          total +
+          row.quantity * row.price +
+          (row.quantity * row.price * row.cgst) / 100,
+
+        0
+      );
+      const calcTotalIgst = updatedRows.reduce(
+        (total, row) =>
+          total +
+          row.quantity * row.price +
+          (row.quantity * row.price * row.igst) / 100,
+
+        0
+      );
+      const calcTotalSgst = updatedRows.reduce(
+        (total, row) =>
+          total +
+          row.quantity * row.price +
+          (row.quantity * row.price * row.sgst) / 100,
+
+        0
+      );
+
+      setTotalAmount(calculatedTotalAmount);
+      setTotalCgst(calcTotalCgst);
+      setTotalIgst(calcTotalIgst);
+      setTotalSgst(calcTotalSgst);
 
       setTotalAmount(calculatedTotalAmount);
     }
   };
 
+  console.log(totalCgst,totalIgst, totalSgst)
 
   const handleEditRow = (idx, row) => {
     setProductName(row.productName);
@@ -591,6 +654,9 @@ export const SalesOrderCreateForm = (props) => {
               totalAmount: finalAmount,
               paidamount: 0,
               modeofdelivery: deliveryMode,
+              totalcgst: totalCgst,
+              totalsgst: totalSgst,
+              totaligst: totalIgst,
               lastModifiedByUser: { id: userId },
             },
             salesOrderDetails: updatedRows,

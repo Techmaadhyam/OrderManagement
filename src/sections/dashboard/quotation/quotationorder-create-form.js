@@ -815,6 +815,9 @@ export const QuotationOrderCreateForm = (props) => {
                               setProductId(selectedOption.id);
                               setProductName(e.target.value);
                               setDescription(selectedOption.description);
+                                    setCgst(selectedOption.cgst);
+                                    setIgst(selectedOption.igst);
+                                    setSgst(selectedOption.sgst);
                             }}
                             style={{ marginBottom: 10 }}
                           >

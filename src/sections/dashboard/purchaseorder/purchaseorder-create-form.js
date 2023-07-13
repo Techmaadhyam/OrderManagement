@@ -174,6 +174,9 @@ export const PurchaseOrderCreateForm = (props) => {
 
   //store total amount
   const [totalAmount, setTotalAmount] = useState(0);
+  const [totalCgst, setTotalCgst] = useState(0);
+  const [totalIgst, setTotalIgst] = useState(0);
+  const [totalSgst, setTotalSgst] = useState(0);
 
   //handle file uploads
   const [performaInvoiceFile, setPerformaInvoiceFile] = useState(null);
@@ -387,6 +390,7 @@ console.log(tempId, userState)
     const updatedRows = rows.filter((_, index) => index !== idx);
     setRows(updatedRows);
 
+    //calculate total everytime form is updated and saved
     const calculatedTotalAmount = updatedRows.reduce(
       (total, row) =>
         total +
@@ -397,7 +401,35 @@ console.log(tempId, userState)
       0
     );
 
+    const calcTotalCgst = updatedRows.reduce(
+      (total, row) =>
+        total +
+        row.quantity * row.price +
+        (row.quantity * row.price * row.cgst) / 100,
+
+      0
+    );
+    const calcTotalIgst = updatedRows.reduce(
+      (total, row) =>
+        total +
+        row.quantity * row.price +
+        (row.quantity * row.price * row.igst) / 100,
+
+      0
+    );
+    const calcTotalSgst = updatedRows.reduce(
+      (total, row) =>
+        total +
+        row.quantity * row.price +
+        (row.quantity * row.price * row.sgst) / 100,
+
+      0
+    );
+
     setTotalAmount(calculatedTotalAmount);
+    setTotalCgst(calcTotalCgst);
+    setTotalIgst(calcTotalIgst);
+    setTotalSgst(calcTotalSgst);
   };
 
   //handle show hide popup form
@@ -468,7 +500,35 @@ console.log(tempId, userState)
         0
       );
 
+      const calcTotalCgst = updatedRows.reduce(
+        (total, row) =>
+          total +
+          row.quantity * row.price +
+          (row.quantity * row.price * row.cgst) / 100,
+       
+        0
+      );
+       const calcTotalIgst = updatedRows.reduce(
+         (total, row) =>
+           total +
+           row.quantity * row.price +
+           (row.quantity * row.price * row.igst) / 100,
+
+         0
+      );
+       const calcTotalSgst = updatedRows.reduce(
+         (total, row) =>
+           total +
+           row.quantity * row.price +
+           (row.quantity * row.price * row.sgst) / 100,
+
+         0
+      );
+      
       setTotalAmount(calculatedTotalAmount);
+      setTotalCgst(calcTotalCgst)
+      setTotalIgst(calcTotalIgst)
+      setTotalSgst(calcTotalSgst)
     }
   };
 
@@ -537,7 +597,7 @@ console.log(tempId, userState)
           },
           body: JSON.stringify({
             purchaseOrder: {
-              ...(quotation && { quotid : quotation  }),
+              ...(quotation && { quotid: quotation }),
               salesOrderId: null,
               ...(tempId && { tempUser: { id: tempId } }),
               ...(userState && { companyuser: { id: userState } }),
@@ -558,6 +618,9 @@ console.log(tempId, userState)
               lastModifiedDate: new Date(),
               comments: comment,
               termsAndCondition: terms,
+              totalcgst: totalCgst,
+              totalsgst: totalSgst,
+              totaligst: totalIgst,
               totalAmount: finalAmount,
             },
             purchaseOrderDetails: updatedRows,
@@ -1054,6 +1117,9 @@ console.log(tempId, userState)
                               setProductId(selectedOption.id);
                               setProductName(e.target.value);
                               setDescription(selectedOption.description);
+                              setCgst(selectedOption.cgst)
+                              setIgst(selectedOption.igst)
+                              setSgst(selectedOption.sgst)
                             }}
                             style={{ marginBottom: 10 }}
                           >

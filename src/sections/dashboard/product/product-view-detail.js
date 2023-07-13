@@ -234,6 +234,24 @@ export const ViewProductDetail = (props) => {
             </IconButton>
           </div>
           <Divider />
+          <PropertyListItem
+            align={align}
+            label="CGST"
+            value={state?.cgst}
+          />
+          <Divider />
+          <PropertyListItem
+            align={align}
+            label="IGST"
+            value={state?.igst}
+          />
+          <Divider />
+          <PropertyListItem
+            align={align}
+            label="SGST"
+            value={state?.sgst}
+          />
+          <Divider />
 
           <PropertyListItem
             align={align}
@@ -242,7 +260,6 @@ export const ViewProductDetail = (props) => {
           />
         </PropertyList>
         <Divider />
-        
       </Card>
     </div>
   );

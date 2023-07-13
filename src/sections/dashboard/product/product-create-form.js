@@ -32,7 +32,10 @@ export const CreateProduct = (props) => {
   const [desc2, setDesc2]= useState('')
   const [currentDate, setCurrentDate] = useState('');
   const [data, setData]= useState([])
-  const [partNumber, setpartNumber]= useState('')
+  const [partNumber, setpartNumber] = useState('')
+    const [sgst, setSgst] = useState("");
+    const [igst, setIgst] = useState("");
+    const [cgst, setCgst] = useState("");
   
   
 //handle category change
@@ -157,16 +160,18 @@ export const CreateProduct = (props) => {
           description: desc2,
           createdBy: parseFloat(userId),
           createdDate: new Date(),
-          lastModifiedDate:new Date(),
-          lastModifiedByUser: {id: parseFloat(userId)},
- 
+          lastModifiedDate: new Date(),
+          lastModifiedByUser: { id: parseFloat(userId) },
+          sgst: parseFloat(sgst) || 0,
+          cgst: parseFloat(cgst) || 0,
+          igst: parseFloat(igst) || 0,
         },
         category: {
           name: newCategory,
           description: desc1,
           createdBy: parseFloat(userId),
-          createdDate:new Date(),
-        }
+          createdDate: new Date(),
+        },
       };
     } else if(showAdditionalFields===false && product && desc2 && userId && currentDate && category){
       requestBody = {
@@ -176,16 +181,17 @@ export const CreateProduct = (props) => {
           //type: type,
           description: desc2,
           createdBy: parseFloat(userId),
-          createdDate:new Date(),
-          lastModifiedDate:new Date(),
-          lastModifiedByUser: {id: parseFloat(userId)},
-          
+          createdDate: new Date(),
+          lastModifiedDate: new Date(),
+          lastModifiedByUser: { id: parseFloat(userId) },
+          sgst: parseFloat(sgst) || 0,
+          cgst: parseFloat(cgst) || 0,
+          igst: parseFloat(igst) || 0,
         },
         category: {
-          id: category
-      
-        }
-      }
+          id: category,
+        },
+      };
     }
     
     const config = {
@@ -331,6 +337,54 @@ export const CreateProduct = (props) => {
                   value={partNumber}
                   onChange={handlePart}
                 ></TextField>
+              </Grid>
+              <Grid xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="CGST"
+                  name="cgst"
+                  type="number"
+                  required
+                  value={cgst}
+                  onChange={(e) => {
+                    setCgst(e.target.value);
+                    setIgst(""); // Reset igst when cgst is changed
+                  }}
+                  disabled={igst !== "" && igst !== 0}
+                />
+              </Grid>
+              <Grid xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="SGST"
+                  name="sgst"
+                  type="number"
+                  required
+                  value={sgst}
+                  onChange={(e) => {
+                    setSgst(e.target.value);
+                    setIgst(""); // Reset igst when sgst is changed
+                  }}
+                  disabled={igst !== "" && igst !== 0}
+                />
+              </Grid>
+              <Grid xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="IGST"
+                  name="igst"
+                  type="number"
+                  required
+                  value={igst}
+                  onChange={(e) => {
+                    setIgst(e.target.value);
+                    setSgst(""); // Reset sgst when igst is changed
+                    setCgst(""); // Reset cgst when igst is changed
+                  }}
+                  disabled={
+                    (cgst !== "" && cgst !== 0) || (sgst !== "" && sgst !== 0)
+                  }
+                />
               </Grid>
             </Grid>
             <Grid xs={12} md={6} style={{ marginTop: "20px" }}>
