@@ -190,7 +190,7 @@ export const ViewProductDetail = (props) => {
                       </Grid>
 
                       <TextField
-                        label="Description"
+                        label="Model Description"
                         name="desc"
                         value={editedDescription}
                         onChange={(e) => setEditedDescription(e.target.value)}
@@ -237,11 +237,12 @@ export const ViewProductDetail = (props) => {
 
           <PropertyListItem
             align={align}
-            label="Description"
+            label="Model Description"
             value={state?.category?.description || state?.description}
           />
         </PropertyList>
         <Divider />
+        
       </Card>
     </div>
   );

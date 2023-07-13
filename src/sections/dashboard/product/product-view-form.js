@@ -360,7 +360,7 @@ const columns = [
     render: (category) => category?.name,
   },
   {
-    title: "Description",
+    title: "Model Description",
     key: "category",
     dataIndex: "category",
     render: (category) => category?.description,
@@ -475,7 +475,7 @@ const columns = [
           </Grid> */}
             <Grid xs={12} md={12}>
               <TextField
-                label="Description"
+                label="Model Description"
                 name="description"
                 value={editedRecord.category.description}
                 fullWidth
