@@ -45,17 +45,7 @@ const userId = parseInt(
   sessionStorage.getItem("user") || localStorage.getItem("user")
 );
 
-//type dropdown
-const customerType = [
-  {
-    label: "Customer",
-    value: "Customer",
-  },
-  {
-    label: "Vendor",
-    value: "Vendor",
-  },
-];
+
 
 //status dropdown
 const userOptions = [
@@ -152,7 +142,7 @@ export const PurchaseOrderCreateForm = (props) => {
 
   //form state managment
   const [userName, setUserName] = useState("");
-  const [type, setType] = useState("");
+  const [type, setType] = useState("Vendor");
   const [quotation, setQuotation] = useState("");
   const [deliveryDate, setDeliveryDate] = useState("");
   const [status, setStatus] = useState("");
@@ -819,15 +809,11 @@ console.log(tempId, userState)
                   label="Type"
                   name="type"
                   required
-                  select
+          
                   value={type}
-                  onChange={handleInputChange}
+         
                 >
-                  {customerType.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
+                  
                 </TextField>
               </Grid>
               <Grid xs={12} md={6}>

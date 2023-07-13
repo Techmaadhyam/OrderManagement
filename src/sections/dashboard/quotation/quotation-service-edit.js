@@ -41,16 +41,7 @@ const userId = parseInt(sessionStorage.getItem('user')|| localStorage.getItem('u
 const dateFormat = 'M/D/YYYY, h:mm:ss A';
 
 
-const customerType = [
-  {
-    label: 'Customer',
-    value: 'Customer'
-  },
-  {
-    label: 'Vendor',
-    value: 'Vendor'
-  }
-];
+
 
 
 
@@ -551,15 +542,12 @@ console.log(idx, row)
                   fullWidth
                   label="Type"
                   name="type"
-                  select
+          
                   value={type}
-                  onChange={handleInputChange}
+            
                 >
-                  {customerType.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
+                 
+        
                 </TextField>
               </Grid>
               <Grid xs={12} md={4}>

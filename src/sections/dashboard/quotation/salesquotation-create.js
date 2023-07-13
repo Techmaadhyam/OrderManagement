@@ -642,7 +642,8 @@ export const QuotationOrderCreateForm = (props) => {
                   label="Type"
                   name="type"
                   value={type}
-                  onChange={handleInputChange}
+                  required
+       
                 ></TextField>
               </Grid>
               <Grid xs={12} md={6}></Grid>

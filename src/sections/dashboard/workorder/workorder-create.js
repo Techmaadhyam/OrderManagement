@@ -38,17 +38,7 @@ const userId = parseInt(
   sessionStorage.getItem("user") || localStorage.getItem("user")
 );
 
-//set customer type
-const customerType = [
-  {
-    label: "Customer",
-    value: "Customer",
-  },
-  {
-    label: "Vendor",
-    value: "Vendor",
-  },
-];
+
 
 //set status type
 const userOptions = [
@@ -120,7 +110,7 @@ export const WorkOrderCreateForm = (props) => {
   const navigate = useNavigate();
   //form state handeling
   const [userName, setUserName] = useState("");
-  const [type, setType] = useState("");
+  const [type, setType] = useState("Customer");
   const [status, setStatus] = useState("");
   const [contactName, setContactName] = useState("");
   const [adminName, setAdminName] = useState("");
@@ -520,16 +510,12 @@ export const WorkOrderCreateForm = (props) => {
                   fullWidth
                   label="Type"
                   name="type"
-                  select
+            
                   required
                   value={type}
-                  onChange={handleInputChange}
+              
                 >
-                  {customerType.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
+                 
                 </TextField>
               </Grid>
               <Grid xs={12} md={4}>
