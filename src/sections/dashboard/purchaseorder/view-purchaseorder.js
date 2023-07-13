@@ -504,7 +504,7 @@ export const ViewPurchaseOrder = (props) => {
           <Divider />
           <PropertyListItem
             align={align}
-            label="DeliveryDate"
+            label="Delivery Date"
             value={state?.deliveryDate || formattedDate}
           />
           <Divider />

@@ -309,7 +309,7 @@ console.log(state)
       <h2>Quotation Detail</h2>
       <Card style={{ marginBottom: "12px" }}>
         <PropertyList>
-          <PropertyListItem align={align} label="User Name">
+          <PropertyListItem align={align} label="Username">
             <Typography variant="subtitle2">
               {(state?.createdByUser?.firstName ||
                 state?.quotation?.createdByUser?.firstName) +
@@ -330,7 +330,7 @@ console.log(state)
               <>
                 <PropertyListItem
                   align={align}
-                  label="DeliveryDate"
+                  label="Delivery Date"
                   value={state?.deliveryDate || formattedDate}
                 />
                 <Divider />
