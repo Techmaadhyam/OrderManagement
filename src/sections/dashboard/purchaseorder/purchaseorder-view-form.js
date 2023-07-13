@@ -6,6 +6,11 @@ import {
   InputBase,
   TextField,
   MenuItem,
+  Dialog,
+  Button,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import { Table } from "antd";
 import "./purchase-order.css";
@@ -46,6 +51,8 @@ const PurchaseOrderViewForm = () => {
   const [searchText, setSearchText] = useState("");
 
   const [selectedType, setSelectedType] = useState("");
+  const [open, setOpen] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState(null);
 
   const navigate = useNavigate();
 
@@ -97,19 +104,32 @@ const PurchaseOrderViewForm = () => {
     key: item.id,
   }));
 
-  console.log(dataWithKeys);
-  const handleRemoveRow = (id) => async () => {
+  
+
+
+  //delete row
+  const handleRemoveRow = async () => {
     try {
-      await axios.delete(apiUrl + `deletePurchaseOrderId/${id}`);
-      const updatedRows = userData.filter((item) => item.id !== id);
+      await axios.delete(apiUrl + `deletePurchaseOrderId/${selectedProductId}`);
+      const updatedRows = userData.filter((item) => item.id !== selectedProductId);
       setUserData(updatedRows);
       notify(
         "success",
-        `Sucessfully deleted row with purchase order number: ${id}.`
+        `Sucessfully deleted row with purchase order number: ${selectedProductId}.`
       );
     } catch (error) {
       console.error("Error deleting row:", error.message);
     }
+    setOpen(false);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleConfirmDelete = (productId) => {
+    setSelectedProductId(productId);
+    setOpen(true);
   };
 
   const handleNavigation = (record) => {
@@ -273,7 +293,7 @@ const PurchaseOrderViewForm = () => {
       dataIndex: "actionDelete",
       key: "actionDelete",
       render: (_, row) => (
-        <IconButton onClick={handleRemoveRow(row.id)}>
+        <IconButton onClick={() => handleConfirmDelete(row.id)}>
           <Icon>
             <Delete />
           </Icon>
@@ -338,6 +358,22 @@ const PurchaseOrderViewForm = () => {
           theme="light"
         />
       </Box>
+      {open && (
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>Confirm Delete</DialogTitle>
+          <DialogContent>
+            Are you sure you want to delete this purchase order?
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleRemoveRow} color="primary">
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
     </div>
   );
 };

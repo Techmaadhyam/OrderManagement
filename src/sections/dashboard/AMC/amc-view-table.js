@@ -5,8 +5,13 @@ import {
   Link,
   MenuItem,
   TextField,
-  InputBase
-} from '@mui/material';
+  InputBase,
+  Dialog,
+  Button,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from "@mui/material";
 import { Table } from 'antd';
 import './purchase-order.css'
 import { Box, border } from '@mui/system';
@@ -46,6 +51,8 @@ const AmcViewTable = () => {
   const [userData, setUserData]= useState([])
   const [isSearching, setIsSearching] = useState(false);
   const [searchText, setSearchText] = useState('');
+    const [open, setOpen] = useState(false);
+    const [selectedProductId, setSelectedProductId] = useState(null);
 
   const navigate = useNavigate();
   
@@ -121,20 +128,31 @@ const AmcViewTable = () => {
       theme: "light",
     });
   };
- //delete row
-  const handleRemoveRow = (id) => async () => {
-    try {
-      await axios.delete(apiUrl +`deleteWorkOrderById/${id}`);
-      const updatedRows = userData.filter(item => item.id !== id);
-      setUserData(updatedRows);
-      notify(
-        "success",
-        `Sucessfully deleted row with work order number: ${id}.`
-      );
-    } catch (error) {
-      console.error('Error deleting row:', error.message);
-    }
-  };
+
+   const handleRemoveRow = async () => {
+      try {
+        await axios.delete(apiUrl + `deleteWorkOrderById/${selectedProductId}`);
+        const updatedRows = userData.filter((item) => item.id !== selectedProductId);
+        setUserData(updatedRows);
+        notify(
+          "success",
+          `Sucessfully deleted row with AMC number: ${selectedProductId}.`
+        );
+      } catch (error) {
+        console.error("Error deleting row:", error.message);
+      }
+     setOpen(false);
+   };
+
+   const handleClose = () => {
+     setOpen(false);
+   };
+
+   const handleConfirmDelete = (productId) => {
+     setSelectedProductId(productId);
+     setOpen(true);
+   };
+
 
   const handleNavigation = record => {
 
@@ -593,21 +611,21 @@ const handleWorkInvoice = async (record) => {
 }
   const columns = [
     {
-      title: 'Work Order Number',
-      dataIndex: 'id',
-      key: 'id',
+      title: "Work Order Number",
+      dataIndex: "id",
+      key: "id",
       render: (name, record) => {
         const handleNavigation = () => {
-          navigate('/dashboard/services/amcDetail', { state: record });
+          navigate("/dashboard/services/amcDetail", { state: record });
         };
-        
+
         return (
           <Link
             color="primary"
             onClick={handleNavigation}
             sx={{
-              alignItems: 'center',
-              textAlign: 'center',
+              alignItems: "center",
+              textAlign: "center",
             }}
             underline="hover"
           >
@@ -618,11 +636,11 @@ const handleWorkInvoice = async (record) => {
     },
     {
       title: (
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div style={{ display: "flex", alignItems: "center" }}>
           {!isSearching ? (
             <>
-             <Typography variant="subtitle2">Company Name</Typography>
-                <IconButton onClick={handleCompanyClick}>
+              <Typography variant="subtitle2">Company Name</Typography>
+              <IconButton onClick={handleCompanyClick}>
                 <SearchIcon />
               </IconButton>
             </>
@@ -641,44 +659,44 @@ const handleWorkInvoice = async (record) => {
             </>
           )}
         </div>
-    ),
-      key: 'companyName',
-      dataIndex: 'companyName',
+      ),
+      key: "companyName",
+      dataIndex: "companyName",
     },
     {
-      title: 'Order Modified Date',
-      key: 'lastModifiedDate',
-      dataIndex: 'lastModifiedDate',
+      title: "Order Modified Date",
+      key: "lastModifiedDate",
+      dataIndex: "lastModifiedDate",
     },
     {
-      title: 'Order Date',
-      key: 'createdDate',
-      dataIndex: 'createdDate',
+      title: "Order Date",
+      key: "createdDate",
+      dataIndex: "createdDate",
     },
     {
-      title: 'Assignment Start Date',
-      key: 'startdate',
-      dataIndex: 'startdate',
+      title: "Assignment Start Date",
+      key: "startdate",
+      dataIndex: "startdate",
     },
     {
-      title: 'Assignment End Date',
-      key: 'enddate',
-      dataIndex: 'enddate',
+      title: "Assignment End Date",
+      key: "enddate",
+      dataIndex: "enddate",
     },
     {
-      title: 'Status',
-      key: 'status',
-      dataIndex: 'status',
+      title: "Status",
+      key: "status",
+      dataIndex: "status",
     },
     {
-      title: 'Type',
-      key: 'type',
-      dataIndex: 'type',
+      title: "Type",
+      key: "type",
+      dataIndex: "type",
     },
     {
-      dataIndex: 'actionEdit',
-      key: 'actionEdit',
-       render: (_, record) => (
+      dataIndex: "actionEdit",
+      key: "actionEdit",
+      render: (_, record) => (
         <IconButton onClick={() => handleNavigation(record)}>
           <Icon>
             <EditIcon />
@@ -687,10 +705,10 @@ const handleWorkInvoice = async (record) => {
       ),
     },
     {
-      dataIndex: 'actionDelete',
-      key: 'actionDelete',
+      dataIndex: "actionDelete",
+      key: "actionDelete",
       render: (_, row) => (
-        <IconButton onClick={handleRemoveRow(row.id)}>
+        <IconButton onClick={() => handleConfirmDelete(row.id)}>
           <Icon>
             <Delete />
           </Icon>
@@ -698,9 +716,9 @@ const handleWorkInvoice = async (record) => {
       ),
     },
     {
-      title: 'AMC Download',
-      dataIndex: 'actionDownload',
-      key: 'actionDownload',
+      title: "AMC Download",
+      dataIndex: "actionDownload",
+      key: "actionDownload",
       render: (_, record) => (
         <IconButton onClick={() => handleWorkInvoice(record)}>
           <Icon>
@@ -771,6 +789,22 @@ const handleWorkInvoice = async (record) => {
           theme="light"
         />
       </Box>
+      {open && (
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>Confirm Delete</DialogTitle>
+          <DialogContent>
+            Are you sure you want to delete this AMC?
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleRemoveRow} color="primary">
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
     </div>
   );
     };

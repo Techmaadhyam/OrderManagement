@@ -60,7 +60,9 @@ const ViewProduct = () => {
     const [warehouseText, setWarehouseText] = useState('');
     //category
     const [isSearchingCategory, setIsSearchingCategory] = useState(false);
-    const [categoryText, setCategoryText] = useState('');
+  const [categoryText, setCategoryText] = useState('');
+  const [open, setOpen] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState(null);
 
   const navigate = useNavigate();
   
@@ -103,23 +105,33 @@ const notify = (type, message) => {
 };
 
 
-const handleRemoveRow = (id) => async () => {
-  try {
-    await axios.delete(apiUrl +`deleteItemById/${id}`);
-    const updatedRows = userData.filter(item => item.id !== id);
-    setUserData(updatedRows);
-    notify(
-      "success",
-      `Sucessfully deleted product row.`
-    );
-  } catch (error) {
-    console.error('Error deleting row:', error.message);
-    notify(
-      "error",
-      `This record linked with an Inventory or Purchase Order or Purchase Quotation or Work Order or AMC.`
-    );
-  }
-}
+ const handleRemoveRow = async () => {
+   try {
+     await axios.delete(apiUrl + `deleteItemById/${selectedProductId}`);
+     const updatedRows = userData.filter(
+       (item) => item.id !== selectedProductId
+     );
+     setUserData(updatedRows);
+     notify("success", `Successfully deleted product row.`);
+   } catch (error) {
+     console.error("Error deleting row:", error.message);
+     notify(
+       "error",
+       `This record is linked with an Inventory, Purchase Order, Purchase Quotation, Work Order, or AMC.`
+     );
+   }
+   setOpen(false);
+ };
+
+ const handleClose = () => {
+   setOpen(false);
+ };
+
+ const handleConfirmDelete = (productId) => {
+   setSelectedProductId(productId);
+   setOpen(true);
+ };
+
 
 const handleEditRecord = (record) => {
   setEditRecord(record);
@@ -240,7 +252,7 @@ const filteredProducts = filteredData.filter(product => {
 const columns = [
   {
     title: (
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div style={{ display: "flex", alignItems: "center" }}>
         {!isSearching ? (
           <>
             <Typography variant="subtitle2">Part Name</Typography>
@@ -263,34 +275,35 @@ const columns = [
           </>
         )}
       </div>
-  ),
-    dataIndex: 'productName',
-    key: 'productName',
+    ),
+    dataIndex: "productName",
+    key: "productName",
     render: (name, record) => {
-     
       const handleNavigation = () => {
-        navigate(`/dashboard/products/viewDetail/${record.id}`, { state: record });
+        navigate(`/dashboard/products/viewDetail/${record.id}`, {
+          state: record,
+        });
       };
-    
+
       return (
         <Link
           color="primary"
           onClick={handleNavigation}
           sx={{
-            alignItems: 'center',
-            textAlign: 'center',
+            alignItems: "center",
+            textAlign: "center",
           }}
           underline="hover"
         >
           <Typography variant="subtitle1">{name}</Typography>
         </Link>
       );
-    }
+    },
   },
   {
     title: (
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        {!isSearchingWarehouse? (
+      <div style={{ display: "flex", alignItems: "center" }}>
+        {!isSearchingWarehouse ? (
           <>
             <Typography variant="subtitle2">Part Number</Typography>
             <IconButton onClick={handleWarehouseClick}>
@@ -312,13 +325,13 @@ const columns = [
           </>
         )}
       </div>
-  ),
-    key: 'partnumber',
-    dataIndex: 'partnumber',
+    ),
+    key: "partnumber",
+    dataIndex: "partnumber",
   },
   {
     title: (
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div style={{ display: "flex", alignItems: "center" }}>
         {!isSearchingCategory ? (
           <>
             <Typography variant="subtitle2">Model</Typography>
@@ -341,20 +354,20 @@ const columns = [
           </>
         )}
       </div>
-  ),
-    key: 'category',
-    dataIndex: 'category',
-    render: (category) => category?.name
+    ),
+    key: "category",
+    dataIndex: "category",
+    render: (category) => category?.name,
   },
   {
-    title: 'Description',
-    key: 'category',
-    dataIndex: 'category',
-    render: (category) => category?.description
+    title: "Description",
+    key: "category",
+    dataIndex: "category",
+    render: (category) => category?.description,
   },
   {
-    dataIndex: 'actionEdit',
-    key: 'actionEdit',
+    dataIndex: "actionEdit",
+    key: "actionEdit",
     render: (_, record) => (
       <Link>
         <IconButton onClick={() => handleEditRecord(record)}>
@@ -366,10 +379,10 @@ const columns = [
     ),
   },
   {
-    dataIndex: 'actionDelete',
-    key: 'actionDelete',
+    dataIndex: "actionDelete",
+    key: "actionDelete",
     render: (_, row) => (
-      <IconButton onClick={handleRemoveRow(row.id)}>
+      <IconButton onClick={() => handleConfirmDelete(row.id)}>
         <Icon>
           <Delete />
         </Icon>
@@ -377,6 +390,8 @@ const columns = [
     ),
   },
 ];
+  
+  
 
   const PopupComponent = ({ record, onClose, onSave }) => {
     const [editedRecord, setEditedRecord] = useState(record);
@@ -482,7 +497,7 @@ const columns = [
     );
   };
 
-
+console.log(open)
 
 
   return (
@@ -507,23 +522,6 @@ const columns = [
         </div>
       </div>
 
-      {/* <TextField
-
-      label="Type"
-      name="type"
-      sx={{ minWidth: 250 }}
-      value={selectedCategory}
-      onChange={handleCategoryChange}
-      select
-      >
-     <MenuItem value="">All</MenuItem>
-        {typeDropdown.map((option) => (
-          <MenuItem key={option.value} 
-          value={option.value}>
-            {option.label}
-          </MenuItem>
-        ))}
-      </TextField> */}
       <Box sx={{ position: "relative", overflowX: "auto", marginTop: "30px" }}>
         {userData.length !== 0 ? (
           <Scrollbar>
@@ -559,6 +557,22 @@ const columns = [
           theme="light"
         />
       </Box>
+      {open && (
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>Confirm Delete</DialogTitle>
+          <DialogContent>
+            Are you sure you want to delete this product?
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleRemoveRow} color="primary">
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
       {isPopupVisible && editRecord && (
         <PopupComponent
           record={editRecord}

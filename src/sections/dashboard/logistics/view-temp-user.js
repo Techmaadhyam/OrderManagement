@@ -1,4 +1,3 @@
-
 import {
   Unstable_Grid2 as Grid,
   Typography,
@@ -6,228 +5,235 @@ import {
   Icon,
   Link,
   InputBase,
-} from '@mui/material';
-import { Table } from 'antd';
-import { Box } from '@mui/system';
-import React from 'react';
-import { Scrollbar } from 'src/components/scrollbar';
-import EditIcon from '@mui/icons-material/Edit';
-import {  Delete } from '@mui/icons-material';
-import IconWithPopup from '../user/user-icon';
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import SearchIcon from '@mui/icons-material/Search';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import './customer.css'
-import { apiUrl } from 'src/config';
-import Logo from '../logo/logo';
+} from "@mui/material";
+import { Table } from "antd";
+import { Box } from "@mui/system";
+import React from "react";
+import { Scrollbar } from "src/components/scrollbar";
+import EditIcon from "@mui/icons-material/Edit";
+import { Delete } from "@mui/icons-material";
+import IconWithPopup from "../user/user-icon";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import SearchIcon from "@mui/icons-material/Search";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import "./customer.css";
+import { apiUrl } from "src/config";
+import Logo from "../logo/logo";
 import CircularProgress from "@mui/material/CircularProgress";
 
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, MenuItem } from '@mui/material';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  TextField,
+  MenuItem,
+} from "@mui/material";
 
-  //get userid 
-const userId = sessionStorage.getItem('user') || localStorage.getItem('user');
-
-
+//get userid
+const userId = sessionStorage.getItem("user") || localStorage.getItem("user");
 
 const customerType = [
   {
-    label: 'Customer',
-    value: 'Customer'
+    label: "Customer",
+    value: "Customer",
   },
   {
-    label: 'Vendor',
-    value: 'Vendor'
-  }
-];;
-
+    label: "Vendor",
+    value: "Vendor",
+  },
+];
 
 const ViewTemporaryUser = () => {
-
-  const [userData, setUserData]= useState([])
+  const [userData, setUserData] = useState([]);
 
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [editRecord, setEditRecord] = useState(null);
-  const [currentDate, setCurrentDate] = useState('');
+  const [currentDate, setCurrentDate] = useState("");
 
   const [isSearching, setIsSearching] = useState(false);
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState("");
 
-  const [selectedType, setSelectedType] = useState('');
+  const [selectedType, setSelectedType] = useState("");
+  const [open, setOpen] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState(null);
 
   const navigate = useNavigate();
-  
- 
+
   useEffect(() => {
-    axios.get(apiUrl +`getAllTempUsers/${userId}`)
-      .then(response => {
+    axios
+      .get(apiUrl + `getAllTempUsers/${userId}`)
+      .then((response) => {
         setUserData(response.data);
         console.log(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
   }, []);
 
   const dataWithKeys = userData.map((item) => ({ ...item, key: item.id }));
 
+  const filteredList = dataWithKeys.filter((product) => {
+    const companyMatch = product.companyName
+      .toLowerCase()
+      .includes(searchText.toLowerCase());
 
-const filteredList = dataWithKeys.filter(product => {
-    const companyMatch = product.companyName.toLowerCase().includes(searchText.toLowerCase());
-   
-    return companyMatch
-});
-
-const removeTechnician = filteredList.filter((obj) => obj.type !== 'Technician');
-
-const filteredData = selectedType
-? removeTechnician.filter((item) => item.type === selectedType)
-: removeTechnician;
-
-const handleTypeChange = (event) => {
-  setSelectedType(event.target.value);
-};
-
-    //toast notification from toastify library
-const notify = (type, message) => {
-  toast[type](message, {
-    position: "top-right",
-    autoClose: 2000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "light",
+    return companyMatch;
   });
-};
 
+  const removeTechnician = filteredList.filter(
+    (obj) => obj.type !== "Technician"
+  );
 
-const handleRemoveRow = (row) => async () => {
-  try {
-    await axios.delete(apiUrl +`deleteTempUserId/${row.id}`);
-    const updatedRows = userData.filter(item => item.id !== row.id);
-    setUserData(updatedRows);
-    notify(
-      "success",
-      `Sucessfully deleted customer row.`
-    );
-  } catch (error) {
-    console.error('Error deleting row:', error.message);
-    if (row.type === "Customer") {
-      notify(
-        "error",
-        `This record is linked with Sales Order or Quotation or AMC.`
-      );
-    }else{
-      notify(
-        "error",
-        `This record is linked with Purchase Order or Quotation.`
-      );
-    }
-  }
-};
+  const filteredData = selectedType
+    ? removeTechnician.filter((item) => item.type === selectedType)
+    : removeTechnician;
 
-const handleEditRecord = (record) => {
-  setEditRecord(record);
-  setPopupVisible(true);
-};
+  const handleTypeChange = (event) => {
+    setSelectedType(event.target.value);
+  };
 
-const handleSaveRecord = async (editedRecord) => {
-
-  console.log('Saving edited record:', editedRecord);
- 
-
-  if (currentDate) {
-    try {
-      const response = await fetch(apiUrl + "addTempUser", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: editedRecord.id,
-          contactpersonname: editedRecord?.contactpersonname,
-          userName: editedRecord.emailId,
-          companyName: editedRecord.companyName,
-          emailId: editedRecord.emailId,
-          gstNumber: editedRecord.gstNumber,
-          mobile: editedRecord.mobile,
-          address: editedRecord.address,
-          type: editedRecord.type,
-          pincode: editedRecord.pincode,
-          city: editedRecord.city,
-          state: editedRecord.state,
-          country: editedRecord.country,
-          pandcard: editedRecord?.pandcard,
-          createdByUser: { id: editedRecord.createdByUser.id },
-          lastModifiedDate: new Date(),
-          lastModifiedByUser: { id: userId },
-        }),
-      });
-      
-      if (response.ok) {
-       response.json().then(data => {
-        console.log(data);
-        window.location.reload()
-       
-});
-      } 
-    } catch (error) {
-      console.error('API call failed:', error);
-    }
-  } 
-
-};
-
-
-//Get date
-useEffect(() => {
-  const today = new Date();
-  const options = { day: 'numeric', month: 'numeric', year: 'numeric' };
-  const formattedDate = today.toLocaleDateString('en-ZA', options);
-  setCurrentDate(formattedDate);
-}, []);
-
-
-
-//company search
-const handleCompanyClick = () => {
-  setIsSearching(true);
-};
-
-const handleCompanyInputChange = event => {
-  setSearchText(event.target.value);
-};
-
-const handleCompanyCancel = () => {
-  setIsSearching(false);
-  setSearchText('');
-};
-
+  //toast notification from toastify library
+  const notify = (type, message) => {
+    toast[type](message, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  };
 
   
- 
+
+  const handleRemoveRow = async () => {
+    try {
+      await axios.delete(apiUrl + `deleteTempUserId/${selectedProductId.id}`);
+      const updatedRows = userData.filter((item) => item.id !== selectedProductId.id);
+      setUserData(updatedRows);
+      notify("success", `Sucessfully deleted customer row.`);
+    } catch (error) {
+      console.error("Error deleting row:", error.message);
+      if (selectedProductId.type === "Customer") {
+        notify(
+          "error",
+          `This record is linked with Sales Order or Quotation or AMC.`
+        );
+      } else {
+        notify(
+          "error",
+          `This record is linked with Purchase Order or Quotation.`
+        );
+      }
+    }
+    setOpen(false);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleConfirmDelete = (product) => {
+    setSelectedProductId(product);
+    setOpen(true);
+  };
+
+  const handleEditRecord = (record) => {
+    setEditRecord(record);
+    setPopupVisible(true);
+  };
+
+  const handleSaveRecord = async (editedRecord) => {
+    console.log("Saving edited record:", editedRecord);
+
+    if (currentDate) {
+      try {
+        const response = await fetch(apiUrl + "addTempUser", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: editedRecord.id,
+            contactpersonname: editedRecord?.contactpersonname,
+            userName: editedRecord.emailId,
+            companyName: editedRecord.companyName,
+            emailId: editedRecord.emailId,
+            gstNumber: editedRecord.gstNumber,
+            mobile: editedRecord.mobile,
+            address: editedRecord.address,
+            type: editedRecord.type,
+            pincode: editedRecord.pincode,
+            city: editedRecord.city,
+            state: editedRecord.state,
+            country: editedRecord.country,
+            pandcard: editedRecord?.pandcard,
+            createdByUser: { id: editedRecord.createdByUser.id },
+            lastModifiedDate: new Date(),
+            lastModifiedByUser: { id: userId },
+          }),
+        });
+
+        if (response.ok) {
+          response.json().then((data) => {
+            console.log(data);
+            window.location.reload();
+          });
+        }
+      } catch (error) {
+        console.error("API call failed:", error);
+      }
+    }
+  };
+
+  //Get date
+  useEffect(() => {
+    const today = new Date();
+    const options = { day: "numeric", month: "numeric", year: "numeric" };
+    const formattedDate = today.toLocaleDateString("en-ZA", options);
+    setCurrentDate(formattedDate);
+  }, []);
+
+  //company search
+  const handleCompanyClick = () => {
+    setIsSearching(true);
+  };
+
+  const handleCompanyInputChange = (event) => {
+    setSearchText(event.target.value);
+  };
+
+  const handleCompanyCancel = () => {
+    setIsSearching(false);
+    setSearchText("");
+  };
+
   const columns = [
     {
-      title: 'Name',
-      dataIndex: 'userName',
-      key: 'userName',
+      title: "Name",
+      dataIndex: "userName",
+      key: "userName",
       render: (name, record) => {
         const handleNavigation = () => {
           navigate(`/dashboard/logistics/viewDetail`, { state: record });
         };
-        
+
         return (
           <Link
             color="primary"
             onClick={handleNavigation}
             sx={{
-              alignItems: 'center',
-              textAlign: 'center',
+              alignItems: "center",
+              textAlign: "center",
             }}
             underline="hover"
           >
@@ -237,8 +243,8 @@ const handleCompanyCancel = () => {
       },
     },
     {
-      title:  (
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+      title: (
+        <div style={{ display: "flex", alignItems: "center" }}>
           {!isSearching ? (
             <>
               <Typography variant="subtitle2">Company Name</Typography>
@@ -261,50 +267,46 @@ const handleCompanyCancel = () => {
             </>
           )}
         </div>
-    ),
-      key: 'companyName',
-      dataIndex: 'companyName',
+      ),
+      key: "companyName",
+      dataIndex: "companyName",
     },
     {
-      title: 'Address',
-      key: 'address',
-      dataIndex: 'address',
+      title: "Address",
+      key: "address",
+      dataIndex: "address",
       render: (text, record) => `${text}, ${record.city}, ${record.state}`,
     },
     {
-      title: 'Email',
-      key: 'emailId',
-      dataIndex: 'emailId',
+      title: "Email",
+      key: "emailId",
+      dataIndex: "emailId",
     },
     {
       title: (
         <TextField
-
-        label="Type"
-        name="type"
-        sx={{ minWidth: 150 }}
-        value={selectedType}
-        onChange={handleTypeChange}
-  
-  
-        select
+          label="Type"
+          name="type"
+          sx={{ minWidth: 150 }}
+          value={selectedType}
+          onChange={handleTypeChange}
+          select
         >
-       <MenuItem value="">All</MenuItem>
+          <MenuItem value="">All</MenuItem>
           {customerType.map((option) => (
-            <MenuItem key={option.value} 
-            value={option.value}>
+            <MenuItem key={option.value} value={option.value}>
               {option.label}
             </MenuItem>
           ))}
         </TextField>
       ),
-      key: 'type',
-      dataIndex: 'type',
+      key: "type",
+      dataIndex: "type",
     },
-   
+
     {
-      dataIndex: 'actionEdit',
-      key: 'actionEdit',
+      dataIndex: "actionEdit",
+      key: "actionEdit",
       render: (_, record) => (
         <Link>
           <IconButton onClick={() => handleEditRecord(record)}>
@@ -316,10 +318,10 @@ const handleCompanyCancel = () => {
       ),
     },
     {
-      dataIndex: 'actionDelete',
-      key: 'actionDelete', 
+      dataIndex: "actionDelete",
+      key: "actionDelete",
       render: (_, row) => (
-        <IconButton onClick={handleRemoveRow(row)}>
+        <IconButton onClick={() => handleConfirmDelete(row)}>
           <Icon>
             <Delete />
           </Icon>
@@ -510,6 +512,22 @@ const handleCompanyCancel = () => {
           theme="light"
         />
       </Box>
+      {open && (
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>Confirm Delete</DialogTitle>
+          <DialogContent>
+            Are you sure you want to delete this {selectedProductId.type.toLowerCase()}?
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleRemoveRow} color="primary">
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
       {isPopupVisible && editRecord && (
         <PopupComponent
           record={editRecord}
@@ -519,6 +537,6 @@ const handleCompanyCancel = () => {
       )}
     </div>
   );
-    };
-    
-    export default ViewTemporaryUser;
+};
+
+export default ViewTemporaryUser;

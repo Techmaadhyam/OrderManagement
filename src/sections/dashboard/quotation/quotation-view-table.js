@@ -5,8 +5,13 @@ import {
   Link,
   MenuItem,
   TextField,
-  InputBase
-} from '@mui/material';
+  InputBase,
+  Dialog,
+  Button,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from "@mui/material";
 import { Table } from 'antd';
 import './purchase-order.css'
 import { Box } from '@mui/system';
@@ -69,6 +74,8 @@ const QuotationViewTable = () => {
   const [selectedCategory, setSelectedCategory] = useState('Purchase Quotation');
   const [isSearching, setIsSearching] = useState(false);
   const [searchText, setSearchText] = useState('');
+    const [open, setOpen] = useState(false);
+    const [selectedProductId, setSelectedProductId] = useState(null);
 
 
   const navigate = useNavigate();
@@ -146,18 +153,28 @@ const handleCategoryChange = (event) => {
     });
   };
  //delete row
-  const handleRemoveRow = (id) => async () => {
-    try {
-      await axios.delete(apiUrl +`deleteQuotationId/${id}`);
-      const updatedRows = userData.filter(item => item.id !== id);
-      setUserData(updatedRows);
-      notify(
-        "success",
-        `Sucessfully deleted row with quotation order number: ${id}.`
-      );
-    } catch (error) {
-      console.error('Error deleting row:', error.message);
-    }
+  const handleRemoveRow = async () => {
+     try {
+       await axios.delete(apiUrl + `deleteQuotationId/${selectedProductId}`);
+       const updatedRows = userData.filter((item) => item.id !== selectedProductId);
+       setUserData(updatedRows);
+       notify(
+         "success",
+         `Sucessfully deleted row with quotation order number: ${selectedProductId}.`
+       );
+     } catch (error) {
+       console.error("Error deleting row:", error.message);
+     }
+    setOpen(false);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleConfirmDelete = (productId) => {
+    setSelectedProductId(productId);
+    setOpen(true);
   };
 
   const handleNavigation = record => {
@@ -1048,7 +1065,7 @@ catch(error){
       dataIndex: 'actionDelete',
       key: 'actionDelete',
       render: (_, row) => (
-        <IconButton onClick={handleRemoveRow(row.id)}>
+        <IconButton onClick={() => handleConfirmDelete(row.id)}>
           <Icon>
             <Delete />
           </Icon>
@@ -1155,6 +1172,22 @@ if (deliveryDateIndex !== -1 && filteredList.some(item => item.category === "Ser
           theme="light"
         />
       </Box>
+      {open && (
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>Confirm Delete</DialogTitle>
+          <DialogContent>
+            Are you sure you want to delete this quotation?
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleRemoveRow} color="primary">
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
     </div>
   );
     };

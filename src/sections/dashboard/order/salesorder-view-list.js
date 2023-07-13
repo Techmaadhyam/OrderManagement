@@ -6,6 +6,11 @@ import {
   InputBase,
   TextField,
   MenuItem,
+  Dialog,
+  Button,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import { Table } from "antd";
 import "./sales-order.css";
@@ -61,6 +66,8 @@ const SalesOrderViewList = () => {
   const [searchText, setSearchText] = useState("");
 
   const [selectedType, setSelectedType] = useState("");
+  const [open, setOpen] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState(null);
 
   const navigate = useNavigate();
 
@@ -93,7 +100,7 @@ const SalesOrderViewList = () => {
     }
     // Capitalize first letter of each word in the result string
     result = result.replace(/\b\w/g, (match) => match.toUpperCase());
-  
+
     return result;
   };
 
@@ -147,18 +154,30 @@ const SalesOrderViewList = () => {
     });
   };
 
-  const handleRemoveRow = (id) => async () => {
+
+  //delete row
+  const handleRemoveRow = async () => {
     try {
-      await axios.delete(apiUrl + `deleteSalesOrderId/${id}`);
-      const updatedRows = userData.filter((item) => item.id !== id);
+      await axios.delete(apiUrl + `deleteSalesOrderId/${selectedProductId}`);
+      const updatedRows = userData.filter((item) => item.id !== selectedProductId);
       setUserData(updatedRows);
       notify(
         "success",
-        `Sucessfully deleted row with sales order number: ${id}.`
+        `Sucessfully deleted row with sales order number: ${selectedProductId}.`
       );
     } catch (error) {
       console.error("Error deleting row:", error.message);
     }
+    setOpen(false);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleConfirmDelete = (productId) => {
+    setSelectedProductId(productId);
+    setOpen(true);
   };
 
   const handleNavigation = (record) => {
@@ -196,7 +215,6 @@ const SalesOrderViewList = () => {
   };
 
   const handleInvoicePdf = async (record, heading, dateData, noData) => {
-    
     console.log(record);
     try {
       const response = await axios.get(
@@ -212,19 +230,22 @@ const SalesOrderViewList = () => {
         let TotalGST = product.sgst + product.cgst + product.igst;
         let TotalGSTAmount = (TotalAD * TotalGST) / 100;
         return [
-                    { text: index + 1, style: 'tableCell'},
-                    { text: `${product.inventory.product.productName}(${product.inventory.product.partnumber})`, style: 'tableCell' },
-                    { text: product.inventory.hsncode, style: 'tableCell' },
-                    { text: product.price, style: 'tableCell' },
-                    { text: product.quantity, style: 'tableCell' },
-                    { text: TotalBD, style: 'tableCell' },
-                    { text: discount, style: 'tableCell' },
-                    { text: TotalAD, style: 'tableCell' },
-                    { text: product.sgst, style: 'tableCell' },
-                    { text: product.cgst, style: 'tableCell' },
-                    { text: product.igst, style: 'tableCell' },
-                    { text: TotalAD + TotalGSTAmount, style: 'tableCell' },
-                  ];
+          { text: index + 1, style: "tableCell" },
+          {
+            text: `${product.inventory.product.productName}(${product.inventory.product.partnumber})`,
+            style: "tableCell",
+          },
+          { text: product.inventory.hsncode, style: "tableCell" },
+          { text: product.price, style: "tableCell" },
+          { text: product.quantity, style: "tableCell" },
+          { text: TotalBD, style: "tableCell" },
+          { text: discount, style: "tableCell" },
+          { text: TotalAD, style: "tableCell" },
+          { text: product.sgst, style: "tableCell" },
+          { text: product.cgst, style: "tableCell" },
+          { text: product.igst, style: "tableCell" },
+          { text: TotalAD + TotalGSTAmount, style: "tableCell" },
+        ];
       });
       const docDefinition = {
         pageOrientation: "landscape",
@@ -683,10 +704,13 @@ const SalesOrderViewList = () => {
       // console.log(response.data);
       const rowData = response.data.map((product, index) => {
         return [
-          {text: index+1, style: 'tableCell'},
-          {text: `${product.inventory.product.productName}(${product.inventory.product.partnumber})`, style: 'tableCell'},
-          {text: "", style: 'tableCell'},
-          {text: product.quantity, style: 'tableCell'},
+          { text: index + 1, style: "tableCell" },
+          {
+            text: `${product.inventory.product.productName}(${product.inventory.product.partnumber})`,
+            style: "tableCell",
+          },
+          { text: "", style: "tableCell" },
+          { text: product.quantity, style: "tableCell" },
         ];
       });
       const docDefinition = {
@@ -1157,8 +1181,7 @@ const SalesOrderViewList = () => {
         >
           <MenuItem value="">All</MenuItem>
           {customerType.map((option) => (
-            <MenuItem key={option.value} 
-            value={option.value}>
+            <MenuItem key={option.value} value={option.value}>
               {option.label}
             </MenuItem>
           ))}
@@ -1242,7 +1265,7 @@ const SalesOrderViewList = () => {
       dataIndex: "actionDelete",
       key: "actionDelete",
       render: (_, row) => (
-        <IconButton onClick={handleRemoveRow(row.id)}>
+        <IconButton onClick={() => handleConfirmDelete(row.id)}>
           <Icon>
             <Delete />
           </Icon>
@@ -1308,6 +1331,22 @@ const SalesOrderViewList = () => {
           theme="light"
         />
       </Box>
+      {open && (
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>Confirm Delete</DialogTitle>
+          <DialogContent>
+            Are you sure you want to delete this sales order?
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleRemoveRow} color="primary">
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
     </div>
   );
 };

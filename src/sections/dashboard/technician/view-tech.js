@@ -48,6 +48,8 @@ const ViewTechnician = () => {
   const [searchText, setSearchText] = useState('');
 
   const [selectedType, setSelectedType] = useState('Technician');
+  const [open, setOpen] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState(null);
 
   const navigate = useNavigate();
   
@@ -92,24 +94,30 @@ const notify = (type, message) => {
   });
 };
 
+  
+    const handleRemoveRow = async () => {
+      try {
+        await axios.delete(apiUrl + `deleteTempUserId/${selectedProductId}`);
+        const updatedRows = userData.filter(
+          (item) => item.id !== selectedProductId
+        );
+        setUserData(updatedRows);
+        notify("success", `Sucessfully deleted technician row.`);
+      } catch (error) {
+        console.error("Error deleting row:", error.message);
+        notify("error", `This record is linked with Work Order or AMC.`);
+      }
+      setOpen(false);
+    };
 
-const handleRemoveRow = (id) => async () => {
-  try {
-    await axios.delete(apiUrl +`deleteTempUserId/${id}`);
-    const updatedRows = userData.filter(item => item.id !== id);
-    setUserData(updatedRows);
-    notify(
-      "success",
-      `Sucessfully deleted customer row.`
-    );
-  } catch (error) {
-    console.error('Error deleting row:', error.message);
-    notify(
-      "error",
-      `This record is linked with Work Order or AMC.`
-    );
-  }
-};
+    const handleClose = () => {
+      setOpen(false);
+    };
+
+    const handleConfirmDelete = (productId) => {
+      setSelectedProductId(productId);
+      setOpen(true);
+    };
 
 const handleEditRecord = (record) => {
   setEditRecord(record);
@@ -215,21 +223,21 @@ const handleCompanyCancel = () => {
  
   const columns = [
     {
-      title: 'Name',
-      dataIndex: 'userName',
-      key: 'userName',
+      title: "Name",
+      dataIndex: "userName",
+      key: "userName",
       render: (name, record) => {
         const handleNavigation = () => {
-          navigate('/dashboard/services/technicianDetail', { state: record });
+          navigate("/dashboard/services/technicianDetail", { state: record });
         };
-        
+
         return (
           <Link
             color="primary"
             onClick={handleNavigation}
             sx={{
-              alignItems: 'center',
-              textAlign: 'center',
+              alignItems: "center",
+              textAlign: "center",
             }}
             underline="hover"
           >
@@ -239,8 +247,8 @@ const handleCompanyCancel = () => {
       },
     },
     {
-      title:  (
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+      title: (
+        <div style={{ display: "flex", alignItems: "center" }}>
           {!isSearching ? (
             <>
               <Typography variant="subtitle2">Company Name</Typography>
@@ -263,30 +271,30 @@ const handleCompanyCancel = () => {
             </>
           )}
         </div>
-    ),
-      key: 'companyName',
-      dataIndex: 'companyName',
+      ),
+      key: "companyName",
+      dataIndex: "companyName",
     },
     {
-      title: 'Address',
-      key: 'address',
-      dataIndex: 'address',
+      title: "Address",
+      key: "address",
+      dataIndex: "address",
       render: (text, record) => `${text}, ${record.city}, ${record.state}`,
     },
     {
-      title: 'Email',
-      key: 'emailId',
-      dataIndex: 'emailId',
+      title: "Email",
+      key: "emailId",
+      dataIndex: "emailId",
     },
     {
-      title: 'Type',
-      key: 'type',
-      dataIndex: 'type',
+      title: "Type",
+      key: "type",
+      dataIndex: "type",
     },
-   
+
     {
-      dataIndex: 'actionEdit',
-      key: 'actionEdit',
+      dataIndex: "actionEdit",
+      key: "actionEdit",
       render: (_, record) => (
         <Link>
           <IconButton onClick={() => handleEditRecord(record)}>
@@ -298,10 +306,10 @@ const handleCompanyCancel = () => {
       ),
     },
     {
-      dataIndex: 'actionDelete',
-      key: 'actionDelete', 
+      dataIndex: "actionDelete",
+      key: "actionDelete",
       render: (_, row) => (
-        <IconButton onClick={handleRemoveRow(row.id)}>
+        <IconButton onClick={() => handleConfirmDelete(row.id)}>
           <Icon>
             <Delete />
           </Icon>
@@ -481,6 +489,22 @@ const handleCompanyCancel = () => {
           pauseOnHover
           theme="light"
         />
+        {open && (
+          <Dialog open={open} onClose={handleClose}>
+            <DialogTitle>Confirm Delete</DialogTitle>
+            <DialogContent>
+              Are you sure you want to delete this technician?
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose} color="primary">
+                Cancel
+              </Button>
+              <Button onClick={handleRemoveRow} color="primary">
+                Delete
+              </Button>
+            </DialogActions>
+          </Dialog>
+        )}
       </Box>
       {isPopupVisible && editRecord && (
         <PopupComponent

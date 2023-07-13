@@ -6,8 +6,13 @@ import {
   Link,
   InputBase,
   TextField,
-  MenuItem
-} from '@mui/material';
+  MenuItem,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+} from "@mui/material";
 import { Table } from 'antd';
 import { Box } from '@mui/system';
 import React from 'react';
@@ -26,6 +31,7 @@ import './inventory.css'
 import { apiUrl } from 'src/config';
 import Logo from '../logo/logo';
 import CircularProgress from "@mui/material/CircularProgress";
+
   //get userid 
   const userId = sessionStorage.getItem('user') || localStorage.getItem('user');
 
@@ -55,6 +61,8 @@ const ViewInventory = () => {
   const [categoryText, setCategoryText] = useState('');
 
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [open, setOpen] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState(null);
 
 
 
@@ -99,23 +107,31 @@ const notify = (type, message) => {
   });
 };
 
-const handleRemoveRow = (id) => async () => {
-  try {
-    await axios.delete(apiUrl +`deleteInventoryById/${id}`);
-    const updatedRows = userData.filter(item => item.id  !== id);
-    setUserData(updatedRows);
-    notify(
-      "success",
-      `Sucessfully deleted inventory row.`
-    );
-  } catch (error) {
-    console.error('Error deleting row:', error.message);
-    notify(
-      "error",
-      `This record is linked with a Sales Quotation or Sales Order.`
-    );
-  }
-};
+  
+  const handleRemoveRow = async () => {
+   try {
+     await axios.delete(apiUrl + `deleteInventoryById/${selectedProductId}`);
+     const updatedRows = userData.filter((item) => item.id !== selectedProductId);
+     setUserData(updatedRows);
+     notify("success", `Sucessfully deleted inventory row.`);
+   } catch (error) {
+     console.error("Error deleting row:", error.message);
+     notify(
+       "error",
+       `This record is linked with a Sales Quotation or Sales Order.`
+     );
+   }
+    setOpen(false);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleConfirmDelete = (productId) => {
+    setSelectedProductId(productId);
+    setOpen(true);
+  };
 
 const handleNavigation = record => {
   navigate('/dashboard/inventory/edit', { state: record });
@@ -319,7 +335,7 @@ const filteredProducts = filteredData.filter(product => {
       dataIndex: "actionDelete",
       key: "actionDelete",
       render: (_, row) => (
-        <IconButton onClick={handleRemoveRow(row.id)}>
+        <IconButton onClick={() => handleConfirmDelete(row.id)}>
           <Icon>
             <Delete />
           </Icon>
@@ -381,9 +397,8 @@ const filteredProducts = filteredData.filter(product => {
             style={{
               display: "flex",
               justifyContent: "center",
-                alignItems: "center",
-              height: '100px'
-    
+              alignItems: "center",
+              height: "100px",
             }}
           >
             <CircularProgress />
@@ -402,6 +417,22 @@ const filteredProducts = filteredData.filter(product => {
           theme="light"
         />
       </Box>
+      {open && (
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>Confirm Delete</DialogTitle>
+          <DialogContent>
+            Are you sure you want to delete this inventory?
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleRemoveRow} color="primary">
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
     </div>
   );
     };

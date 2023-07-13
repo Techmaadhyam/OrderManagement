@@ -1,13 +1,18 @@
 
 import {
-    Typography,
-    IconButton,
-    Icon,
-    Link,
-    MenuItem,
-    TextField,
-    InputBase
-  } from '@mui/material';
+  Typography,
+  IconButton,
+  Icon,
+  Link,
+  MenuItem,
+  TextField,
+  InputBase,
+  Dialog,
+  Button,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from "@mui/material";
   import { Table } from 'antd';
   import './purchase-order.css'
   import { Box } from '@mui/system';
@@ -36,6 +41,8 @@ import Logo from '../logo/logo';
   
     const [isSearching, setIsSearching] = useState(false);
     const [searchText, setSearchText] = useState('');
+        const [open, setOpen] = useState(false);
+        const [selectedProductId, setSelectedProductId] = useState(null);
   
   
     const navigate = useNavigate();
@@ -108,21 +115,34 @@ import Logo from '../logo/logo';
         theme: "light",
       });
     };
-   //delete row
-    const handleRemoveRow = (id) => async () => {
-      try {
-        await axios.delete(apiUrl +`deleteWorkOrderById/${id}`);
-        const updatedRows = userData.filter(item => item.id !== id);
-        setUserData(updatedRows);
-        notify(
-          "success",
-          `Sucessfully deleted row with work order number: ${id}.`
-        );
-      } catch (error) {
-        console.error('Error deleting row:', error.message);
-      }
+      const handleRemoveRow = async () => {
+        try {
+          await axios.delete(
+            apiUrl + `deleteWorkOrderById/${selectedProductId}`
+          );
+          const updatedRows = userData.filter(
+            (item) => item.id !== selectedProductId
+          );
+          setUserData(updatedRows);
+          notify(
+            "success",
+            `Sucessfully deleted row with work order number: ${selectedProductId}.`
+          );
+        } catch (error) {
+          console.error("Error deleting row:", error.message);
+        }
+        setOpen(false);
+      };
+
+      const handleClose = () => {
+        setOpen(false);
+      };
+
+      const handleConfirmDelete = (productId) => {
+        setSelectedProductId(productId);
+        setOpen(true);
     };
-  
+    
     const handleNavigation = record => {
   
       navigate('/dashboard/services/workorderedit', { state: record });
@@ -153,21 +173,21 @@ import Logo from '../logo/logo';
   
     const columns = [
       {
-        title: 'Work Order Number',
-        dataIndex: 'id',
-        key: 'id',
+        title: "Work Order Number",
+        dataIndex: "id",
+        key: "id",
         render: (name, record) => {
           const handleNavigation = () => {
-            navigate('/dashboard/services/workorderDetail', { state: record });
+            navigate("/dashboard/services/workorderDetail", { state: record });
           };
-          
+
           return (
             <Link
               color="primary"
               onClick={handleNavigation}
               sx={{
-                alignItems: 'center',
-                textAlign: 'center',
+                alignItems: "center",
+                textAlign: "center",
               }}
               underline="hover"
             >
@@ -178,7 +198,7 @@ import Logo from '../logo/logo';
       },
       {
         title: (
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div style={{ display: "flex", alignItems: "center" }}>
             {!isSearching ? (
               <>
                 <Typography variant="subtitle2">Company Name</Typography>
@@ -201,34 +221,34 @@ import Logo from '../logo/logo';
               </>
             )}
           </div>
-      ),
-        key: 'companyName',
-        dataIndex: 'companyName',
+        ),
+        key: "companyName",
+        dataIndex: "companyName",
       },
       {
-        title: 'Order Modified Date',
-        key: 'lastModifiedDate',
-        dataIndex: 'lastModifiedDate',
+        title: "Order Modified Date",
+        key: "lastModifiedDate",
+        dataIndex: "lastModifiedDate",
       },
       {
-        title: 'Order Date',
-        key: 'createdDate',
-        dataIndex: 'createdDate',
+        title: "Order Date",
+        key: "createdDate",
+        dataIndex: "createdDate",
       },
       {
-        title: 'Status',
-        key: 'status',
-        dataIndex: 'status',
+        title: "Status",
+        key: "status",
+        dataIndex: "status",
       },
       {
-        title: 'Type',
-        key: 'type',
-        dataIndex: 'type',
+        title: "Type",
+        key: "type",
+        dataIndex: "type",
       },
       {
-        dataIndex: 'actionEdit',
-        key: 'actionEdit',
-         render: (_, record) => (
+        dataIndex: "actionEdit",
+        key: "actionEdit",
+        render: (_, record) => (
           <IconButton onClick={() => handleNavigation(record)}>
             <Icon>
               <EditIcon />
@@ -237,10 +257,10 @@ import Logo from '../logo/logo';
         ),
       },
       {
-        dataIndex: 'actionDelete',
-        key: 'actionDelete',
+        dataIndex: "actionDelete",
+        key: "actionDelete",
         render: (_, row) => (
-          <IconButton onClick={handleRemoveRow(row.id)}>
+          <IconButton onClick={() => handleConfirmDelete(row.id)}>
             <Icon>
               <Delete />
             </Icon>
@@ -311,6 +331,22 @@ import Logo from '../logo/logo';
             theme="light"
           />
         </Box>
+        {open && (
+          <Dialog open={open} onClose={handleClose}>
+            <DialogTitle>Confirm Delete</DialogTitle>
+            <DialogContent>
+              Are you sure you want to delete this work order?
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose} color="primary">
+                Cancel
+              </Button>
+              <Button onClick={handleRemoveRow} color="primary">
+                Delete
+              </Button>
+            </DialogActions>
+          </Dialog>
+        )}
       </div>
     );
       };
