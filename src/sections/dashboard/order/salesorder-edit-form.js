@@ -179,6 +179,9 @@ const [productName, setProductName] = useState('');
   const [Id, setId] = useState()
 
   const [totalAmount, setTotalAmount] = useState(0);
+    const [totalCgst, setTotalCgst] = useState(0);
+    const [totalIgst, setTotalIgst] = useState(0);
+    const [totalSgst, setTotalSgst] = useState(0);
  
 
   const [rowData, setRowData] =useState()
@@ -208,8 +211,11 @@ const [productName, setProductName] = useState('');
       const [zipcode, setZipcode]= useState(state?.pinCode ||'')
 
   useEffect(() => {
-    axios.get(apiUrl +`getAllSalesOrderDetails/${state?.id || state?.soRecord?.id}`)
-      .then(response => {
+    axios
+      .get(
+        apiUrl + `getAllSalesOrderDetails/${state?.id || state?.soRecord?.id}`
+      )
+      .then((response) => {
         const updatedData = response.data.map((obj) => {
           let parsedInventoryId;
           try {
@@ -240,13 +246,23 @@ const [productName, setProductName] = useState('');
         });
         setRowData(updatedData);
         setTotalAmount(state?.totalAmount);
-  
+        setTotalCgst(state?.totalcgst);
+        setTotalIgst(state?.totaligst);
+        setTotalSgst(state?.totalsgst);
+
         console.log(updatedData);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
-  }, [state?.id, state?.soRecord?.id, state?.totalAmount]);
+  }, [
+    state?.id,
+    state?.soRecord?.id,
+    state?.totalAmount,
+    state?.totalcgst,
+    state?.totaligst,
+    state?.totalsgst,
+  ]);
 //inventory 
   useEffect(() => {
     axios.get(apiUrl +`getInventoryByUserId/${userId}`)
@@ -579,12 +595,31 @@ console.log(deliveryIST)
     const updatedRows = rowData?.filter((_, index) => index !== idx);
     setRowData(updatedRows);
   
-    const calculatedTotalAmount = updatedRows.reduce(
-      (total, row) => total + row.netAmount,
-      0
-    );
+        const calculatedTotalAmount = updatedRows.reduce(
+          (total, row) => total + row.netAmount,
+          0
+        );
 
-    setTotalAmount(calculatedTotalAmount);
+        const calcTotalCgst = updatedRows.reduce(
+          (total, row) => total + (row.quantity * row.price * row.cgst) / 100,
+
+          0
+        );
+        const calcTotalIgst = updatedRows.reduce(
+          (total, row) => total + (row.quantity * row.price * row.igst) / 100,
+
+          0
+        );
+        const calcTotalSgst = updatedRows.reduce(
+          (total, row) => total + (row.quantity * row.price * row.sgst) / 100,
+
+          0
+        );
+
+        setTotalAmount(calculatedTotalAmount);
+        setTotalCgst(calcTotalCgst);
+        setTotalIgst(calcTotalIgst);
+        setTotalSgst(calcTotalSgst);
   };
 
   const toggleForm = () => {
@@ -683,12 +718,31 @@ const notify = (type, message) => {
       setShowForm(false);
       setEditIndex(null);
   
-      const calculatedTotalAmount = updatedRows.reduce(
-        (total, row) => total + row.netAmount,
-        0
-      );
+          const calculatedTotalAmount = updatedRows.reduce(
+            (total, row) => total + row.netAmount,
+            0
+          );
 
-      setTotalAmount(calculatedTotalAmount);
+          const calcTotalCgst = updatedRows.reduce(
+            (total, row) => total + (row.quantity * row.price * row.cgst) / 100,
+
+            0
+          );
+          const calcTotalIgst = updatedRows.reduce(
+            (total, row) => total + (row.quantity * row.price * row.igst) / 100,
+
+            0
+          );
+          const calcTotalSgst = updatedRows.reduce(
+            (total, row) => total + (row.quantity * row.price * row.sgst) / 100,
+
+            0
+          );
+
+          setTotalAmount(calculatedTotalAmount);
+          setTotalCgst(calcTotalCgst);
+          setTotalIgst(calcTotalIgst);
+          setTotalSgst(calcTotalSgst);
     }
   };
 
@@ -792,6 +846,9 @@ const notify = (type, message) => {
                 comments: comment,
                 termsAndCondition: terms,
                 paidamount: state?.paidamount,
+                totalcgst: totalCgst,
+                totalsgst: totalSgst,
+                totaligst: totalIgst,
                 modeofdelivery: deliveryMode,
                 totalAmount: finalAmount,
                 lastModifiedByUser: { id: userId },

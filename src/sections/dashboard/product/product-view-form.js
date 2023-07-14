@@ -145,14 +145,12 @@ const handleSaveRecord = async (editedRecord) => {
 
   if (currentDate) {
     try {
-      const response = await fetch(apiUrl +'addProduct', {
-        method: 'POST',
+      const response = await fetch(apiUrl + "addProduct", {
+        method: "POST",
         headers: {
-
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-
           product: {
             id: editedRecord.id,
             productName: editedRecord.productName,
@@ -160,15 +158,16 @@ const handleSaveRecord = async (editedRecord) => {
             type: editedRecord.type,
             description: editedRecord.description,
             createdBy: editedRecord.createdBy,
+            sgst: editedRecord.sgst,
+            cgst: editedRecord.cgst,
+            igst: editedRecord.igst,
             lastModifiedDate: new Date(),
-            lastModifiedByUser: {id: userId},
-            
+            lastModifiedByUser: { id: userId },
           },
           category: {
-            id: editedRecord.category.id
-          }
-
-        })
+            id: editedRecord.category.id,
+          },
+        }),
       });
       
       if (response.ok) {

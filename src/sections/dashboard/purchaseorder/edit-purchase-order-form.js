@@ -169,6 +169,9 @@ export const PurchaseOrderEditForm = (props) => {
   const [productId, setProductId] = useState();
 
   const [totalAmount, setTotalAmount] = useState(0);
+    const [totalCgst, setTotalCgst] = useState(0);
+    const [totalIgst, setTotalIgst] = useState(0);
+    const [totalSgst, setTotalSgst] = useState(0);
 
   const [rowData, setRowData] = useState();
   const [dDate, setDDate] = useState(state?.deliveryDate);
@@ -244,11 +247,21 @@ export const PurchaseOrderEditForm = (props) => {
 
         setRowData(updatedData);
         setTotalAmount(state?.totalAmount);
+        setTotalCgst(state?.totalcgst);
+        setTotalIgst(state?.totaligst);
+        setTotalSgst(state?.totalsgst);
       })
       .catch((error) => {
         console.error(error);
       });
-  }, [state?.id, state?.purchaseOrderRec?.id, state?.totalAmount]);
+  }, [
+    state?.id,
+    state?.purchaseOrderRec?.id,
+    state?.totalAmount,
+    state?.totalcgst,
+    state?.totaligst,
+    state?.totalsgst,
+  ]);
 
   //currentdate
   useEffect(() => {
@@ -576,6 +589,7 @@ export const PurchaseOrderEditForm = (props) => {
     const updatedRows = rowData?.filter((_, index) => index !== idx);
     setRowData(updatedRows);
 
+    //calculate total everytime form is updated and saved
     const calculatedTotalAmount = updatedRows.reduce(
       (total, row) =>
         total +
@@ -586,7 +600,26 @@ export const PurchaseOrderEditForm = (props) => {
       0
     );
 
+    const calcTotalCgst = updatedRows.reduce(
+      (total, row) => total + (row.quantity * row.price * row.cgst) / 100,
+
+      0
+    );
+    const calcTotalIgst = updatedRows.reduce(
+      (total, row) => total + (row.quantity * row.price * row.igst) / 100,
+
+      0
+    );
+    const calcTotalSgst = updatedRows.reduce(
+      (total, row) => total + (row.quantity * row.price * row.sgst) / 100,
+
+      0
+    );
+
     setTotalAmount(calculatedTotalAmount);
+    setTotalCgst(calcTotalCgst);
+    setTotalIgst(calcTotalIgst);
+    setTotalSgst(calcTotalSgst);
   };
 
   const toggleForm = () => {
@@ -646,6 +679,7 @@ export const PurchaseOrderEditForm = (props) => {
       setShowForm(false);
       setEditIndex(null);
 
+      //calculate total everytime form is updated and saved
       const calculatedTotalAmount = updatedRows.reduce(
         (total, row) =>
           total +
@@ -656,7 +690,26 @@ export const PurchaseOrderEditForm = (props) => {
         0
       );
 
+      const calcTotalCgst = updatedRows.reduce(
+        (total, row) => total + (row.quantity * row.price * row.cgst) / 100,
+
+        0
+      );
+      const calcTotalIgst = updatedRows.reduce(
+        (total, row) => total + (row.quantity * row.price * row.igst) / 100,
+
+        0
+      );
+      const calcTotalSgst = updatedRows.reduce(
+        (total, row) => total + (row.quantity * row.price * row.sgst) / 100,
+
+        0
+      );
+
       setTotalAmount(calculatedTotalAmount);
+      setTotalCgst(calcTotalCgst);
+      setTotalIgst(calcTotalIgst);
+      setTotalSgst(calcTotalSgst);
     }
   };
 
@@ -758,6 +811,9 @@ export const PurchaseOrderEditForm = (props) => {
               lastModifiedDate: new Date(),
               createdDate: state?.originalcreatedDate,
               comments: comment,
+              totalcgst: totalCgst,
+              totalsgst: totalSgst,
+              totaligst: totalIgst,
               paidamount: state?.paidamount,
               termsAndCondition: terms,
               totalAmount: finalAmount,

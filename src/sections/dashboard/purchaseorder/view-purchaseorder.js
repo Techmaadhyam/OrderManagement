@@ -95,7 +95,7 @@ export const ViewPurchaseOrder = (props) => {
               id: state?.id,
 
               ...(state?.quotid && {
-                quotid:  state?.quotid ,
+                quotid: state?.quotid,
               }),
               ...(tempId && { tempUser: { id: tempId } }),
               ...(userState && { companyuser: { id: userState } }),
@@ -117,6 +117,9 @@ export const ViewPurchaseOrder = (props) => {
               paidamount: paidAmount,
               termsAndCondition: state?.termsAndCondition,
               totalAmount: state?.totalAmount,
+              totalcgst: state?.totalcgst,
+              totalsgst: state?.totalsgst,
+              totaligst: state?.totaligst,
 
               lastModifiedByUser: { id: parseFloat(userId) },
             },

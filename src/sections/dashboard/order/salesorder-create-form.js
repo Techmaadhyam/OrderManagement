@@ -416,7 +416,7 @@ export const SalesOrderCreateForm = (props) => {
     const calcTotalCgst = updatedRows.reduce(
       (total, row) =>
         total +
-        row.quantity * row.price +
+      
         (row.quantity * row.price * row.cgst) / 100,
 
       0
@@ -424,7 +424,7 @@ export const SalesOrderCreateForm = (props) => {
     const calcTotalIgst = updatedRows.reduce(
       (total, row) =>
         total +
-        row.quantity * row.price +
+       
         (row.quantity * row.price * row.igst) / 100,
 
       0
@@ -432,7 +432,7 @@ export const SalesOrderCreateForm = (props) => {
     const calcTotalSgst = updatedRows.reduce(
       (total, row) =>
         total +
-        row.quantity * row.price +
+       
         (row.quantity * row.price * row.sgst) / 100,
 
       0
@@ -537,7 +537,7 @@ export const SalesOrderCreateForm = (props) => {
       const calcTotalCgst = updatedRows.reduce(
         (total, row) =>
           total +
-          row.quantity * row.price +
+     
           (row.quantity * row.price * row.cgst) / 100,
 
         0
@@ -545,7 +545,7 @@ export const SalesOrderCreateForm = (props) => {
       const calcTotalIgst = updatedRows.reduce(
         (total, row) =>
           total +
-          row.quantity * row.price +
+
           (row.quantity * row.price * row.igst) / 100,
 
         0
@@ -553,7 +553,7 @@ export const SalesOrderCreateForm = (props) => {
       const calcTotalSgst = updatedRows.reduce(
         (total, row) =>
           total +
-          row.quantity * row.price +
+       
           (row.quantity * row.price * row.sgst) / 100,
 
         0
@@ -563,8 +563,6 @@ export const SalesOrderCreateForm = (props) => {
       setTotalCgst(calcTotalCgst);
       setTotalIgst(calcTotalIgst);
       setTotalSgst(calcTotalSgst);
-
-      setTotalAmount(calculatedTotalAmount);
     }
   };
 

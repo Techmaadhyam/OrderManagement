@@ -45,8 +45,6 @@ const userId = parseInt(
   sessionStorage.getItem("user") || localStorage.getItem("user")
 );
 
-
-
 //status dropdown
 const userOptions = [
   {
@@ -336,7 +334,7 @@ export const PurchaseOrderCreateForm = (props) => {
   const handleDateChange = (date) => {
     setDeliveryDate(date);
   };
-console.log(tempId, userState)
+  console.log(tempId, userState);
   //get temporary user data
   useEffect(() => {
     axios
@@ -365,7 +363,8 @@ console.log(tempId, userState)
       .then((response) => {
         const filteredQuotations = response.data.filter(
           (item) =>
-            item.status === "Delivered" && item.category === "Purchase Quotation"
+            item.status === "Delivered" &&
+            item.category === "Purchase Quotation"
         );
         setAllQuotation(filteredQuotations);
       })
@@ -402,26 +401,17 @@ console.log(tempId, userState)
     );
 
     const calcTotalCgst = updatedRows.reduce(
-      (total, row) =>
-        total +
-        row.quantity * row.price +
-        (row.quantity * row.price * row.cgst) / 100,
+      (total, row) => total + (row.quantity * row.price * row.cgst) / 100,
 
       0
     );
     const calcTotalIgst = updatedRows.reduce(
-      (total, row) =>
-        total +
-        row.quantity * row.price +
-        (row.quantity * row.price * row.igst) / 100,
+      (total, row) => total + (row.quantity * row.price * row.igst) / 100,
 
       0
     );
     const calcTotalSgst = updatedRows.reduce(
-      (total, row) =>
-        total +
-        row.quantity * row.price +
-        (row.quantity * row.price * row.sgst) / 100,
+      (total, row) => total + (row.quantity * row.price * row.sgst) / 100,
 
       0
     );
@@ -449,14 +439,7 @@ console.log(tempId, userState)
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (
-      quantity &&
-      price &&
-      productName &&
-      description &&
-      weight &&
-      size
-    ) {
+    if (quantity && price && productName && description && weight && size) {
       const newRow = {
         product: { id: productId },
         productName,
@@ -501,36 +484,29 @@ console.log(tempId, userState)
       );
 
       const calcTotalCgst = updatedRows.reduce(
-        (total, row) =>
-          total +
-          row.quantity * row.price +
-          (row.quantity * row.price * row.cgst) / 100,
-       
+        (total, row) => total + (row.quantity * row.price * row.cgst) / 100,
+
         0
       );
-       const calcTotalIgst = updatedRows.reduce(
-         (total, row) =>
-           total +
-           row.quantity * row.price +
-           (row.quantity * row.price * row.igst) / 100,
+      const calcTotalIgst = updatedRows.reduce(
+        (total, row) => total + (row.quantity * row.price * row.igst) / 100,
 
-         0
+        0
       );
-       const calcTotalSgst = updatedRows.reduce(
-         (total, row) =>
-           total +
-           row.quantity * row.price +
-           (row.quantity * row.price * row.sgst) / 100,
+      const calcTotalSgst = updatedRows.reduce(
+        (total, row) => total + (row.quantity * row.price * row.sgst) / 100,
 
-         0
+        0
       );
-      
+
       setTotalAmount(calculatedTotalAmount);
-      setTotalCgst(calcTotalCgst)
-      setTotalIgst(calcTotalIgst)
-      setTotalSgst(calcTotalSgst)
+      setTotalCgst(calcTotalCgst);
+      setTotalIgst(calcTotalIgst);
+      setTotalSgst(calcTotalSgst);
     }
   };
+
+  console.log(totalCgst, totalIgst);
 
   //handle editing of row
   const handleEditRow = (idx, row) => {
@@ -872,12 +848,8 @@ console.log(tempId, userState)
                   label="Type"
                   name="type"
                   required
-          
                   value={type}
-         
-                >
-                  
-                </TextField>
+                ></TextField>
               </Grid>
               <Grid xs={12} md={6}>
                 <TextField
@@ -1117,9 +1089,9 @@ console.log(tempId, userState)
                               setProductId(selectedOption.id);
                               setProductName(e.target.value);
                               setDescription(selectedOption.description);
-                              setCgst(selectedOption.cgst)
-                              setIgst(selectedOption.igst)
-                              setSgst(selectedOption.sgst)
+                              setCgst(selectedOption.cgst);
+                              setIgst(selectedOption.igst);
+                              setSgst(selectedOption.sgst);
                             }}
                             style={{ marginBottom: 10 }}
                           >
