@@ -84,11 +84,11 @@ const Page = () => {
               </div>
             </div>
 
-            <Box display="flex" justifyContent="space-between" sx={{ m: -2 }}>
+            <Box display="flex" sx={{ m: -2 }}>
               <TextField
                 label="Category"
                 name="category"
-                sx={{ minWidth: 250 }}
+                sx={{ minWidth: 150 , mr: 1}}
                 value={selectedCategory}
                 onChange={handleCategoryChange}
                 select
@@ -104,6 +104,7 @@ const Page = () => {
                 <DatePicker
                   variant="filled"
                   label="Year"
+                  sx={{ width: 150 }}
                   openTo="year"
                   views={["year"]}
                   value={selectedDate}

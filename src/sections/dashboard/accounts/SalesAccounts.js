@@ -1,145 +1,153 @@
-import React from "react";
-import { useState, useEffect } from "react";
-import { apiUrl } from "src/config";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import {
-  Unstable_Grid2 as Grid,
-  Typography,
-  IconButton,
-  Icon,
-  Link,
-  InputBase,
-  Card,
-  CardHeader,
-    SvgIcon,
-  Button
-} from "@mui/material";
+import { Typography, Button } from "@mui/material";
+import { Scrollbar } from "src/components/scrollbar";
 import { Table } from "antd";
 import { Box } from "@mui/system";
-import { Scrollbar } from "src/components/scrollbar";
 
-const userId = sessionStorage.getItem("user") || localStorage.getItem("user");
+import { apiUrl } from "src/config";
 
 const SalesAccounts = ({ year }) => {
-  const [userData, setUserData] = useState([]);
+  const [userData, setUserData] = useState({});
 
   useEffect(() => {
+    const userId =
+      sessionStorage.getItem("user") || localStorage.getItem("user");
+
     axios
       .get(apiUrl + `getSalesOrderAccountingForMonthYear/${userId}/${year}`)
       .then((response) => {
-        setUserData(response.data);
-        // console.log(response.data)
+        const groupedData = {};
+
+        for (const { salesOrder, monthname } of response.data) {
+          const month = monthname; // Extract the month name
+          if (!groupedData[month]) {
+            groupedData[month] = [];
+          }
+            groupedData[month].push(salesOrder); // Append the order to the respective group
+        }
+
+        setUserData(groupedData);
       })
       .catch((error) => {
         console.error(error);
       });
   }, [year]);
 
-  function formatDate(dateString) {
+  const formatDate = (dateString) => {
     const parsedDate = new Date(dateString);
     const year = parsedDate.getFullYear();
     const month = String(parsedDate.getMonth() + 1).padStart(2, "0");
     const day = String(parsedDate.getDate()).padStart(2, "0");
     return `${year}/${month}/${day}`;
-  }
+  };
 
-  const dataWithKeys = userData?.map((item) => ({
-    ...item,
-    companyName: item.tempUser?.companyName || item.companyuser?.companyName,
-    gstn: item.tempUser?.gstNumber || item.companyuser?.gstNumber,
-    pendingAmount: item.totalAmount - item.paidamount,
-  }));
+  const renderTablesForMonths = () => {
+    return Object.entries(userData).map(([month, data]) => {
+      const dataWithKeys = data?.map((item) => ({
+        ...item,
+        companyName:
+          item?.tempUser?.companyName || item?.companyuser?.companyName,
+        gstn: item?.tempUser?.gstNumber || item?.companyuser?.gstNumber,
+        pendingAmount: item?.totalAmount - item?.paidamount,
+      }));
 
-  const column = [
-    {
-      title: "Sl No",
-      key: "slNo",
-      render: (text, record, index) => index + 1,
-    },
-    {
-      title: "Order Date",
-      key: "createdDate",
-      dataIndex: "createdDate",
-      render: (text) => formatDate(text),
-    },
+      const column = [
+        {
+          title: "Sl No",
+          key: "slNo",
+          render: (text, record, index) => index + 1,
+        },
+        {
+          title: "Order Date",
+          key: "createdDate",
+          dataIndex: "createdDate",
+          render: (text) => formatDate(text),
+        },
+        {
+          title: "Invoice No",
+          dataIndex: "id",
+          key: "id",
+        },
+        {
+          title: "Customer Name",
+          key: "companyName",
+          dataIndex: "companyName",
+        },
+        {
+          title: "GSTIN",
+          key: "gstn",
+          dataIndex: "gstn",
+        },
+        {
+          title: "Taxable Supply",
+          key: "totalcost",
+          dataIndex: "totalcost",
+        },
+        {
+          title: "Total IGST",
+          key: "totaligst",
+          dataIndex: "totaligst",
+        },
+        {
+          title: "Total CGST",
+          key: "totalcgst",
+          dataIndex: "totalcgst",
+        },
+        {
+          title: "Total SGST",
+          key: "totalsgst",
+          dataIndex: "totalsgst",
+        },
+        {
+          title: "Total Amount",
+          key: "totalAmount",
+          dataIndex: "totalAmount",
+        },
+        {
+          title: "Pending Amount",
+          key: "pendingAmount",
+          dataIndex: "pendingAmount",
+        },
+      ];
 
-    {
-      title: "Invoice No",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "Customer Name",
-      key: "companyName",
-      dataIndex: "companyName",
-    },
-    {
-      title: "GSTIN",
-      key: "gstn",
-      dataIndex: "gstn",
-    },
+      return (
+        <Box key={month} sx={{ mt: 3 }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              marginRight: "12px",
+              marginBottom: 1,
+            }}
+          >
+            <Button color="primary" variant="contained" align="right">
+              Generate PDF
+            </Button>
+          </Box>
+          <Box sx={{ position: "relative", overflowX: "auto" }}>
+            <Scrollbar>
+              <Table
+                sx={{ minWidth: 800, overflowX: "auto" }}
+                columns={column}
+                dataSource={dataWithKeys}
+                title={() => (
+                  <Typography variant="h5">
+                    Sales Details of {month} {year}
+                  </Typography>
+                )}
+                size="small"
+                bordered
+                rowClassName={() => "table-data-row"}
+              />
+            </Scrollbar>
+          </Box>
+        </Box>
+      );
+    });
+  };
 
-    {
-      title: "Taxable Supply",
-      key: "totalcost",
-      dataIndex: "totalcost",
-    },
-    {
-      title: "Total IGST",
-      key: "totaligst",
-      dataIndex: "totaligst",
-    },
-    {
-      title: "Total CGST",
-      key: "totalcgst",
-      dataIndex: "totalcgst",
-    },
-    {
-      title: "Total SGST",
-      key: "totalsgst",
-      dataIndex: "totalsgst",
-    },
-    {
-      title: "Total Amount",
-      key: "totalAmount",
-      dataIndex: "totalAmount",
-    },
-    {
-      title: "Pending Amount",
-      key: "pendingAmount",
-      dataIndex: "pendingAmount",
-    },
-  ];
-
-  return (
-    <>
-      <Box
-        sx={{ mt: 3, mb: 2 }}
-        display="flex"
-        justifyContent="flex-end"
-        marginRight="12px"
-      >
-        <Button color="primary" variant="contained" align="right">
-          Generate PDF
-        </Button>
-      </Box>
-      <Box sx={{ position: "relative", overflowX: "auto" }}>
-        <Scrollbar>
-          <Table
-            sx={{ minWidth: 800, overflowX: "auto" }}
-            columns={column}
-            dataSource={dataWithKeys}
-            title={() => (
-              <Typography variant="h5">Sales Details of Year {year}</Typography>
-            )}
-            size="small"
-            bordered
-            rowClassName={() => "table-data-row"}
-          ></Table>
-        </Scrollbar>
-      </Box>
-    </>
-  );
+  return <>{renderTablesForMonths()}</>;
 };
 
 export default SalesAccounts;

@@ -104,6 +104,7 @@ export const ViewAMCDetail = (props) => {
              totalsgst: 0,
              totaligst: state?.totaligst,
              totalcost: state?.totalcost,
+             totalamount: state?.totalamount,
              //totalAmount: finalAmount,
              technicianInfo: { id: state?.technicianInfo.id },
              ...(tempId && { noncompany: { id: tempId } }),

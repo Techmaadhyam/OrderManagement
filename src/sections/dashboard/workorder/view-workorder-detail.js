@@ -111,7 +111,7 @@ console.log(state)
                 totalsgst: 0,
                 totaligst: state?.totaligst,
                 totalcost: state?.totalcost,
-                //totalAmount: finalAmount,
+                totalamount: state?.totalamount,
                 technicianInfo: { id: state?.technicianInfo.id },
                 ...(tempId && { noncompany: { id: tempId } }),
                 ...(userState && { company: { id: userState } }),
