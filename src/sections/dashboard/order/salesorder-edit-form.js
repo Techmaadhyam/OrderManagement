@@ -600,21 +600,31 @@ console.log(deliveryIST)
           0
         );
 
-        const calcTotalCgst = updatedRows.reduce(
-          (total, row) => total + (row.quantity * row.price * row.cgst) / 100,
+     const calcTotalCgst = updatedRows.reduce((total, row) => {
+       const discountFactor =
+         row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+       const discountedPrice = row.price * discountFactor;
+       console.log(discountedPrice);
+       const cgstAmount = (row.quantity * discountedPrice * row.cgst) / 100;
+       return total + cgstAmount;
+     }, 0);
 
-          0
-        );
-        const calcTotalIgst = updatedRows.reduce(
-          (total, row) => total + (row.quantity * row.price * row.igst) / 100,
-
-          0
-        );
-        const calcTotalSgst = updatedRows.reduce(
-          (total, row) => total + (row.quantity * row.price * row.sgst) / 100,
-
-          0
-        );
+     const calcTotalIgst = updatedRows.reduce((total, row) => {
+       const discountFactor =
+         row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+       const discountedPrice = row.price * discountFactor;
+       console.log(discountedPrice);
+       const igstAmount = (row.quantity * discountedPrice * row.igst) / 100;
+       return total + igstAmount;
+     }, 0);
+     const calcTotalSgst = updatedRows.reduce((total, row) => {
+       const discountFactor =
+         row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+       const discountedPrice = row.price * discountFactor;
+       console.log(discountedPrice);
+       const sgstAmount = (row.quantity * discountedPrice * row.sgst) / 100;
+       return total + sgstAmount;
+     }, 0);
 
         setTotalAmount(calculatedTotalAmount);
         setTotalCgst(calcTotalCgst);
@@ -723,21 +733,31 @@ const notify = (type, message) => {
             0
           );
 
-          const calcTotalCgst = updatedRows.reduce(
-            (total, row) => total + (row.quantity * row.price * row.cgst) / 100,
+        const calcTotalCgst = updatedRows.reduce((total, row) => {
+          const discountFactor =
+            row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+          const discountedPrice = row.price * discountFactor;
+          console.log(discountedPrice);
+          const cgstAmount = (row.quantity * discountedPrice * row.cgst) / 100;
+          return total + cgstAmount;
+        }, 0);
 
-            0
-          );
-          const calcTotalIgst = updatedRows.reduce(
-            (total, row) => total + (row.quantity * row.price * row.igst) / 100,
-
-            0
-          );
-          const calcTotalSgst = updatedRows.reduce(
-            (total, row) => total + (row.quantity * row.price * row.sgst) / 100,
-
-            0
-          );
+        const calcTotalIgst = updatedRows.reduce((total, row) => {
+          const discountFactor =
+            row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+          const discountedPrice = row.price * discountFactor;
+          console.log(discountedPrice);
+          const igstAmount = (row.quantity * discountedPrice * row.igst) / 100;
+          return total + igstAmount;
+        }, 0);
+        const calcTotalSgst = updatedRows.reduce((total, row) => {
+          const discountFactor =
+            row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+          const discountedPrice = row.price * discountFactor;
+          console.log(discountedPrice);
+          const sgstAmount = (row.quantity * discountedPrice * row.sgst) / 100;
+          return total + sgstAmount;
+        }, 0);
 
           setTotalAmount(calculatedTotalAmount);
           setTotalCgst(calcTotalCgst);

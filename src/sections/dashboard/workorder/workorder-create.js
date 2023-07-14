@@ -38,8 +38,6 @@ const userId = parseInt(
   sessionStorage.getItem("user") || localStorage.getItem("user")
 );
 
-
-
 //set status type
 const userOptions = [
   {
@@ -124,7 +122,7 @@ export const WorkOrderCreateForm = (props) => {
   const [comment, setComment] = useState("");
   const [technician, setTechnician] = useState("");
   const [technicianData, setTechnicianData] = useState([]);
-   const [quotation, setQuotation] = useState(null);
+  const [quotation, setQuotation] = useState(null);
 
   //add product state
   const [productName, setProductName] = useState("");
@@ -134,6 +132,7 @@ export const WorkOrderCreateForm = (props) => {
   const [description, setDescription] = useState("");
   const [netAmount, setNetAmount] = useState();
   const [discount, setDiscount] = useState();
+  const [totalIgst, setTotalIgst] = useState(0);
   //state related to parts row edit, delete, update
   const [rows, setRows] = useState([]);
   const [showForm, setShowForm] = useState(false);
@@ -228,12 +227,23 @@ export const WorkOrderCreateForm = (props) => {
     const updatedRows = rows.filter((_, index) => index !== idx);
     setRows(updatedRows);
 
-    const calculatedTotalAmount = updatedRows.reduce(
-      (total, row) => total + row.netAmount,
-      0
-    );
+   const calculatedTotalAmount = updatedRows.reduce(
+     (total, row) => total + row.netAmount,
+     0
+   );
+   const calcTotalIgst = updatedRows.reduce((total, row) => {
+     const discountFactor =
+       row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+     const discountedPrice = row.unitPrice * discountFactor;
 
-    setTotalAmount(calculatedTotalAmount);
+     const igstAmount =
+       (row.workstationcount * discountedPrice * row.igst) / 100;
+
+     return total + igstAmount;
+   }, 0);
+
+   setTotalAmount(calculatedTotalAmount);
+   setTotalIgst(calcTotalIgst);
   };
 
   //show/hide popup form
@@ -291,11 +301,22 @@ export const WorkOrderCreateForm = (props) => {
         (total, row) => total + row.netAmount,
         0
       );
+      const calcTotalIgst = updatedRows.reduce((total, row) => {
+        const discountFactor =
+          row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+        const discountedPrice = row.unitPrice * discountFactor;
+
+        const igstAmount =
+          (row.workstationcount * discountedPrice * row.igst) / 100;
+     
+        return total + igstAmount;
+      }, 0);
 
       setTotalAmount(calculatedTotalAmount);
+      setTotalIgst(calcTotalIgst);
     }
   };
-
+  console.log(totalIgst);
   //handle row edit
   const handleEditRow = (idx, row) => {
     setProductName(row.productName);
@@ -339,8 +360,7 @@ export const WorkOrderCreateForm = (props) => {
       .then((response) => {
         const filteredQuotations = response.data.filter(
           (item) =>
-            item.status === "Delivered" &&
-            item.category === "Service Quotation"
+            item.status === "Delivered" && item.category === "Service Quotation"
         );
         setAllQuotation(filteredQuotations);
       })
@@ -395,6 +415,9 @@ export const WorkOrderCreateForm = (props) => {
               status: status,
               type: type,
               category: "workorder",
+              totalcgst: 0,
+              totalsgst: 0,
+              totaligst: totalIgst,
               createdByUser: { id: userId },
               createdDate: new Date(),
               lastModifiedDate: new Date(),
@@ -448,6 +471,9 @@ export const WorkOrderCreateForm = (props) => {
               adminEmail: adminEmail,
               status: status,
               type: type,
+              totalcgst: 0,
+              totalsgst: 0,
+              totaligst: totalIgst,
               category: "workorder",
               createdByUser: { id: userId },
               createdDate: new Date(),
@@ -510,13 +536,9 @@ export const WorkOrderCreateForm = (props) => {
                   fullWidth
                   label="Type"
                   name="type"
-            
                   required
                   value={type}
-              
-                >
-                 
-                </TextField>
+                ></TextField>
               </Grid>
               <Grid xs={12} md={4}>
                 <TextField
@@ -724,6 +746,7 @@ export const WorkOrderCreateForm = (props) => {
                               setProductName(e.target.value);
                               setDescription(selectedOption.description);
                               setDiscount(0);
+                              setIgst(selectedOption.igst);
                             }}
                             style={{ marginBottom: 10 }}
                           >

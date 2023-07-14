@@ -661,6 +661,7 @@ const deliveryIST2 = deliveryDateJS2
                               setProductId(selectedOption.id);
                               setProductName(e.target.value);
                               setDescription(selectedOption.description);
+                                      setIgst(selectedOption.igst);
                             }}
                             style={{ marginBottom: 10 }}
                           >

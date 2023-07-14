@@ -26,7 +26,7 @@ import { primaryColor } from "src/primaryColor";
 import EditIcon from "@mui/icons-material/Edit";
 import { Scrollbar } from "src/components/scrollbar";
 import React from "react";
-import { Delete} from "@mui/icons-material";
+import { Delete } from "@mui/icons-material";
 import "./customTable.css";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
@@ -42,11 +42,9 @@ import {
   fetchIndianStates,
 } from "src/utils/api-service";
 
-
 const userId = parseInt(
   sessionStorage.getItem("user") || localStorage.getItem("user")
 );
-
 
 const userOptions = [
   {
@@ -160,11 +158,11 @@ export const SalesOrderCreateForm = (props) => {
   const [cgst, setCgst] = useState();
   const [size, setSize] = useState();
   const [description, setDescription] = useState("");
-  const [netAmount, setNetAmount] = useState()
-  const [discount, setDiscount] = useState()
-    const [totalCgst, setTotalCgst] = useState(0);
-    const [totalIgst, setTotalIgst] = useState(0);
-    const [totalSgst, setTotalSgst] = useState(0);
+  const [netAmount, setNetAmount] = useState();
+  const [discount, setDiscount] = useState();
+  const [totalCgst, setTotalCgst] = useState(0);
+  const [totalIgst, setTotalIgst] = useState(0);
+  const [totalSgst, setTotalSgst] = useState(0);
 
   const [rows, setRows] = useState([]);
   const [showForm, setShowForm] = useState(false);
@@ -402,7 +400,6 @@ export const SalesOrderCreateForm = (props) => {
   const deliveryDateJS = deliveryDateAntd ? deliveryDateAntd.toDate() : null;
   const deliveryIST = deliveryDateJS;
 
-
   const handleRemoveRow = (idx) => () => {
     const updatedRows = rows.filter((_, index) => index !== idx);
     setRows(updatedRows);
@@ -411,32 +408,32 @@ export const SalesOrderCreateForm = (props) => {
       (total, row) => total + row.netAmount,
       0
     );
-  
 
-    const calcTotalCgst = updatedRows.reduce(
-      (total, row) =>
-        total +
-      
-        (row.quantity * row.price * row.cgst) / 100,
+    const calcTotalCgst = updatedRows.reduce((total, row) => {
+      const discountFactor =
+        row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+      const discountedPrice = row.price * discountFactor;
+      console.log(discountedPrice);
+      const cgstAmount = (row.quantity * discountedPrice * row.cgst) / 100;
+      return total + cgstAmount;
+    }, 0);
 
-      0
-    );
-    const calcTotalIgst = updatedRows.reduce(
-      (total, row) =>
-        total +
-       
-        (row.quantity * row.price * row.igst) / 100,
-
-      0
-    );
-    const calcTotalSgst = updatedRows.reduce(
-      (total, row) =>
-        total +
-       
-        (row.quantity * row.price * row.sgst) / 100,
-
-      0
-    );
+    const calcTotalIgst = updatedRows.reduce((total, row) => {
+      const discountFactor =
+        row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+      const discountedPrice = row.price * discountFactor;
+      console.log(discountedPrice);
+      const igstAmount = (row.quantity * discountedPrice * row.igst) / 100;
+      return total + igstAmount;
+    }, 0);
+    const calcTotalSgst = updatedRows.reduce((total, row) => {
+      const discountFactor =
+        row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+      const discountedPrice = row.price * discountFactor;
+      console.log(discountedPrice);
+      const sgstAmount = (row.quantity * discountedPrice * row.sgst) / 100;
+      return total + sgstAmount;
+    }, 0);
 
     setTotalAmount(calculatedTotalAmount);
     setTotalCgst(calcTotalCgst);
@@ -457,16 +454,16 @@ export const SalesOrderCreateForm = (props) => {
       toggleForm();
     }
   };
-   useEffect(() => {
-     const calculatedNetAmount =
-       quantity * price +
-       (quantity * price * cgst) / 100 +
-       (quantity * price * igst) / 100 +
-       (quantity * price * sgst) / 100;
-     const discountedAmount =
-       calculatedNetAmount - (calculatedNetAmount * discount) / 100;
-     setNetAmount(discountedAmount.toFixed(2));
-   }, [quantity, price, cgst, igst, sgst, discount]);
+  useEffect(() => {
+    const calculatedNetAmount =
+      quantity * price +
+      (quantity * price * cgst) / 100 +
+      (quantity * price * igst) / 100 +
+      (quantity * price * sgst) / 100;
+    const discountedAmount =
+      calculatedNetAmount - (calculatedNetAmount * discount) / 100;
+    setNetAmount(discountedAmount.toFixed(2));
+  }, [quantity, price, cgst, igst, sgst, discount]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -483,14 +480,7 @@ export const SalesOrderCreateForm = (props) => {
       return;
     }
 
-    if (
-      quantity &&
-      price &&
-      productName &&
-      description &&
-      weight &&
-      size
-    ) {
+    if (quantity && price && productName && description && weight && size) {
       const newRow = {
         //inventoryId: inventoryId,
         inventory: { id: inventoryId },
@@ -534,30 +524,31 @@ export const SalesOrderCreateForm = (props) => {
         0
       );
 
-      const calcTotalCgst = updatedRows.reduce(
-        (total, row) =>
-          total +
-     
-          (row.quantity * row.price * row.cgst) / 100,
+      const calcTotalCgst = updatedRows.reduce((total, row) => {
+        const discountFactor =
+          row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+        const discountedPrice = row.price * discountFactor;
+        console.log(discountedPrice);
+        const cgstAmount = (row.quantity * discountedPrice * row.cgst) / 100;
+        return total + cgstAmount;
+      }, 0);
 
-        0
-      );
-      const calcTotalIgst = updatedRows.reduce(
-        (total, row) =>
-          total +
-
-          (row.quantity * row.price * row.igst) / 100,
-
-        0
-      );
-      const calcTotalSgst = updatedRows.reduce(
-        (total, row) =>
-          total +
-       
-          (row.quantity * row.price * row.sgst) / 100,
-
-        0
-      );
+      const calcTotalIgst = updatedRows.reduce((total, row) => {
+        const discountFactor =
+          row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+        const discountedPrice = row.price * discountFactor;
+        console.log(discountedPrice);
+        const igstAmount = (row.quantity * discountedPrice * row.igst) / 100;
+        return total + igstAmount;
+      }, 0);
+      const calcTotalSgst = updatedRows.reduce((total, row) => {
+        const discountFactor =
+          row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+        const discountedPrice = row.price * discountFactor;
+        console.log(discountedPrice);
+        const sgstAmount = (row.quantity * discountedPrice * row.sgst) / 100;
+        return total + sgstAmount;
+      }, 0);
 
       setTotalAmount(calculatedTotalAmount);
       setTotalCgst(calcTotalCgst);
@@ -566,7 +557,7 @@ export const SalesOrderCreateForm = (props) => {
     }
   };
 
-  console.log(totalCgst,totalIgst, totalSgst)
+  console.log(totalCgst, totalIgst, totalSgst);
 
   const handleEditRow = (idx, row) => {
     setProductName(row.productName);
@@ -578,7 +569,7 @@ export const SalesOrderCreateForm = (props) => {
     setSgst(row.sgst);
     setSize(row.size);
     setDiscount(row.discountpercent);
-    setNetAmount(row.netAmount)
+    setNetAmount(row.netAmount);
     setDescription(row.productDescription);
     setEditIndex(idx);
     setShowForm(true);
@@ -594,8 +585,8 @@ export const SalesOrderCreateForm = (props) => {
     setIgst("");
     setSgst("");
     setDescription("");
-    setDiscount('');
-    setNetAmount('')
+    setDiscount("");
+    setNetAmount("");
   };
 
   //
@@ -610,7 +601,6 @@ export const SalesOrderCreateForm = (props) => {
         console.error(error);
       });
   }, []);
-
 
   const updatedRows = rows.map(
     ({ productName, productDescription, productId, netAmount, ...rest }) => rest
@@ -723,12 +713,8 @@ export const SalesOrderCreateForm = (props) => {
                   label="Type"
                   name="type"
                   required
-   
                   value={type}
-
-                >
-                 
-                </TextField>
+                ></TextField>
               </Grid>
               <Grid xs={12} md={6}>
                 <TextField
@@ -976,8 +962,7 @@ export const SalesOrderCreateForm = (props) => {
                             value={productName}
                             onChange={(e) => {
                               const selectedOption = userData2.find(
-                                (option) =>
-                                  option.id === e.target.value
+                                (option) => option.id === e.target.value
                               );
                               if (selectedOption) {
                                 setProductId(selectedOption.product.id);
@@ -1002,10 +987,7 @@ export const SalesOrderCreateForm = (props) => {
                             style={{ marginBottom: 10 }}
                           >
                             {userData2.map((option) => (
-                              <MenuItem
-                                key={option.id}
-                                value={option.id}
-                              >
+                              <MenuItem key={option.id} value={option.id}>
                                 {option.product.productName}
                               </MenuItem>
                             ))}

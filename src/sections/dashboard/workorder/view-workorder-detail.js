@@ -89,7 +89,7 @@ console.log(state)
               workorder: {
                 id: state?.id,
                 ...(state?.quotid && {
-                  quotid:  state?.quotid
+                  quotid: state?.quotid,
                 }),
                 contactPersonName: state?.contactPersonName,
                 contactPhoneNumber: state?.contactPhoneNumber,
@@ -107,6 +107,9 @@ console.log(state)
                 lastModifiedByUser: { id: userId },
                 paidamount: paidAmount,
                 termsAndCondition: state?.termsAndCondition,
+                totalcgst: 0,
+                totalsgst: 0,
+                totaligst: state?.totaligst,
                 //totalAmount: finalAmount,
                 technicianInfo: { id: state?.technicianInfo.id },
                 ...(tempId && { noncompany: { id: tempId } }),

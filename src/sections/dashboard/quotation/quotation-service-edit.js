@@ -745,6 +745,7 @@ console.log(idx, row)
                               setProductId(selectedOption.id);
                               setProductName(e.target.value);
                               setDescription(selectedOption.description);
+                                      setIgst(selectedOption.igst);
                             }}
                             style={{ marginBottom: 10 }}
                           >

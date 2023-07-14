@@ -144,6 +144,7 @@ export const AmcCreateForm = (props) => {
   const [productId, setProductId] = useState();
 
   const [totalAmount, setTotalAmount] = useState(0);
+  const [totalIgst, setTotalIgst] = useState(0);
   const [touched, setTouched] = useState(false);
 
   const handleInputChange = (event) => {
@@ -246,8 +247,19 @@ export const AmcCreateForm = (props) => {
       (total, row) => total + row.netAmount,
       0
     );
+    const calcTotalIgst = updatedRows.reduce((total, row) => {
+      const discountFactor =
+        row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+      const discountedPrice = row.unitPrice * discountFactor;
+
+      const igstAmount =
+        (row.workstationcount * discountedPrice * row.igst) / 100;
+
+      return total + igstAmount;
+    }, 0);
 
     setTotalAmount(calculatedTotalAmount);
+    setTotalIgst(calcTotalIgst);
   };
 
   //show/hide popup form
@@ -305,8 +317,19 @@ export const AmcCreateForm = (props) => {
         (total, row) => total + row.netAmount,
         0
       );
+      const calcTotalIgst = updatedRows.reduce((total, row) => {
+        const discountFactor =
+          row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+        const discountedPrice = row.unitPrice * discountFactor;
+
+        const igstAmount =
+          (row.workstationcount * discountedPrice * row.igst) / 100;
+
+        return total + igstAmount;
+      }, 0);
 
       setTotalAmount(calculatedTotalAmount);
+      setTotalIgst(calcTotalIgst);
     }
   };
 
@@ -393,6 +416,9 @@ export const AmcCreateForm = (props) => {
               comments: comment,
               lastModifiedByUser: { id: userId },
               termsAndCondition: terms,
+              totalcgst: 0,
+              totalsgst: 0,
+              totaligst: totalIgst,
               //totalAmount: finalAmount,
               technicianInfo: { id: technician },
               noncompany: { id: tempId },
@@ -448,6 +474,9 @@ export const AmcCreateForm = (props) => {
               comments: comment,
               lastModifiedByUser: { id: userId },
               termsAndCondition: terms,
+              totalcgst: 0,
+              totalsgst: 0,
+              totaligst: totalIgst,
               //totalAmount: finalAmount,
               technicianInfo: { id: technician },
               company: { id: userState },
@@ -718,6 +747,7 @@ export const AmcCreateForm = (props) => {
                               setProductName(e.target.value);
                               setDescription(selectedOption.description);
                               setDiscount(0);
+                              setIgst(selectedOption.igst);
                             }}
                             style={{ marginBottom: 10 }}
                           >
