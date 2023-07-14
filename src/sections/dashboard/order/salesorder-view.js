@@ -128,6 +128,7 @@ export const ViewSalesOrder = (props) => {
               totalcgst: state?.totalcgst,
               totalsgst: state?.totalsgst,
               totaligst: state?.totaligst,
+              totalcost: state?.totalcost,
               lastModifiedByUser: { id: parseFloat(userId) },
             },
             salesOrderDetails: convertedArray,

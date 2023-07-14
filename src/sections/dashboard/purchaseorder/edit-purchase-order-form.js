@@ -171,7 +171,8 @@ export const PurchaseOrderEditForm = (props) => {
   const [totalAmount, setTotalAmount] = useState(0);
     const [totalCgst, setTotalCgst] = useState(0);
     const [totalIgst, setTotalIgst] = useState(0);
-    const [totalSgst, setTotalSgst] = useState(0);
+  const [totalSgst, setTotalSgst] = useState(0);
+   const [totalCost, setTotalCost] = useState(0);
 
   const [rowData, setRowData] = useState();
   const [dDate, setDDate] = useState(state?.deliveryDate);
@@ -250,6 +251,7 @@ export const PurchaseOrderEditForm = (props) => {
         setTotalCgst(state?.totalcgst);
         setTotalIgst(state?.totaligst);
         setTotalSgst(state?.totalsgst);
+        setTotalCost(state?.totalcost);
       })
       .catch((error) => {
         console.error(error);
@@ -261,6 +263,7 @@ export const PurchaseOrderEditForm = (props) => {
     state?.totalcgst,
     state?.totaligst,
     state?.totalsgst,
+    state?.totalcost
   ]);
 
   //currentdate
@@ -615,11 +618,16 @@ export const PurchaseOrderEditForm = (props) => {
 
       0
     );
+     const calcTotalCost = updatedRows.reduce(
+       (total, row) => total + row.quantity * row.price,
+       0
+     );
 
     setTotalAmount(calculatedTotalAmount);
     setTotalCgst(calcTotalCgst);
     setTotalIgst(calcTotalIgst);
     setTotalSgst(calcTotalSgst);
+    setTotalCost(calcTotalCost);
   };
 
   const toggleForm = () => {
@@ -705,11 +713,16 @@ export const PurchaseOrderEditForm = (props) => {
 
         0
       );
+    const calcTotalCost = updatedRows.reduce(
+      (total, row) => total + row.quantity * row.price,
+      0
+    );
 
-      setTotalAmount(calculatedTotalAmount);
-      setTotalCgst(calcTotalCgst);
-      setTotalIgst(calcTotalIgst);
-      setTotalSgst(calcTotalSgst);
+setTotalAmount(calculatedTotalAmount);
+setTotalCgst(calcTotalCgst);
+setTotalIgst(calcTotalIgst);
+setTotalSgst(calcTotalSgst);
+setTotalCost(calcTotalCost);
     }
   };
 
@@ -817,6 +830,7 @@ export const PurchaseOrderEditForm = (props) => {
               paidamount: state?.paidamount,
               termsAndCondition: terms,
               totalAmount: finalAmount,
+              totalcost: totalCost,
               lastModifiedByUser: { id: userId },
             },
             purchaseOrderDetails: updatedRows,

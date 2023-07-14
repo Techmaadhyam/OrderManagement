@@ -175,6 +175,8 @@ export const PurchaseOrderCreateForm = (props) => {
   const [totalCgst, setTotalCgst] = useState(0);
   const [totalIgst, setTotalIgst] = useState(0);
   const [totalSgst, setTotalSgst] = useState(0);
+  const [totalCost, setTotalCost] = useState(0);
+  
 
   //handle file uploads
   const [performaInvoiceFile, setPerformaInvoiceFile] = useState(null);
@@ -415,11 +417,16 @@ export const PurchaseOrderCreateForm = (props) => {
 
       0
     );
+       const calcTotalCost = updatedRows.reduce(
+         (total, row) => total + row.quantity * row.price,
+         0
+       );
 
     setTotalAmount(calculatedTotalAmount);
     setTotalCgst(calcTotalCgst);
     setTotalIgst(calcTotalIgst);
     setTotalSgst(calcTotalSgst);
+    setTotalCost(calcTotalCost)
   };
 
   //handle show hide popup form
@@ -498,11 +505,16 @@ export const PurchaseOrderCreateForm = (props) => {
 
         0
       );
+         const calcTotalCost = updatedRows.reduce(
+           (total, row) => total +(row.quantity * row.price),
+           0
+         );
 
       setTotalAmount(calculatedTotalAmount);
       setTotalCgst(calcTotalCgst);
       setTotalIgst(calcTotalIgst);
       setTotalSgst(calcTotalSgst);
+      setTotalCost(calcTotalCost);
     }
   };
 
@@ -598,6 +610,7 @@ export const PurchaseOrderCreateForm = (props) => {
               totalsgst: totalSgst,
               totaligst: totalIgst,
               totalAmount: finalAmount,
+              totalcost: totalCost
             },
             purchaseOrderDetails: updatedRows,
 

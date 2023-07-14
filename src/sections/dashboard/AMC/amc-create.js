@@ -145,6 +145,7 @@ export const AmcCreateForm = (props) => {
 
   const [totalAmount, setTotalAmount] = useState(0);
   const [totalIgst, setTotalIgst] = useState(0);
+    const [totalCost, setTotalCost] = useState(0);
   const [touched, setTouched] = useState(false);
 
   const handleInputChange = (event) => {
@@ -258,8 +259,19 @@ export const AmcCreateForm = (props) => {
       return total + igstAmount;
     }, 0);
 
-    setTotalAmount(calculatedTotalAmount);
-    setTotalIgst(calcTotalIgst);
+           const calcTotalCost = updatedRows.reduce((total, row) => {
+             const discountFactor =
+               row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+             const discountedPrice = row.unitPrice * discountFactor;
+
+             const cost = row.workstationcount * discountedPrice;
+
+             return total + cost;
+           }, 0);
+
+           setTotalAmount(calculatedTotalAmount);
+           setTotalIgst(calcTotalIgst);
+           setTotalCost(calcTotalCost);
   };
 
   //show/hide popup form
@@ -328,8 +340,19 @@ export const AmcCreateForm = (props) => {
         return total + igstAmount;
       }, 0);
 
-      setTotalAmount(calculatedTotalAmount);
-      setTotalIgst(calcTotalIgst);
+       const calcTotalCost = updatedRows.reduce((total, row) => {
+         const discountFactor =
+           row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+         const discountedPrice = row.unitPrice * discountFactor;
+
+         const cost = row.workstationcount * discountedPrice;
+
+         return total + cost;
+       }, 0);
+
+       setTotalAmount(calculatedTotalAmount);
+       setTotalIgst(calcTotalIgst);
+       setTotalCost(calcTotalCost);
     }
   };
 
@@ -419,6 +442,7 @@ export const AmcCreateForm = (props) => {
               totalcgst: 0,
               totalsgst: 0,
               totaligst: totalIgst,
+              totalcost: totalCost,
               //totalAmount: finalAmount,
               technicianInfo: { id: technician },
               noncompany: { id: tempId },
@@ -477,6 +501,7 @@ export const AmcCreateForm = (props) => {
               totalcgst: 0,
               totalsgst: 0,
               totaligst: totalIgst,
+              totalcost: totalCost,
               //totalAmount: finalAmount,
               technicianInfo: { id: technician },
               company: { id: userState },

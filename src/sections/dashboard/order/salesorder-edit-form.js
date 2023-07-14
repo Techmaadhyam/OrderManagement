@@ -172,7 +172,8 @@ const [productName, setProductName] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
     const [netAmount, setNetAmount] = useState();
-    const [discount, setDiscount] = useState();
+  const [discount, setDiscount] = useState();
+  
 
   const [userData2, setUserData2] = useState([])
   const [productId, setProductId] = useState()
@@ -181,7 +182,8 @@ const [productName, setProductName] = useState('');
   const [totalAmount, setTotalAmount] = useState(0);
     const [totalCgst, setTotalCgst] = useState(0);
     const [totalIgst, setTotalIgst] = useState(0);
-    const [totalSgst, setTotalSgst] = useState(0);
+  const [totalSgst, setTotalSgst] = useState(0);
+     const [totalCost, setTotalCost] = useState(0);
  
 
   const [rowData, setRowData] =useState()
@@ -249,6 +251,7 @@ const [productName, setProductName] = useState('');
         setTotalCgst(state?.totalcgst);
         setTotalIgst(state?.totaligst);
         setTotalSgst(state?.totalsgst);
+        setTotalCost(state?.totalcost)
 
         console.log(updatedData);
       })
@@ -262,6 +265,7 @@ const [productName, setProductName] = useState('');
     state?.totalcgst,
     state?.totaligst,
     state?.totalsgst,
+    state?.totalCost
   ]);
 //inventory 
   useEffect(() => {
@@ -626,10 +630,19 @@ console.log(deliveryIST)
        return total + sgstAmount;
      }, 0);
 
-        setTotalAmount(calculatedTotalAmount);
-        setTotalCgst(calcTotalCgst);
-        setTotalIgst(calcTotalIgst);
-        setTotalSgst(calcTotalSgst);
+       const calcTotalCost = updatedRows.reduce((total, row) => {
+         const discountFactor =
+           row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+         const discountedPrice = row.price * discountFactor;
+         const cost = row.quantity * discountedPrice;
+         return total + cost;
+       }, 0);
+
+       setTotalAmount(calculatedTotalAmount);
+       setTotalCgst(calcTotalCgst);
+       setTotalIgst(calcTotalIgst);
+       setTotalSgst(calcTotalSgst);
+       setTotalCost(calcTotalCost);
   };
 
   const toggleForm = () => {
@@ -759,10 +772,19 @@ const notify = (type, message) => {
           return total + sgstAmount;
         }, 0);
 
-          setTotalAmount(calculatedTotalAmount);
-          setTotalCgst(calcTotalCgst);
-          setTotalIgst(calcTotalIgst);
-          setTotalSgst(calcTotalSgst);
+        const calcTotalCost = updatedRows.reduce((total, row) => {
+          const discountFactor =
+            row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+          const discountedPrice = row.price * discountFactor;
+          const cost = row.quantity * discountedPrice;
+          return total + cost;
+        }, 0);
+
+        setTotalAmount(calculatedTotalAmount);
+        setTotalCgst(calcTotalCgst);
+        setTotalIgst(calcTotalIgst);
+        setTotalSgst(calcTotalSgst);
+        setTotalCost(calcTotalCost);
     }
   };
 
@@ -869,6 +891,7 @@ const notify = (type, message) => {
                 totalcgst: totalCgst,
                 totalsgst: totalSgst,
                 totaligst: totalIgst,
+                totalcost: totalCost,
                 modeofdelivery: deliveryMode,
                 totalAmount: finalAmount,
                 lastModifiedByUser: { id: userId },

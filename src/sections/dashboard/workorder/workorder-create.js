@@ -133,6 +133,7 @@ export const WorkOrderCreateForm = (props) => {
   const [netAmount, setNetAmount] = useState();
   const [discount, setDiscount] = useState();
   const [totalIgst, setTotalIgst] = useState(0);
+  const [totalCost, setTotalCost] = useState(0);
   //state related to parts row edit, delete, update
   const [rows, setRows] = useState([]);
   const [showForm, setShowForm] = useState(false);
@@ -227,23 +228,33 @@ export const WorkOrderCreateForm = (props) => {
     const updatedRows = rows.filter((_, index) => index !== idx);
     setRows(updatedRows);
 
-   const calculatedTotalAmount = updatedRows.reduce(
-     (total, row) => total + row.netAmount,
-     0
-   );
-   const calcTotalIgst = updatedRows.reduce((total, row) => {
-     const discountFactor =
-       row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
-     const discountedPrice = row.unitPrice * discountFactor;
+    const calculatedTotalAmount = updatedRows.reduce(
+      (total, row) => total + row.netAmount,
+      0
+    );
+    const calcTotalIgst = updatedRows.reduce((total, row) => {
+      const discountFactor =
+        row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+      const discountedPrice = row.unitPrice * discountFactor;
 
-     const igstAmount =
-       (row.workstationcount * discountedPrice * row.igst) / 100;
+      const igstAmount =
+        (row.workstationcount * discountedPrice * row.igst) / 100;
 
-     return total + igstAmount;
-   }, 0);
+      return total + igstAmount;
+    }, 0);
+    const calcTotalCost = updatedRows.reduce((total, row) => {
+      const discountFactor =
+        row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+      const discountedPrice = row.unitPrice * discountFactor;
 
-   setTotalAmount(calculatedTotalAmount);
-   setTotalIgst(calcTotalIgst);
+      const cost = row.workstationcount * discountedPrice;
+
+      return total + cost;
+    }, 0);
+
+    setTotalAmount(calculatedTotalAmount);
+    setTotalIgst(calcTotalIgst);
+    setTotalCost(calcTotalCost);
   };
 
   //show/hide popup form
@@ -308,12 +319,23 @@ export const WorkOrderCreateForm = (props) => {
 
         const igstAmount =
           (row.workstationcount * discountedPrice * row.igst) / 100;
-     
+
         return total + igstAmount;
       }, 0);
 
-      setTotalAmount(calculatedTotalAmount);
-      setTotalIgst(calcTotalIgst);
+    const calcTotalCost = updatedRows.reduce((total, row) => {
+      const discountFactor =
+        row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+      const discountedPrice = row.unitPrice * discountFactor;
+
+      const cost = row.workstationcount * discountedPrice;
+
+      return total + cost;
+    }, 0);
+
+    setTotalAmount(calculatedTotalAmount);
+    setTotalIgst(calcTotalIgst);
+    setTotalCost(calcTotalCost);
     }
   };
   console.log(totalIgst);
@@ -428,6 +450,7 @@ export const WorkOrderCreateForm = (props) => {
               technicianInfo: { id: technician },
               noncompany: { id: tempId },
               paidamount: 0,
+              totalcost: totalCost,
               //company: {id: userState},
             },
             workOrderItems: updatedRows,
@@ -482,6 +505,7 @@ export const WorkOrderCreateForm = (props) => {
               lastModifiedByUser: { id: userId },
               termsAndCondition: terms,
               //totalAmount: finalAmount,
+              totalcost: totalCost,
               technicianInfo: { id: technician },
               //noncompany:{id: tempId},
               company: { id: userState },

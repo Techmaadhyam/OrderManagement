@@ -163,6 +163,7 @@ export const SalesOrderCreateForm = (props) => {
   const [totalCgst, setTotalCgst] = useState(0);
   const [totalIgst, setTotalIgst] = useState(0);
   const [totalSgst, setTotalSgst] = useState(0);
+   const [totalCost, setTotalCost] = useState(0);
 
   const [rows, setRows] = useState([]);
   const [showForm, setShowForm] = useState(false);
@@ -435,12 +436,19 @@ export const SalesOrderCreateForm = (props) => {
       return total + sgstAmount;
     }, 0);
 
-    setTotalAmount(calculatedTotalAmount);
-    setTotalCgst(calcTotalCgst);
-    setTotalIgst(calcTotalIgst);
-    setTotalSgst(calcTotalSgst);
+ const calcTotalCost = updatedRows.reduce((total, row) => {
+   const discountFactor =
+     row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+   const discountedPrice = row.price * discountFactor;
+   const cost = row.quantity * discountedPrice;
+   return total + cost;
+ }, 0);
 
-    setTotalAmount(calculatedTotalAmount);
+ setTotalAmount(calculatedTotalAmount);
+ setTotalCgst(calcTotalCgst);
+ setTotalIgst(calcTotalIgst);
+ setTotalSgst(calcTotalSgst);
+ setTotalCost(calcTotalCost);
   };
 
   const toggleForm = () => {
@@ -549,11 +557,19 @@ export const SalesOrderCreateForm = (props) => {
         const sgstAmount = (row.quantity * discountedPrice * row.sgst) / 100;
         return total + sgstAmount;
       }, 0);
+      const calcTotalCost = updatedRows.reduce((total, row) => {
+        const discountFactor =
+          row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+        const discountedPrice = row.price * discountFactor;
+        const cost = (row.quantity * discountedPrice)
+        return total + cost;
+      }, 0);
 
       setTotalAmount(calculatedTotalAmount);
       setTotalCgst(calcTotalCgst);
       setTotalIgst(calcTotalIgst);
       setTotalSgst(calcTotalSgst);
+      setTotalCost(calcTotalCost)
     }
   };
 
@@ -645,6 +661,7 @@ export const SalesOrderCreateForm = (props) => {
               totalcgst: totalCgst,
               totalsgst: totalSgst,
               totaligst: totalIgst,
+              totalcost: totalCost,
               lastModifiedByUser: { id: userId },
             },
             salesOrderDetails: updatedRows,
