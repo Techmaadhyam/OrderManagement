@@ -142,6 +142,57 @@ const WorkAccounts = ({ year, category }) => {
                 size="small"
                 bordered
                 rowClassName={() => "table-data-row"}
+                summary={() => (
+                  <Table.Summary fixed>
+                    <Table.Summary.Row>
+                      <Table.Summary.Cell index={0}>Total</Table.Summary.Cell>
+                      <Table.Summary.Cell index={1}></Table.Summary.Cell>
+                      <Table.Summary.Cell index={2}></Table.Summary.Cell>
+                      <Table.Summary.Cell index={3}></Table.Summary.Cell>
+                      <Table.Summary.Cell index={4}></Table.Summary.Cell>
+                      <Table.Summary.Cell index={5}>
+                        Total Taxable:{" "}
+                        {dataWithKeys
+                          ?.reduce((total, item) => total + item.totalcost, 0)
+                          .toFixed(2)}
+                      </Table.Summary.Cell>
+                      <Table.Summary.Cell index={6}>
+                        Total IGST:{" "}
+                        {dataWithKeys
+                          ?.reduce((total, item) => total + item.totaligst, 0)
+                          .toFixed(2)}
+                      </Table.Summary.Cell>
+                      <Table.Summary.Cell index={7}>
+                        Total CGST:{" "}
+                        {dataWithKeys
+                          ?.reduce((total, item) => total + item.totalcgst, 0)
+                          .toFixed(2)}
+                      </Table.Summary.Cell>
+                      <Table.Summary.Cell index={8}>
+                        Total SGST:{" "}
+                        {dataWithKeys
+                          ?.reduce((total, item) => total + item.totalsgst, 0)
+                          .toFixed(2)}
+                      </Table.Summary.Cell>
+                      <Table.Summary.Cell index={9}>
+                        Total Amount:{" "}
+                        {dataWithKeys
+                          ?.reduce((total, item) => total + item.totalamount, 0)
+                          .toFixed(2)}
+                      </Table.Summary.Cell>
+                      <Table.Summary.Cell index={10}>
+                        {" "}
+                        Total Pending:{" "}
+                        {dataWithKeys
+                          ?.reduce(
+                            (total, item) => total + item.pendingAmount,
+                            0
+                          )
+                          .toFixed(2)}
+                      </Table.Summary.Cell>
+                    </Table.Summary.Row>
+                  </Table.Summary>
+                )}
               />
             </Scrollbar>
           </Box>
