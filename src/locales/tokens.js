@@ -29,6 +29,7 @@ export const tokens = {
     ecommerce: 'nav.ecommerce',
     invoice: 'nav.invoice',
     invoices: 'nav.invoices',
+    accounts: 'nav.accounts',
     amc: 'nav.amc',
     addAmc: 'nav.addAmc',
     error: 'nav.error',

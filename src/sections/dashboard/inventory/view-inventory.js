@@ -389,6 +389,7 @@ const filteredProducts = filteredData.filter(product => {
               sx={{ minWidth: 800, overflowX: "auto" }}
               columns={columns}
               dataSource={filteredProducts}
+            
               rowClassName={() => "table-data-row"}
             ></Table>
           </Scrollbar>

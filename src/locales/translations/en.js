@@ -29,6 +29,7 @@ export const en = {
   [tokens.nav.ecommerce]: "E-Commerce",
   [tokens.nav.invoice]: "Invoice",
   [tokens.nav.invoices]: "Invoices",
+  [tokens.nav.accounts]: "Accounting",
   [tokens.nav.amc]: "Download AMC",
   [tokens.nav.addAmc]: "Add AMC",
   [tokens.nav.error]: "Error",

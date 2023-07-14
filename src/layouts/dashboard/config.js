@@ -14,6 +14,7 @@ import { paths } from 'src/paths';
 import BuildCircleTwoToneIcon from '@mui/icons-material/BuildCircleTwoTone';
 import InventoryTwoToneIcon from '@mui/icons-material/InventoryTwoTone';
 import AssignmentTwoToneIcon from '@mui/icons-material/AssignmentTwoTone';
+import AccountBalanceTwoToneIcon from "@mui/icons-material/AccountBalanceTwoTone";
 
 export const useSections = () => {
   const { t } = useTranslation();
@@ -266,6 +267,16 @@ export const useSections = () => {
                 ],
               },
             ],
+          },
+          {
+            title: t(tokens.nav.accounts),
+            path: paths.dashboard.accounts,
+            icon: (
+              <SvgIcon fontSize="small">
+                <AccountBalanceTwoToneIcon />
+                {/* <Users03Icon /> */}
+              </SvgIcon>
+            ),
           },
         ],
       },

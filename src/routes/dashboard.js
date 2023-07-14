@@ -84,6 +84,9 @@ const ProductViewPage = lazy(() => import('src/pages/dashboard/products/viewDeta
 // Social (do not delete)
 const SocialProfilePage = lazy(() => import('src/pages/dashboard/social/profile'));
 
+//accounting
+const Accounts = lazy(() => import("src/pages/dashboard/accounts/accounts"));
+
 // Other
 const BlankPage = lazy(() => import('src/pages/dashboard/blank'));
 
@@ -353,6 +356,10 @@ export const dashboardRoutes = [
             element: <InventoryDetailPage />,
           },
         ],
+      },
+      {
+        path: 'accounts',
+        element: <Accounts/>
       },
       {
         path: "social",

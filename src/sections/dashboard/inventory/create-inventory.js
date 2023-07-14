@@ -12,12 +12,13 @@ import {
 } from '@mui/material';
 import './inventory.css'
 import { Box } from '@mui/system';
-import IconWithPopup from '../user/user-icon';
+
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiUrl } from 'src/config';
 import Logo from '../logo/logo';
+import IconWithPopup from "../user/user-icon";
 
 const userId = sessionStorage.getItem('user') || localStorage.getItem('user');
 
