@@ -48,6 +48,25 @@ const ViewTemporaryUser = () => {
       title: "Sales Order Number",
       dataIndex: "id",
       key: "id",
+      render: (name, record) => {
+        const handleNavigation = () => {
+          navigate("/dashboard/services/workorderDetail", { state: record });
+        };
+
+        return (
+          <Link
+            color="primary"
+            onClick={handleNavigation}
+            sx={{
+              alignItems: "center",
+          
+            }}
+            underline="hover"
+          >
+            <Typography variant="subtitle1">WO:{name}</Typography>
+          </Link>
+        );
+      },
     },
     {
       title: "Company Name",

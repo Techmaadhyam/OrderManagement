@@ -30,159 +30,17 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
+import ShoppingCart01Icon from "src/icons/untitled-ui/duocolor/shopping-cart-01";
+import InventoryTwoToneIcon from "@mui/icons-material/InventoryTwoTone";
+import LayoutAlt02Icon from "src/icons/untitled-ui/duocolor/layout-alt-02";
+import ListAltTwoToneIcon from "@mui/icons-material/ListAltTwoTone";
 
 
 const userId = sessionStorage.getItem("user") || localStorage.getItem("user");
 const currentMonth = new Date().toLocaleString("default", { month: "long" });
 const currentYear = new Date().getFullYear().toString();
 
-const quotationColumn = [
-  {
-    title: "Quotation Order Number",
-    dataIndex: "id",
-    key: "id",
-    
-  },
-  {
-    title: "Company Name",
-    key: "companyName",
-    dataIndex: "companyName",
-  },
-  {
-    title: "Order Modified Date",
-    key: "lastModifiedDate",
-    dataIndex: "lastModifiedDate",
-  },
-  {
-    title: "Order Date",
-    key: "createdDate",
-    dataIndex: "createdDate",
-  },
-  {
-    title: "Delivery Date",
-    key: "deliveryDate",
-    dataIndex: "deliveryDate",
-  },
-  {
-    title: "Status",
-    key: "status",
-    dataIndex: "status",
-  },
-  {
-    title: "Type",
-    key: "type",
-    dataIndex: "type",
-  },
- 
-];
-const salesColumn = [
-  {
-    title: "Sales Order Number",
-    dataIndex: "id",
-    key: "id",
-  },
-  {
-    title: "Company Name",
-    key: "companyName",
-    dataIndex: "companyName",
-  },
-  {
-    title: "Order Modified Date",
-    key: "lastModifiedDate",
-    dataIndex: "lastModifiedDate",
-  },
-  {
-    title: "Order Date",
-    key: "createdDate",
-    dataIndex: "createdDate",
-  },
-  {
-    title: "Delivery Date",
-    key: "deliveryDate",
-    dataIndex: "deliveryDate",
-  },
-  {
-    title: "Status",
-    key: "status",
-    dataIndex: "status",
-  },
-  {
-    title: "Type",
-    key: "type",
-    dataIndex: "type",
-  },
-];
-const purchaseColumn = [
-  {
-    title: "Purchase Order Number",
-    dataIndex: "id",
-    key: "id",
-  },
-  {
-    title: "Company Name",
-    key: "companyName",
-    dataIndex: "companyName",
-  },
-  {
-    title: "Order Modified Date",
-    key: "lastModifiedDate",
-    dataIndex: "lastModifiedDate",
-  },
-  {
-    title: "Order Date",
-    key: "createdDate",
-    dataIndex: "createdDate",
-  },
-  {
-    title: "Delivery Date",
-    key: "deliveryDate",
-    dataIndex: "deliveryDate",
-  },
-  {
-    title: "Status",
-    key: "status",
-    dataIndex: "status",
-  },
-  {
-    title: "Type",
-    key: "type",
-    dataIndex: "type",
-  },
-];
 
-const workColumn = [
-  {
-    title: "Work Order Number",
-    dataIndex: "id",
-    key: "id",
-  },
-  {
-    title: "Company Name",
-    key: "companyName",
-    dataIndex: "companyName",
-  },
-  {
-    title: "Order Modified Date",
-    key: "lastModifiedDate",
-    dataIndex: "lastModifiedDate",
-  },
-  {
-    title: "Order Date",
-    key: "createdDate",
-    dataIndex: "createdDate",
-  },
-
-  {
-    title: "Status",
-    key: "status",
-    dataIndex: "status",
-  },
-  {
-    title: "Type",
-    key: "type",
-    dataIndex: "type",
-  },
-];
 
 export const ViewTemporaryUserDetail = (props) => {
 
@@ -198,7 +56,252 @@ export const ViewTemporaryUserDetail = (props) => {
   const [quotation, setQuotation] = useState([]);
    const [selectedDate, setSelectedDate] = useState(
      dayjs(`${currentMonth} ${currentYear}`)
-   );
+  );
+  const quotationColumn = [
+    {
+      title: "Quotation Order Number",
+      dataIndex: "id",
+      key: "id",
+      render: (name, record) => {
+        const handleNavigation = () => {
+          navigate(`/dashboard/quotation/viewDetail`, { state: record });
+        };
+
+        return (
+          <Link
+            color="primary"
+            onClick={handleNavigation}
+            sx={{
+              alignItems: "center",
+     
+            }}
+            underline="hover"
+          >
+            <Typography variant="subtitle1">QO:{name}</Typography>
+          </Link>
+        );
+      },
+    },
+    {
+      title: "Company Name",
+      key: "companyName",
+      dataIndex: "companyName",
+    },
+    {
+      title: "Order Modified Date",
+      key: "lastModifiedDate",
+      dataIndex: "lastModifiedDate",
+    },
+    {
+      title: "Order Date",
+      key: "createdDate",
+      dataIndex: "createdDate",
+    },
+    {
+      title: "Delivery Date",
+      key: "deliveryDate",
+      dataIndex: "deliveryDate",
+    },
+    {
+      title: "Status",
+      key: "status",
+      dataIndex: "status",
+    },
+    {
+      title: "Type",
+      key: "type",
+      dataIndex: "type",
+    },
+    {
+      title: "Total Amount",
+      key: "totalAmount",
+      dataIndex: "totalAmount",
+    },
+  ];
+  const salesColumn = [
+    {
+      title: "Sales Order Number",
+      dataIndex: "id",
+      key: "id",
+      render: (name, record) => {
+        const handleNavigation = () => {
+          navigate(`/dashboard/orders/viewDetail/${record.id}`, {
+            state: record,
+          });
+        };
+
+        return (
+          <Link
+            color="primary"
+            onClick={handleNavigation}
+            sx={{
+              alignItems: "center",
+            
+            }}
+            underline="hover"
+          >
+            <Typography variant="subtitle1">SP:{name}</Typography>
+          </Link>
+        );
+      },
+    },
+    {
+      title: "Company Name",
+      key: "companyName",
+      dataIndex: "companyName",
+    },
+    {
+      title: "Order Modified Date",
+      key: "lastModifiedDate",
+      dataIndex: "lastModifiedDate",
+    },
+    {
+      title: "Order Date",
+      key: "createdDate",
+      dataIndex: "createdDate",
+    },
+    {
+      title: "Delivery Date",
+      key: "deliveryDate",
+      dataIndex: "deliveryDate",
+    },
+    {
+      title: "Status",
+      key: "status",
+      dataIndex: "status",
+    },
+    {
+      title: "Type",
+      key: "type",
+      dataIndex: "type",
+    },
+    {
+      title: "Total Amount",
+      key: "totalAmount",
+      dataIndex: "totalAmount",
+    },
+  ];
+  const purchaseColumn = [
+    {
+      title: "Purchase Order Number",
+      dataIndex: "id",
+      key: "id",
+      render: (name, record) => {
+        const handleNavigation = () => {
+          navigate(`/dashboard/purchaseorder/viewDetail/${record.id}`, {
+            state: record,
+          });
+        };
+
+        return (
+          <Link
+            color="primary"
+            onClick={handleNavigation}
+            sx={{
+              alignItems: "center",
+   
+            }}
+            underline="hover"
+          >
+            <Typography variant="subtitle1">PO:{name}</Typography>
+          </Link>
+        );
+      },
+    },
+    {
+      title: "Company Name",
+      key: "companyName",
+      dataIndex: "companyName",
+    },
+    {
+      title: "Order Modified Date",
+      key: "lastModifiedDate",
+      dataIndex: "lastModifiedDate",
+    },
+    {
+      title: "Order Date",
+      key: "createdDate",
+      dataIndex: "createdDate",
+    },
+    {
+      title: "Delivery Date",
+      key: "deliveryDate",
+      dataIndex: "deliveryDate",
+    },
+    {
+      title: "Status",
+      key: "status",
+      dataIndex: "status",
+    },
+    {
+      title: "Type",
+      key: "type",
+      dataIndex: "type",
+    },
+    {
+      title: "Total Amount",
+      key: "totalAmount",
+      dataIndex: "totalAmount",
+    },
+  ];
+
+  const workColumn = [
+    {
+      title: "Work Order Number",
+      dataIndex: "id",
+      key: "id",
+      render: (name, record) => {
+        const handleNavigation = () => {
+          navigate("/dashboard/services/workorderDetail", { state: record });
+        };
+
+        return (
+          <Link
+            color="primary"
+            onClick={handleNavigation}
+            sx={{
+              alignItems: "center",
+             
+            }}
+            underline="hover"
+          >
+            <Typography variant="subtitle1">WO:{name}</Typography>
+          </Link>
+        );
+      },
+    },
+    {
+      title: "Company Name",
+      key: "companyName",
+      dataIndex: "companyName",
+    },
+    {
+      title: "Order Modified Date",
+      key: "lastModifiedDate",
+      dataIndex: "lastModifiedDate",
+    },
+    {
+      title: "Order Date",
+      key: "createdDate",
+      dataIndex: "createdDate",
+    },
+
+    {
+      title: "Status",
+      key: "status",
+      dataIndex: "status",
+    },
+    {
+      title: "Type",
+      key: "type",
+      dataIndex: "type",
+    },
+    {
+      title: "Total Amount",
+      key: "totalamount",
+      dataIndex: "totalamount",
+    },
+  ];
 
 
   const align = 'horizontal' 
@@ -502,11 +605,25 @@ export const ViewTemporaryUserDetail = (props) => {
             </>
           }
         />
-       
       </Card>
       <Card style={{ marginBottom: "12px" }}>
         <CardHeader
-          title="Quotation list"
+          title={
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <LayoutAlt02Icon />
+              <Typography variant="h6" sx={{ ml: 1 }}>
+                Quotation list
+              </Typography>
+              <Typography variant="h6" sx={{ ml: 1 }}>
+                ({ quotation.length})
+              </Typography>
+            </Box>
+          }
           action={
             <Link
               color="primary"
@@ -537,7 +654,22 @@ export const ViewTemporaryUserDetail = (props) => {
       </Card>
       <Card style={{ marginBottom: "12px" }}>
         <CardHeader
-          title="Sales Order list"
+          title={
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <InventoryTwoToneIcon />
+              <Typography variant="h6" sx={{ ml: 1 }}>
+                Sales Order list
+              </Typography>
+              <Typography variant="h6" sx={{ ml: 1 }}>
+                ({ so.length })
+              </Typography>
+            </Box>
+          }
           action={
             <Link
               color="primary"
@@ -568,7 +700,22 @@ export const ViewTemporaryUserDetail = (props) => {
       </Card>
       <Card style={{ marginBottom: "12px" }}>
         <CardHeader
-          title="Purchase Order list"
+          title={
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <ShoppingCart01Icon />
+              <Typography variant="h6" sx={{ ml: 1 }}>
+                Purchase Order list
+              </Typography>
+              <Typography variant="h6" sx={{ ml: 1 }}>
+                ({ po.length })
+              </Typography>
+            </Box>
+          }
           action={
             <Link
               color="primary"
@@ -599,7 +746,22 @@ export const ViewTemporaryUserDetail = (props) => {
       </Card>
       <Card style={{ marginBottom: "12px" }}>
         <CardHeader
-          title="Work Order list"
+          title={
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <ListAltTwoToneIcon />
+              <Typography variant="h6" sx={{ ml: 1 }}>
+                Work Order list
+              </Typography>
+              <Typography variant="h6" sx={{ ml: 1 }}>
+                ({ wo.length })
+              </Typography>
+            </Box>
+          }
           action={
             <Link
               color="primary"

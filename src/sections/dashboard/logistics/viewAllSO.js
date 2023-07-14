@@ -47,6 +47,27 @@ const ViewTemporaryUser = () => {
       title: "Sales Order Number",
       dataIndex: "id",
       key: "id",
+      render: (name, record) => {
+        const handleNavigation = () => {
+          navigate(`/dashboard/orders/viewDetail/${record.id}`, {
+            state: record,
+          });
+        };
+
+        return (
+          <Link
+            color="primary"
+            onClick={handleNavigation}
+            sx={{
+              alignItems: "center",
+       
+            }}
+            underline="hover"
+          >
+            <Typography variant="subtitle1">SP:{name}</Typography>
+          </Link>
+        );
+      },
     },
     {
       title: "Company Name",
