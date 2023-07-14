@@ -11,7 +11,8 @@ import {
   InputBase,
   Card,
   CardHeader,
-  SvgIcon,
+    SvgIcon,
+  Button
 } from "@mui/material";
 import { Table } from "antd";
 import { Box } from "@mui/system";
@@ -115,6 +116,16 @@ const WorkAccounts = ({ year, category }) => {
 
   return (
     <>
+      <Box
+        sx={{ mt: 3, mb: 2 }}
+        display="flex"
+        justifyContent="flex-end"
+        marginRight="12px"
+      >
+        <Button color="primary" variant="contained" align="right">
+          Generate PDF
+        </Button>
+      </Box>
       <Box sx={{ position: "relative", overflowX: "auto" }}>
         <Scrollbar>
           <Table
