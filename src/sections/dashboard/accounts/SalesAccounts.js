@@ -134,8 +134,8 @@ const SalesAccounts = ({ year }) => {
               { text: item.totaligst, style: "tableContent" },
               { text: item.totalcgst, style: "tableContent" },
               { text: item.totalsgst, style: "tableContent" },
-              { text: item.totalamount, style: "tableContent" },
-              { text: item.totalamount - item.paidamount, style: "tableContent" },
+              { text: item.totalAmount, style: "tableContent" },
+              { text: item.totalAmount - item.paidamount, style: "tableContent" },
             ]
           });
           const docDefinition = {
