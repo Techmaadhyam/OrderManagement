@@ -61,6 +61,7 @@ const ViewTemporaryUser = () => {
 
   const [selectedType, setSelectedType] = useState("");
   const [open, setOpen] = useState(false);
+      const [loading, setLoading] = useState(true);
   const [selectedProductId, setSelectedProductId] = useState(null);
 
   const navigate = useNavigate();
@@ -70,6 +71,7 @@ const ViewTemporaryUser = () => {
       .get(apiUrl + `getAllTempUsers/${userId}`)
       .then((response) => {
         setUserData(response.data);
+        setLoading(false)
         console.log(response.data);
       })
       .catch((error) => {
@@ -488,7 +490,7 @@ const ViewTemporaryUser = () => {
       </div>
 
       <Box sx={{ position: "relative", overflowX: "auto" }}>
-        {userData.length !== 0 ? (
+        {loading === false ? (
           <Scrollbar>
             <Table
               sx={{ minWidth: 800, overflowX: "auto" }}

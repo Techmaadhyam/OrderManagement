@@ -41,7 +41,8 @@ import Logo from '../logo/logo';
   
     const [isSearching, setIsSearching] = useState(false);
     const [searchText, setSearchText] = useState('');
-        const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(false);
+    const [loading, setLoading] =useState(true)
         const [selectedProductId, setSelectedProductId] = useState(null);
   
   
@@ -52,7 +53,7 @@ import Logo from '../logo/logo';
       axios.get(apiUrl +`getAllWorkOrders/${userId}`)
         .then(response => {
           setUserData(response.data);
-          console.log(response.data)
+          setLoading(false)
         })
         .catch(error => {
           console.error(error);
@@ -307,7 +308,7 @@ import Logo from '../logo/logo';
         <Box
           sx={{ position: "relative", overflowX: "auto", marginTop: "30px" }}
         >
-          {userData.length !== 0 ? (
+          {loading === false ? (
             <Scrollbar>
               <Table
                 sx={{ minWidth: 800, overflowX: "auto" }}

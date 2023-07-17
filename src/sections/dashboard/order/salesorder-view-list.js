@@ -67,6 +67,7 @@ const SalesOrderViewList = () => {
 
   const [selectedType, setSelectedType] = useState("");
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [selectedProductId, setSelectedProductId] = useState(null);
 
   const navigate = useNavigate();
@@ -77,6 +78,7 @@ const SalesOrderViewList = () => {
       .then((response) => {
         setUserData(response.data);
         // console.log(response.data);
+        setLoading(false)
       })
       .catch((error) => {
         console.error(error);
@@ -1307,7 +1309,7 @@ const SalesOrderViewList = () => {
       </div>
 
       <Box sx={{ position: "relative", overflowX: "auto" }}>
-        {userData.length !== 0 ? (
+        {loading === false ? (
           <Scrollbar>
             <Table
               sx={{ minWidth: 800, overflowX: "auto" }}

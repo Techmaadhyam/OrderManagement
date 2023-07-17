@@ -74,8 +74,9 @@ const QuotationViewTable = () => {
   const [selectedCategory, setSelectedCategory] = useState('Purchase Quotation');
   const [isSearching, setIsSearching] = useState(false);
   const [searchText, setSearchText] = useState('');
-    const [open, setOpen] = useState(false);
-    const [selectedProductId, setSelectedProductId] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [selectedProductId, setSelectedProductId] = useState(null);
 
 
   const navigate = useNavigate();
@@ -85,7 +86,9 @@ const QuotationViewTable = () => {
     axios.get(apiUrl +`getAllQuotations/${userId}`)
       .then(response => {
         setUserData(response.data);
+        setLoading(false)
         // console.log(response.data)
+
       })
       .catch(error => {
         console.error(error);
@@ -1148,7 +1151,7 @@ if (deliveryDateIndex !== -1 && filteredList.some(item => item.category === "Ser
       </TextField>
 
       <Box sx={{ position: "relative", overflowX: "auto", marginTop: "30px" }}>
-        {userData.length !== 0 ? (
+        {loading=== false ? (
           <Scrollbar>
             <Table
               sx={{ minWidth: 800, overflowX: "auto" }}

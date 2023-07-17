@@ -62,6 +62,7 @@ const ViewInventory = () => {
 
   const [selectedCategory, setSelectedCategory] = useState('');
   const [open, setOpen] = useState(false);
+      const [loading, setLoading] = useState(true);
   const [selectedProductId, setSelectedProductId] = useState(null);
 
 
@@ -73,7 +74,8 @@ const ViewInventory = () => {
   useEffect(() => {
     axios.get(apiUrl +`getInventoryByUserId/${userId}`)
       .then(response => {
-  setUserData(response.data)
+        setUserData(response.data)
+        setLoading(false)
 
       })
       .catch(error => {
@@ -390,7 +392,7 @@ const filteredProducts = filteredData.filter(product => {
         ))}
       </TextField> */}
       <Box sx={{ position: "relative", overflowX: "auto", marginTop: "30px" }}>
-        {userData.length !== 0 ? (
+        {loading === false ? (
           <Scrollbar>
             <Table
               sx={{ minWidth: 800, overflowX: "auto" }}

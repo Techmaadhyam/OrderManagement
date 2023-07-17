@@ -49,6 +49,7 @@ const ViewTechnician = () => {
 
   const [selectedType, setSelectedType] = useState('Technician');
   const [open, setOpen] = useState(false);
+      const [loading, setLoading] = useState(true);
   const [selectedProductId, setSelectedProductId] = useState(null);
 
   const navigate = useNavigate();
@@ -58,7 +59,7 @@ const ViewTechnician = () => {
     axios.get(apiUrl +`getAllTempUsers/${userId}`)
       .then(response => {
         setUserData(response.data);
-        console.log(response.data);
+        setLoading(false);
       })
       .catch(error => {
         console.error(error);
@@ -466,7 +467,7 @@ const handleCompanyCancel = () => {
         </div>
       </div>
       <Box sx={{ position: "relative", overflowX: "auto" }}>
-        {userData.length !== 0 ? (
+        {loading === false ? (
           <Scrollbar>
             <Table
               sx={{ minWidth: 800, overflowX: "auto" }}

@@ -51,6 +51,7 @@ const AmcViewTable = () => {
   const [userData, setUserData]= useState([])
   const [isSearching, setIsSearching] = useState(false);
   const [searchText, setSearchText] = useState('');
+      const [loading, setLoading] = useState(true);
     const [open, setOpen] = useState(false);
     const [selectedProductId, setSelectedProductId] = useState(null);
 
@@ -61,7 +62,7 @@ const AmcViewTable = () => {
     axios.get(apiUrl +`getAllWorkOrders/${userId}`)
       .then(response => {
         setUserData(response.data);
-        console.log(response.data)
+        setLoading(false)
       })
       .catch(error => {
         console.error(error);
@@ -765,7 +766,7 @@ const handleWorkInvoice = async (record) => {
       </div>
 
       <Box sx={{ position: "relative", overflowX: "auto", marginTop: "30px" }}>
-        {userData.length !== 0 ? (
+        {loading=== false ? (
           <Scrollbar>
             <Table
               sx={{ minWidth: 800, overflowX: "auto" }}

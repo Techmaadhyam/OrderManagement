@@ -62,6 +62,7 @@ const ViewProduct = () => {
     const [isSearchingCategory, setIsSearchingCategory] = useState(false);
   const [categoryText, setCategoryText] = useState('');
   const [open, setOpen] = useState(false);
+      const [loading, setLoading] = useState(true);
   const [selectedProductId, setSelectedProductId] = useState(null);
 
   const navigate = useNavigate();
@@ -72,6 +73,7 @@ const ViewProduct = () => {
       .then(response => {
         setUserData(response.data);
         console.log(response.data);
+        setLoading(false)
       })
       .catch(error => {
         console.error(error);
@@ -502,7 +504,6 @@ const columns = [
     );
   };
 
-console.log(open)
 
 
   return (
@@ -528,7 +529,7 @@ console.log(open)
       </div>
 
       <Box sx={{ position: "relative", overflowX: "auto", marginTop: "30px" }}>
-        {userData.length !== 0 ? (
+        {loading === false ? (
           <Scrollbar>
             <Table
               sx={{ minWidth: 800, overflowX: "auto" }}
