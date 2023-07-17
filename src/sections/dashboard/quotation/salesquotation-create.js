@@ -221,6 +221,7 @@ export const QuotationOrderCreateForm = (props) => {
         setAccessToken(accessToken);
       } catch (error) {
         console.error(error);
+        setTimeout(fetchData, 500);
       }
     };
 
@@ -435,14 +436,7 @@ export const QuotationOrderCreateForm = (props) => {
       return;
     }
 
-    if (
-      quantity &&
-      price &&
-      productName &&
-      description &&
-      weight &&
-      size
-    ) {
+    if (quantity && price && productName && description && weight && size) {
       const newRow = {
         inventory: { id: inventoryId },
         quotationId: null,
@@ -643,7 +637,6 @@ export const QuotationOrderCreateForm = (props) => {
                   name="type"
                   value={type}
                   required
-       
                 ></TextField>
               </Grid>
               <Grid xs={12} md={6}></Grid>
@@ -861,8 +854,7 @@ export const QuotationOrderCreateForm = (props) => {
                             value={productName}
                             onChange={(e) => {
                               const selectedOption = userData2.find(
-                                (option) =>
-                                  option.id === e.target.value
+                                (option) => option.id === e.target.value
                               );
                               if (selectedOption) {
                                 setProductId(selectedOption.product.id);
@@ -887,10 +879,7 @@ export const QuotationOrderCreateForm = (props) => {
                             style={{ marginBottom: 10 }}
                           >
                             {userData2.map((option) => (
-                              <MenuItem
-                                key={option.id}
-                                value={option.id}
-                              >
+                              <MenuItem key={option.id} value={option.id}>
                                 {option.product.productName}
                               </MenuItem>
                             ))}

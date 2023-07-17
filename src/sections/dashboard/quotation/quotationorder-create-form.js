@@ -211,6 +211,7 @@ export const QuotationOrderCreateForm = (props) => {
         setAccessToken(accessToken);
       } catch (error) {
         console.error(error);
+        setTimeout(fetchData, 500);
       }
     };
 
@@ -400,14 +401,7 @@ export const QuotationOrderCreateForm = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (
-      quantity &&
-      price &&
-      productName &&
-      description &&
-      weight &&
-      size
-    ) {
+    if (quantity && price && productName && description && weight && size) {
       const newRow = {
         product: { id: productId },
         productName,
@@ -591,7 +585,6 @@ export const QuotationOrderCreateForm = (props) => {
                   name="type"
                   value={type}
                   required
-        
                 ></TextField>
               </Grid>
               <Grid xs={12} md={6}></Grid>
@@ -815,9 +808,9 @@ export const QuotationOrderCreateForm = (props) => {
                               setProductId(selectedOption.id);
                               setProductName(e.target.value);
                               setDescription(selectedOption.description);
-                                    setCgst(selectedOption.cgst);
-                                    setIgst(selectedOption.igst);
-                                    setSgst(selectedOption.sgst);
+                              setCgst(selectedOption.cgst);
+                              setIgst(selectedOption.igst);
+                              setSgst(selectedOption.sgst);
                             }}
                             style={{ marginBottom: 10 }}
                           >

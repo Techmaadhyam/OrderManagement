@@ -207,6 +207,7 @@ export const SalesOrderCreateForm = (props) => {
         setAccessToken(accessToken);
       } catch (error) {
         console.error(error);
+       setTimeout(fetchData, 500);
       }
     };
 

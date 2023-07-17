@@ -16,6 +16,13 @@ import { useNavigate } from "react-router-dom";
 import { apiUrl } from "src/config";
 import Logo from "../logo/logo";
 import { ToastContainer, toast } from "react-toastify";
+import {
+  fetchAccessToken,
+  fetchCountries,
+  fetchStates,
+  fetchCities,
+  fetchIndianStates,
+} from "src/utils/api-service";
 
 //get userid
 const userId = sessionStorage.getItem("user") || localStorage.getItem("user");
@@ -105,106 +112,41 @@ export const TechnicianCreateForm = (props) => {
     setCurrentDate(formattedDate);
   }, []);
 
+  //get access token
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(
-          "https://www.universal-tutorial.com/api/getaccesstoken",
-          {
-            headers: {
-              Accept: "application/json",
-              "api-token":
-                "8HWETQvEFegKi6tGPUkSWDiQKfW8UdZxPqbzHX6JdShA3YShkrgKuHUbnTMkd11QGkE",
-              "user-email": "mithesh.dev.work@gmail.com",
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch access token");
-        }
-
-        const data = await response.json();
-
-        setAccessToken(data.auth_token);
+        const accessToken = await fetchAccessToken();
+        setAccessToken(accessToken);
       } catch (error) {
         console.error(error);
+        setTimeout(fetchData, 500);
       }
     };
 
     fetchData();
   }, []);
-  //fetches country list for dropdown and pushesh it to state which is later mapped
-  const fetchCountries = useCallback(async () => {
-    try {
-      const response = await fetch(
-        "https://www.universal-tutorial.com/api/countries/",
-        {
-          headers: {
-            Authorization: "Bearer " + accessToken,
-            Accept: "application/json",
-          },
-        }
-      );
 
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
+  //fetches country list for dropdown and pushesh it to state which is later mapped
+  const fetchCountriesData = useCallback(async () => {
+    try {
+      if (accessToken) {
+        const countries = await fetchCountries(accessToken);
+        setCountries(countries);
       }
-      const data = await response.json();
-      setCountries(data);
     } catch (error) {
       console.error("Error fetching countries:", error);
     }
   }, [accessToken]);
 
-  //using useeffect to prevent fetch request being called on render
-  useEffect(() => {
-    fetchCountries();
-  }, [fetchCountries]);
-
-  //mapping countries to MUI select input field
-  const userOptions = useMemo(() => {
-    return countries.map((country) => ({
-      label: country.country_name,
-      value: country.country_name,
-    }));
-  }, [countries]);
-
-  //mapping states to MUI select input field
-  const userOptionsState = useMemo(() => {
-    return states.map((state) => ({
-      label: state.state_name,
-      value: state.state_name,
-    }));
-  }, [states]);
-
-  //mapping cities to MUI select input field
-  const userOptionsCities = useMemo(() => {
-    return cities.map((city) => ({
-      label: city.city_name,
-      value: city.city_name,
-    }));
-  }, [cities]);
-
   //fetches states list for dropdown and pushesh it to setStates which is later mapped
   const handleCountry = async (event) => {
     try {
       setCurrentCountry(event.target.value);
-      const response = await fetch(
-        `https://www.universal-tutorial.com/api/states/${event.target.value}`,
-        {
-          headers: {
-            Authorization: "Bearer " + accessToken,
-            Accept: "application/json",
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
+      if (accessToken) {
+        const states = await fetchStates(accessToken, event.target.value);
+        setStates(states);
       }
-      const data = await response.json();
-      setStates(data);
     } catch (error) {
       console.error("Error fetching states:", error);
     }
@@ -214,54 +156,63 @@ export const TechnicianCreateForm = (props) => {
   const handleState = async (event) => {
     try {
       setCurrentState(event.target.value);
-      const response = await fetch(
-        `https://www.universal-tutorial.com/api/cities/${event.target.value}`,
-        {
-          headers: {
-            Authorization: "Bearer " + accessToken,
-            Accept: "application/json",
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
+      if (accessToken) {
+        const cities = await fetchCities(accessToken, event.target.value);
+        setCities(cities);
       }
-      const data = await response.json();
-      setCities(data);
     } catch (error) {
-      console.error("Error fetching states:", error);
+      console.error("Error fetching cities:", error);
     }
   };
 
   //sets default country to India and fetches state list for India and is pushed to setStates
-  const handleDefaultState = async () => {
+  const handleDefaultState = useCallback(async () => {
     try {
-      if (currentCountry === "India") {
-        const response = await fetch(
-          "https://www.universal-tutorial.com/api/states/India",
-          {
-            headers: {
-              Authorization: "Bearer " + accessToken,
-              Accept: "application/json",
-            },
-          }
-        );
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        setStates(data);
+      if (currentCountry === "India" && accessToken) {
+        const states = await fetchIndianStates(accessToken);
+        setStates(states);
       }
     } catch (error) {
-      console.error("Error fetching states:", error);
+      console.error("Error fetching Indian states:", error);
     }
-  };
+  }, [accessToken, currentCountry]);
+
+  //useeffect fetch request being called on componet mount
+  useEffect(() => {
+    if (accessToken) {
+      fetchCountriesData();
+      handleDefaultState();
+    }
+  }, [accessToken, fetchCountriesData, handleDefaultState]);
 
   //sets current city value in MUI select field onchange event
   const handleCities = async (event) => {
     setCurrentCity(event.target.value);
   };
+
+  //mapping countries to MUI select input field
+  const userOptionsCountry = useMemo(() => {
+    return countries?.map((country) => ({
+      label: country.country_name,
+      value: country.country_name,
+    }));
+  }, [countries]);
+
+  //mapping states to MUI select input field
+  const userOptionsState = useMemo(() => {
+    return states?.map((state) => ({
+      label: state.state_name,
+      value: state.state_name,
+    }));
+  }, [states]);
+
+  //mapping cities to MUI select input field
+  const userOptionsCities = useMemo(() => {
+    return cities?.map((city) => ({
+      label: city.city_name,
+      value: city.city_name,
+    }));
+  }, [cities]);
 
   const notify = (type, message) => {
     toast[type](message, {
@@ -486,7 +437,7 @@ export const TechnicianCreateForm = (props) => {
                   value={currentCountry}
                   onChange={handleCountry}
                 >
-                  {userOptions?.map((option) => (
+                  {userOptionsCountry?.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.label}
                     </MenuItem>

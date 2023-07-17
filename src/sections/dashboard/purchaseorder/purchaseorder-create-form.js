@@ -39,7 +39,7 @@ import {
   fetchCities,
   fetchIndianStates,
 } from "src/utils/api-service";
- import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 
 //get userId from session storage
 const userId = parseInt(
@@ -203,6 +203,7 @@ export const PurchaseOrderCreateForm = (props) => {
         setAccessToken(accessToken);
       } catch (error) {
         console.error(error);
+        setTimeout(fetchData, 500);
       }
     };
 
@@ -458,7 +459,15 @@ export const PurchaseOrderCreateForm = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (quantity && price && productId && description && weight && size && (cgst && sgst || igst)) {
+    if (
+      quantity &&
+      price &&
+      productId &&
+      description &&
+      weight &&
+      size &&
+      ((cgst && sgst) || igst)
+    ) {
       const newRow = {
         product: { id: productId },
         productName,
@@ -528,7 +537,7 @@ export const PurchaseOrderCreateForm = (props) => {
       setTotalSgst(calcTotalSgst);
       setTotalCost(calcTotalCost);
     } else {
-         notify("error", "Please fill all the fields marked with *.");
+      notify("error", "Please fill all the fields marked with *.");
     }
   };
 
@@ -818,7 +827,7 @@ export const PurchaseOrderCreateForm = (props) => {
         console.error("API call failed:", error);
       }
     } else {
-         notify("error", "Please fill all the fields marked with *.");
+      notify("error", "Please fill all the fields marked with *.");
     }
   };
 
