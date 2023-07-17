@@ -221,7 +221,7 @@ const SalesAccounts = ({ year }) => {
                       { text: dataWithKeys?.reduce((total, item) => total + item.totaligst, 0).toFixed(2), style: "tableLabel" },
                       { text: dataWithKeys?.reduce((total, item) => total + item.totalcgst, 0).toFixed(2), style: "tableLabel" },
                       { text: dataWithKeys?.reduce((total, item) => total + item.totalsgst, 0).toFixed(2), style: "tableLabel" },
-                      { text: dataWithKeys?.reduce((total, item) => total + item.totalamount, 0).toFixed(2), style: "tableLabel" },
+                      { text: dataWithKeys?.reduce((total, item) => total + item.totalAmount, 0).toFixed(2), style: "tableLabel" },
                       { text: dataWithKeys?.reduce((total, item) => total + item.pendingAmount, 0).toFixed(2), style: "tableLabel" },
                     ]
                   ],
