@@ -342,9 +342,9 @@ const ViewWarehouse = () => {
       dataIndex: "zipcode",
     },
     {
-      title: "Description",
-      key: "description",
-      dataIndex: "description",
+      title: "Incharge Name",
+      key: "contactName",
+      dataIndex: "contactName",
     },
     {
       dataIndex: "actionEdit",
