@@ -611,7 +611,17 @@ const handleWorkInvoice = async (record) => {
 }
   const columns = [
     {
-      title: "Work Order Number",
+      title: (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          AMC Number
+        </div>
+      ),
       dataIndex: "id",
       key: "id",
       render: (name, record) => {

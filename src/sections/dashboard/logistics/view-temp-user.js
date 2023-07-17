@@ -219,7 +219,17 @@ const ViewTemporaryUser = () => {
 
   const columns = [
     {
-      title: "Name",
+      title: (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          Name
+        </div>
+      ),
       dataIndex: "userName",
       key: "userName",
       render: (name, record) => {

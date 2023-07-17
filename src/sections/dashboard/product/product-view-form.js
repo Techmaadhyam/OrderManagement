@@ -251,7 +251,13 @@ const filteredProducts = filteredData.filter(product => {
 const columns = [
   {
     title: (
-      <div style={{ display: "flex", alignItems: "center" }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         {!isSearching ? (
           <>
             <Typography variant="subtitle2">Part Name</Typography>

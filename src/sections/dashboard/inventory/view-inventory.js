@@ -196,7 +196,13 @@ const filteredProducts = filteredData.filter(product => {
   const columns = [
     {
       title: (
-        <div style={{ display: "flex", alignItems: "center" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           {!isSearching ? (
             <>
               <Typography variant="subtitle2">Part Name</Typography>
@@ -220,6 +226,7 @@ const filteredProducts = filteredData.filter(product => {
           )}
         </div>
       ),
+
       dataIndex: "product",
       key: "product",
       render: (name, record) => {

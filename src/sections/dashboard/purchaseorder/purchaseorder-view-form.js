@@ -182,7 +182,18 @@ const PurchaseOrderViewForm = () => {
 
   const columns = [
     {
-      title: "Purchase Order Number",
+      title: (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          Purchase Order Number
+        </div>
+      ),
+
       dataIndex: "id",
       key: "id",
       render: (name, record) => {

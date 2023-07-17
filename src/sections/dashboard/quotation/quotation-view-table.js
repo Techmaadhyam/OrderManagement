@@ -949,21 +949,31 @@ catch(error){
 }
   const columns = [
     {
-      title: 'Quotation Order Number',
-      dataIndex: 'id',
-      key: 'id',
+      title: (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          Quotation Order Number
+        </div>
+      ),
+      dataIndex: "id",
+      key: "id",
       render: (name, record) => {
         const handleNavigation = () => {
           navigate(`/dashboard/quotation/viewDetail`, { state: record });
         };
-        
+
         return (
           <Link
             color="primary"
             onClick={handleNavigation}
             sx={{
-              alignItems: 'center',
-              textAlign: 'center',
+              alignItems: "center",
+              textAlign: "center",
             }}
             underline="hover"
           >
@@ -974,7 +984,7 @@ catch(error){
     },
     {
       title: (
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div style={{ display: "flex", alignItems: "center" }}>
           {!isSearching ? (
             <>
               <Typography variant="subtitle2">Company Name</Typography>
@@ -997,39 +1007,39 @@ catch(error){
             </>
           )}
         </div>
-    ),
-      key: 'companyName',
-      dataIndex: 'companyName',
+      ),
+      key: "companyName",
+      dataIndex: "companyName",
     },
     {
-      title: 'Order Modified Date',
-      key: 'lastModifiedDate',
-      dataIndex: 'lastModifiedDate',
+      title: "Order Modified Date",
+      key: "lastModifiedDate",
+      dataIndex: "lastModifiedDate",
     },
     {
-      title: 'Created Date',
-      key: 'createdDate',
-      dataIndex: 'createdDate',
+      title: "Created Date",
+      key: "createdDate",
+      dataIndex: "createdDate",
     },
     {
-      title: 'Delivery Date',
-      key: 'deliveryDate',
-      dataIndex: 'deliveryDate',
+      title: "Delivery Date",
+      key: "deliveryDate",
+      dataIndex: "deliveryDate",
     },
     {
-      title: 'Status',
-      key: 'status',
-      dataIndex: 'status',
+      title: "Status",
+      key: "status",
+      dataIndex: "status",
     },
     {
-      title: 'Type',
-      key: 'type',
-      dataIndex: 'type',
+      title: "Type",
+      key: "type",
+      dataIndex: "type",
     },
     {
-      dataIndex: 'actionEdit',
-      key: 'actionEdit',
-       render: (_, record) => (
+      dataIndex: "actionEdit",
+      key: "actionEdit",
+      render: (_, record) => (
         <IconButton onClick={() => handleNavigation(record)}>
           <Icon>
             <EditIcon />
@@ -1038,32 +1048,32 @@ catch(error){
       ),
     },
     {
-      title: 'Download Quotation Spreadsheet',
-      dataIndex: 'quotation',
-      key: 'quotation',
+      title: "Download Quotation Spreadsheet",
+      dataIndex: "quotation",
+      key: "quotation",
       render: (_, record) => (
-        <IconButton  onClick={() => handleQuotation(record)}>
+        <IconButton onClick={() => handleQuotation(record)}>
           <Icon>
-              <DownloadIcon />
+            <DownloadIcon />
           </Icon>
         </IconButton>
       ),
     },
     {
-      title: 'Download Quotation PDF',
-      dataIndex: 'quotationPdf',
-      key: 'quotationPdf',
+      title: "Download Quotation PDF",
+      dataIndex: "quotationPdf",
+      key: "quotationPdf",
       render: (_, record) => (
-        <IconButton  onClick={() => handleQuotationPdf(record)}>
+        <IconButton onClick={() => handleQuotationPdf(record)}>
           <Icon>
-              <DownloadIcon />
+            <DownloadIcon />
           </Icon>
         </IconButton>
       ),
     },
     {
-      dataIndex: 'actionDelete',
-      key: 'actionDelete',
+      dataIndex: "actionDelete",
+      key: "actionDelete",
       render: (_, row) => (
         <IconButton onClick={() => handleConfirmDelete(row.id)}>
           <Icon>

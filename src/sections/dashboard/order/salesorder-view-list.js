@@ -1094,7 +1094,17 @@ const SalesOrderViewList = () => {
 
   const columns = [
     {
-      title: "Sales Order Number",
+      title: (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          Sales Order Number
+        </div>
+      ),
       dataIndex: "id",
       key: "id",
       render: (name, record) => {

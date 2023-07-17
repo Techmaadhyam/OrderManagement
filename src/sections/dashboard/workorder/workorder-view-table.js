@@ -173,7 +173,17 @@ import Logo from '../logo/logo';
   
     const columns = [
       {
-        title: "Work Order Number",
+        title: (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            Work Order Number
+          </div>
+        ),
         dataIndex: "id",
         key: "id",
         render: (name, record) => {

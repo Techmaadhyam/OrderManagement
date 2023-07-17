@@ -297,7 +297,17 @@ const ViewWarehouse = () => {
 
   const columns = [
     {
-      title: "Warehouse Name",
+      title: (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          Warehouse Name
+        </div>
+      ),
       dataIndex: "name",
       key: "name",
       render: (name, record) => {
