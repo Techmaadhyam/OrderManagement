@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 import {
   Button,
@@ -8,178 +8,191 @@ import {
   Divider,
   TextField,
   MenuItem,
-  Unstable_Grid2 as Grid
-} from '@mui/material';
-import './inventory.css'
-import { Box } from '@mui/system';
+  Unstable_Grid2 as Grid,
+} from "@mui/material";
+import "./inventory.css";
+import { Box } from "@mui/system";
 
-import axios from 'axios';
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { apiUrl } from 'src/config';
-import Logo from '../logo/logo';
+import axios from "axios";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { apiUrl } from "src/config";
+import Logo from "../logo/logo";
 import IconWithPopup from "../user/user-icon";
+import { ToastContainer, toast } from "react-toastify";
 
-const userId = sessionStorage.getItem('user') || localStorage.getItem('user');
+const userId = sessionStorage.getItem("user") || localStorage.getItem("user");
 
 const userOptions = [
   {
-    label: 'None',
-    value: 'none'
+    label: "None",
+    value: "none",
   },
   {
-    label: 'Add New Rack',
-    value: 'others'
+    label: "Add New Rack",
+    value: "others",
   },
-  
 ];
 export const CreateInventory = (props) => {
-
   const [showAdditionalFields, setShowAdditionalFields] = useState(false);
-//warehouse
-  const [warehouse, setWarehouse]= useState()
-  const [warehouseId, setWarehouseId]=useState()
+  //warehouse
+  const [warehouse, setWarehouse] = useState();
+  const [warehouseId, setWarehouseId] = useState();
   //purchase order
-  const [purchaseOrder, setPurchaseOrder]=useState()
-  const [purchaseId, setPurchaseId]=useState()
+  const [purchaseOrder, setPurchaseOrder] = useState();
+  const [purchaseId, setPurchaseId] = useState();
   //category
-  const [category, setCategory]=useState()
-  const [categoryName, setCategoryName]=useState()
-  const [categoryId, setCategoryId]=useState()
+  const [category, setCategory] = useState();
+  const [categoryName, setCategoryName] = useState();
+  const [categoryId, setCategoryId] = useState();
 
   //product name
-  const [selectedName, setSelectedName]= useState()
+  const [selectedName, setSelectedName] = useState();
   const [selectedId, setSelectedId] = useState();
-  const [product, setProduct]=useState([])
+  const [product, setProduct] = useState([]);
   //remaining form states
 
-  const [hsnCode, setHsnCode] = useState('');
+  const [hsnCode, setHsnCode] = useState("");
   const [size, setSize] = useState("");
-  const [rack,  setRack]= useState('')
-  const [weight, setWeight] = useState('');
-  const [createdDate, setCreatedDate] = useState('');
-  const [quantity, setQuantity] = useState('');
-  const [cost,setCost] = useState('')
-  const [sgst, setSgst] = useState('');
-  const [igst, setIgst] = useState('');
-  const [cgst, setCgst] = useState('');
-  const [description, setDescription] = useState('');
+  const [rack, setRack] = useState("");
+  const [weight, setWeight] = useState("");
+  const [createdDate, setCreatedDate] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [cost, setCost] = useState("");
+  const [sgst, setSgst] = useState("");
+  const [igst, setIgst] = useState("");
+  const [cgst, setCgst] = useState("");
+  const [description, setDescription] = useState("");
 
-  const [rackName, setRackName] =useState('')
-  const [rackDesc, setRackDesc] =useState('')
+  const [rackName, setRackName] = useState("");
+  const [rackDesc, setRackDesc] = useState("");
 
-  const [userData, setUserData]= useState([])
+  const [userData, setUserData] = useState([]);
 
   const navigate = useNavigate();
-  
-console.log(selectedName, createdDate)
+
+  console.log(selectedName, createdDate);
 
   //get warehouse data
   useEffect(() => {
-    axios.get(apiUrl +`getAllWareHouse/${userId}`)
-      .then(response => {
-
-        setWarehouse(response.data)
-        console.log(response.data)
-
+    axios
+      .get(apiUrl + `getAllWareHouse/${userId}`)
+      .then((response) => {
+        setWarehouse(response.data);
+        console.log(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
   }, []);
   //get purchase order
-   
-  useEffect(() => {
-    axios.get(apiUrl +`getAllPurchaseOrderByUser/${userId}`)
-      .then(response => {
 
-        setPurchaseOrder(response.data)
-        console.log(response.data)
+  useEffect(() => {
+    axios
+      .get(apiUrl + `getAllPurchaseOrderByUser/${userId}`)
+      .then((response) => {
+        setPurchaseOrder(response.data);
+        console.log(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
   }, []);
-//get category
+  //get category
   useEffect(() => {
-    axios.get(apiUrl +`getAllCategorys/${userId}`)
-      .then(response => {
+    axios
+      .get(apiUrl + `getAllCategorys/${userId}`)
+      .then((response) => {
         setCategory(response.data);
         console.log(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
   }, []);
 
   //get Product
   useEffect(() => {
-    axios.get(apiUrl +`getAllItem/${userId}`)
-      .then(response => {
+    axios
+      .get(apiUrl + `getAllItem/${userId}`)
+      .then((response) => {
         setProduct(response.data);
         console.log(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
   }, []);
 
+    const notify = (type, message) => {
+      toast[type](message, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+  };
+  
   //  get date
   useEffect(() => {
     const today = new Date();
     const year = today.getFullYear().toString();
-    const month = (today.getMonth() + 1).toString().padStart(2, '0');
-    const day = today.getDate().toString().padStart(2, '0');
+    const month = (today.getMonth() + 1).toString().padStart(2, "0");
+    const day = today.getDate().toString().padStart(2, "0");
     const formattedDate = `${year}/${month}/${day}`;
     setCreatedDate(formattedDate);
   }, []);
 
-useEffect(() => {
-  axios.get(apiUrl +`getInventoryByUserId/${userId}`)
-    .then(response => {
-      setUserData(response.data);
-      console.log(response.data);
-    })
-    .catch(error => {
-      console.error(error);
-    });
-}, []);
+  useEffect(() => {
+    axios
+      .get(apiUrl + `getInventoryByUserId/${userId}`)
+      .then((response) => {
+        setUserData(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-  
+
     switch (name) {
-    
-        case 'hsncode':
-          setHsnCode(value);
-            break;
-        case 'rack':
+      case "hsncode":
+        setHsnCode(value);
+        break;
+      case "rack":
         setRack(value);
-          break;
-        case 'size':
-          setSize(value);
-          break;
-        case 'weight':
-          setWeight(value);
-          break;
-        case 'quantity':
-          setQuantity(value);
-          break;
-        case 'cost':
-          setCost(value);
-          break;
-        case 'cgst':
-          setCgst(value);
-          break;
-      case 'sgst':
+        break;
+      case "size":
+        setSize(value);
+        break;
+      case "weight":
+        setWeight(value);
+        break;
+      case "quantity":
+        setQuantity(value);
+        break;
+      case "cost":
+        setCost(value);
+        break;
+      case "cgst":
+        setCgst(value);
+        break;
+      case "sgst":
         setSgst(value);
-          break;
-      case 'igst':
+        break;
+      case "igst":
         setIgst(value);
-          break;
-      case 'description':
+        break;
+      case "description":
         setDescription(value);
-          break;
+        break;
       default:
         break;
     }
@@ -187,14 +200,17 @@ useEffect(() => {
 
   //handle rack change
   const handleCategoryChange = (event) => {
-
     const selectedCategory = event.target.value;
 
-    setRack(selectedCategory)
+    setRack(selectedCategory);
 
-    if (selectedCategory && selectedCategory !== 'none' && selectedCategory !== 'other' && isNaN(Number(selectedCategory))) {
+    if (
+      selectedCategory &&
+      selectedCategory !== "none" &&
+      selectedCategory !== "other" &&
+      isNaN(Number(selectedCategory))
+    ) {
       setShowAdditionalFields(true);
-
     } else {
       setShowAdditionalFields(false);
     }
@@ -207,23 +223,24 @@ useEffect(() => {
     setRackDesc(event.target.value);
   };
 
-  const mappedOptions = userData.map(({ rack}) => ({
+  const mappedOptions = userData.map(({ rack }) => ({
     label: rack.name,
-    value: rack.id
+    value: rack.id,
   }));
 
-  const rackIdSet = new Set(); 
-  const updatedUserOptions = userOptions.concat(mappedOptions.filter(newOption => {
-    if (rackIdSet.has(newOption.value)) {
-      return false; 
-    } else {
-      rackIdSet.add(newOption.value); 
-      return true; 
-    }
-  }));
+  const rackIdSet = new Set();
+  const updatedUserOptions = userOptions.concat(
+    mappedOptions.filter((newOption) => {
+      if (rackIdSet.has(newOption.value)) {
+        return false;
+      } else {
+        rackIdSet.add(newOption.value);
+        return true;
+      }
+    })
+  );
 
-  const handleSave=async ()=>{
-
+  const handleSave = async () => {
     // let inventory ={
     //   productId: selectedId,
     //   purchaseOrderId:purchaseId,
@@ -242,7 +259,7 @@ useEffect(() => {
     //   createdDate: createdDate,
     //   lastModifiedDate: createdDate
     // }
-   
+
     let inventory = {
       inventory: {
         quantity: parseFloat(quantity),
@@ -262,7 +279,7 @@ useEffect(() => {
         lastModifiedByUser: { id: userId },
       },
       warehouse: {
-        id: warehouseId
+        id: warehouseId,
       },
 
       rack: {
@@ -275,88 +292,117 @@ useEffect(() => {
         id: categoryId,
       },
     };
-  let inventoryWithRack = {
-    inventory: {
-      quantity: parseFloat(quantity),
-      weight: weight,
-      size: size,
-      hsncode: hsnCode,
-      price: parseFloat(cost),
-      description: description,
-      createdBy: parseFloat(userId),
-      //productId: selectedId,
-      product: { id: selectedId },
-      purchaseOrderId: purchaseId,
+    let inventoryWithRack = {
+      inventory: {
+        quantity: parseFloat(quantity),
+        weight: weight,
+        size: size,
+        hsncode: hsnCode,
+        price: parseFloat(cost),
+        description: description,
+        createdBy: parseFloat(userId),
+        //productId: selectedId,
+        product: { id: selectedId },
+        purchaseOrderId: purchaseId,
 
-      sgst: parseFloat(sgst) || 0,
-      cgst: parseFloat(cgst) || 0,
-      igst: parseFloat(igst) || 0,
-      createdDate: new Date(),
-      lastModifiedByUser: { id: userId },
-    },
-    warehouse: {
-      id: warehouseId
-    },
+        sgst: parseFloat(sgst) || 0,
+        cgst: parseFloat(cgst) || 0,
+        igst: parseFloat(igst) || 0,
+        createdDate: new Date(),
+        lastModifiedByUser: { id: userId },
+      },
+      warehouse: {
+        id: warehouseId,
+      },
 
-    rack: {
-      id: rack,
-    },
+      rack: {
+        id: rack,
+      },
 
-    category: {
-      id: categoryId,
-    },
-  };
-    debugger;
-    if ( showAdditionalFields &&  warehouseId && quantity && weight && hsnCode && cost && userId) {
+      category: {
+        id: categoryId,
+      },
+    };
+
+    if (
+      showAdditionalFields &&
+      warehouseId &&
+      quantity &&
+      weight &&
+      hsnCode &&
+      cost &&
+      description &&
+      selectedId &&
+      rackName &&
+      rackDesc &&
+      categoryId &&
+      ((sgst && cgst) || igst) &&
+      userId
+    ) {
       try {
-        const response = await fetch(apiUrl +'addInventory', {
-          method: 'POST',
+        const response = await fetch(apiUrl + "addInventory", {
+          method: "POST",
           headers: {
-  
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify(inventory)
+          body: JSON.stringify(inventory),
         });
-        
+
         if (response.ok) {
           // Redirect to home page upon successful submission
-      
-         response.json().then(data => {
-  
-          console.log(data)
-          navigate(`/dashboard/inventory/viewDetail/${data.id}`, { state: data });
-        });
-        } 
+
+          response.json().then((data) => {
+            console.log(data);
+            navigate(`/dashboard/inventory/viewDetail/${data.id}`, {
+              state: data,
+            });
+          });
+        }
       } catch (error) {
-        console.error('API call failed:', error);
+        console.error("API call failed:", error);
       }
-      debugger;
-    } else if (showAdditionalFields === false){
+    } else if (
+      showAdditionalFields === false &&
+      warehouseId &&
+      quantity &&
+      weight &&
+      hsnCode &&
+      cost &&
+      description &&
+      selectedId &&
+      rack !== "none" &&
+      categoryId &&
+      ((sgst && cgst) || igst) &&
+      userId
+    ) {
       try {
-        const response = await fetch(apiUrl +'addInventory', {
-          method: 'POST',
+        const response = await fetch(apiUrl + "addInventory", {
+          method: "POST",
           headers: {
-  
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify(inventoryWithRack)
+          body: JSON.stringify(inventoryWithRack),
         });
-        
+
         if (response.ok) {
           // Redirect to home page upon successful submission
-      
-         response.json().then(data => {
-  
-          console.log(data)
-          navigate(`/dashboard/inventory/viewDetail/${data.id}` ,{ state: data });
-        });
-        } 
+
+          response.json().then((data) => {
+            console.log(data);
+            navigate(`/dashboard/inventory/viewDetail/${data.id}`, {
+              state: data,
+            });
+          });
+        }
       } catch (error) {
-        console.error('API call failed:', error);
+        console.error("API call failed:", error);
       }
+    } else if (rack === "none") {
+      notify("error", "Cannot submit the form with empty Rack.");
+    } else {
+      notify("error", "Please fill all the fields marked with *.");
     }
-
-  }
+  };
 
   return (
     <div style={{ minWidth: "100%", marginBottom: "1rem" }}>
@@ -382,6 +428,18 @@ useEffect(() => {
 
       <form>
         <Card>
+          <ToastContainer
+            position="top-right"
+            autoClose={2000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
           <CardHeader title="Inventory Detail" />
           <CardContent sx={{ pt: 0 }}>
             <Grid container spacing={3}>
@@ -675,5 +733,5 @@ useEffect(() => {
 };
 
 CreateInventory.propTypes = {
-  customer: PropTypes.object.isRequired
+  customer: PropTypes.object.isRequired,
 };

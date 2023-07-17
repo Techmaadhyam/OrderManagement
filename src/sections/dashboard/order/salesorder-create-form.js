@@ -488,7 +488,7 @@ export const SalesOrderCreateForm = (props) => {
       return;
     }
 
-    if (quantity && price && productName && description && weight && size) {
+    if (quantity && price && inventoryId && description && weight && (cgst && sgst || igst)) {
       const newRow = {
         //inventoryId: inventoryId,
         inventory: { id: inventoryId },
@@ -570,6 +570,8 @@ export const SalesOrderCreateForm = (props) => {
       setTotalIgst(calcTotalIgst);
       setTotalSgst(calcTotalSgst);
       setTotalCost(calcTotalCost)
+    } else {
+      notify("error", "Please fill all the fields marked with *.");
     }
   };
 
@@ -627,7 +629,22 @@ export const SalesOrderCreateForm = (props) => {
     let finalAmount = totalAmount.toFixed(2);
     event.preventDefault();
 
-    if (contactName) {
+    if (
+      contactName &&
+      (tempId || userState) &&
+      phone &&
+      status &&
+      payment &&
+      deliveryIST &&
+      address &&
+      currentCity &&
+      currentCountry &&
+      currentState &&
+      zipcode &&
+      userId &&
+      deliveryMode &&
+      updatedRows
+    ) {
       try {
         const response = await fetch(apiUrl + "createSalesOrder", {
           method: "POST",
@@ -681,6 +698,8 @@ export const SalesOrderCreateForm = (props) => {
       } catch (error) {
         console.error("API call failed:", error);
       }
+    } else {
+      notify("error", "Please fill all the fields marked with *.");
     }
   };
 

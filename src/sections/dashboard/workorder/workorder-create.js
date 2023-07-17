@@ -32,6 +32,7 @@ import { useNavigate } from "react-router-dom";
 import "moment-timezone";
 import { apiUrl } from "src/config";
 import Logo from "../logo/logo";
+  import { ToastContainer, toast } from "react-toastify";
 
 //get userId
 const userId = parseInt(
@@ -188,6 +189,19 @@ export const WorkOrderCreateForm = (props) => {
     }
   };
 
+    const notify = (type, message) => {
+      toast[type](message, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    };
+
   //email validation
   const handleBlur = () => {
     setTouched(true);
@@ -280,7 +294,7 @@ export const WorkOrderCreateForm = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (price && productName && workstation && igst && description) {
+    if (price && productId && workstation && description) {
       const newRow = {
         product: { id: productId },
         productName,
@@ -323,19 +337,21 @@ export const WorkOrderCreateForm = (props) => {
         return total + igstAmount;
       }, 0);
 
-    const calcTotalCost = updatedRows.reduce((total, row) => {
-      const discountFactor =
-        row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
-      const discountedPrice = row.unitPrice * discountFactor;
+      const calcTotalCost = updatedRows.reduce((total, row) => {
+        const discountFactor =
+          row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+        const discountedPrice = row.unitPrice * discountFactor;
 
-      const cost = row.workstationcount * discountedPrice;
+        const cost = row.workstationcount * discountedPrice;
 
-      return total + cost;
-    }, 0);
+        return total + cost;
+      }, 0);
 
-    setTotalAmount(calculatedTotalAmount);
-    setTotalIgst(calcTotalIgst);
-    setTotalCost(calcTotalCost);
+      setTotalAmount(calculatedTotalAmount);
+      setTotalIgst(calcTotalIgst);
+      setTotalCost(calcTotalCost);
+    } else {
+      notify("error", "Please fill all the fields marked with *.");
     }
   };
   console.log(totalIgst);
@@ -408,14 +424,18 @@ export const WorkOrderCreateForm = (props) => {
     let finalAmount = totalAmount.toFixed(2);
 
     event.preventDefault();
-
+debugger
     if (
       contactName &&
       userId &&
       phone &&
+      inchargeEmail &&
+      adminName &&
+      adminPhone &&
+      adminEmail &&
+      type &&
+      technician &&
       status &&
-      comment &&
-      terms &&
       updatedRows &&
       tempId
     ) {
@@ -469,13 +489,21 @@ export const WorkOrderCreateForm = (props) => {
       } catch (error) {
         console.error("API call failed:", error);
       }
+      debugger;
     } else if (
-      contactName &&
+    contactName &&
       userId &&
       phone &&
+      inchargeEmail &&
+      adminName &&
+      adminPhone &&
+      adminEmail &&
+      type &&
+      technician &&
       status &&
       updatedRows &&
       userState
+ 
     ) {
       try {
         const response = await fetch(apiUrl + "addWorkOrderWithItems", {
@@ -526,6 +554,8 @@ export const WorkOrderCreateForm = (props) => {
       } catch (error) {
         console.error("API call failed:", error);
       }
+    } else {
+       notify("error", "Please fill all the fields marked with *.");
     }
   };
 
@@ -552,6 +582,18 @@ export const WorkOrderCreateForm = (props) => {
       </div>
       <form>
         <Card>
+          <ToastContainer
+            position="top-right"
+            autoClose={2000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
           <CardHeader title="Product Order Detail" />
           <CardContent sx={{ pt: 0 }}>
             <Grid container spacing={3}>

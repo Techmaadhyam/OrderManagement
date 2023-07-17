@@ -32,6 +32,7 @@ import { useNavigate } from "react-router-dom";
 import "moment-timezone";
 import { apiUrl } from "src/config";
 import Logo from "../logo/logo";
+import { ToastContainer, toast } from "react-toastify";
 
 //get userId
 const userId = parseInt(
@@ -187,6 +188,18 @@ export const AmcCreateForm = (props) => {
     }
   };
 
+    const notify = (type, message) => {
+      toast[type](message, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    };
   //email validation
   const handleBlur = () => {
     setTouched(true);
@@ -297,7 +310,7 @@ export const AmcCreateForm = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (price && productName && workstation && igst && description) {
+    if (price && productId && workstation && description) {
       const newRow = {
         product: { id: productId },
         productName,
@@ -353,6 +366,8 @@ export const AmcCreateForm = (props) => {
        setTotalAmount(calculatedTotalAmount);
        setTotalIgst(calcTotalIgst);
        setTotalCost(calcTotalCost);
+    } else {
+       notify("error", "Please fill all the fields marked with *.");
     }
   };
 
@@ -408,10 +423,17 @@ export const AmcCreateForm = (props) => {
       contactName &&
       userId &&
       phone &&
-      status &&
-      comment &&
-      terms &&
+      inchargeEmail &&
+      adminName &&
+      adminPhone &&
+      adminEmail &&
+      type &&
+      technician &&
       updatedRows &&
+      status &&
+
+      deliveryIST &&
+      deliveryIST2 &&
       tempId
     ) {
       try {
@@ -469,8 +491,17 @@ export const AmcCreateForm = (props) => {
       contactName &&
       userId &&
       phone &&
+      inchargeEmail &&
+      adminName &&
+      adminPhone &&
+      adminEmail &&
+      type &&
+      technician &&
+
       status &&
       updatedRows &&
+      deliveryIST &&
+      deliveryIST2 &&
       userState
     ) {
       try {
@@ -522,6 +553,8 @@ export const AmcCreateForm = (props) => {
       } catch (error) {
         console.error("API call failed:", error);
       }
+    } else {
+      notify("error", "Please fill all the fields marked with *.");
     }
   };
 
@@ -549,6 +582,18 @@ export const AmcCreateForm = (props) => {
 
       <form>
         <Card>
+          <ToastContainer
+            position="top-right"
+            autoClose={2000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
           <CardHeader title="Product Order Detail" />
           <CardContent sx={{ pt: 0 }}>
             <Grid container spacing={3}>
@@ -557,13 +602,9 @@ export const AmcCreateForm = (props) => {
                   fullWidth
                   label="Type"
                   name="type"
-           
                   required
                   value={type}
-              
-                >
-                  
-                </TextField>
+                ></TextField>
               </Grid>
               <Grid xs={12} md={4}>
                 <DatePicker

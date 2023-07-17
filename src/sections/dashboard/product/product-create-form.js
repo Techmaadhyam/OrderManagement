@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 import {
   Button,
@@ -8,78 +8,95 @@ import {
   Divider,
   TextField,
   MenuItem,
-  Unstable_Grid2 as Grid
-} from '@mui/material';
-import { Box } from '@mui/system';
-import IconWithPopup from '../user/user-icon';
-import { useState} from 'react';
-import { useEffect } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { apiUrl } from 'src/config';
-import Logo from '../logo/logo';
+  Unstable_Grid2 as Grid,
+} from "@mui/material";
+import { Box } from "@mui/system";
+import IconWithPopup from "../user/user-icon";
+import { useState } from "react";
+import { useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { apiUrl } from "src/config";
+import Logo from "../logo/logo";
+  import { ToastContainer, toast } from "react-toastify";
 
-  //get userid 
-  const userId = sessionStorage.getItem('user') || localStorage.getItem('user');
+//get userid
+const userId = sessionStorage.getItem("user") || localStorage.getItem("user");
 
 export const CreateProduct = (props) => {
   const [showAdditionalFields, setShowAdditionalFields] = useState(false);
-  const [product, setProduct]= useState('')
-  const [category, setCategory]= useState('')
-  const [newCategory, setNewCategory]= useState('')
+  const [product, setProduct] = useState("");
+  const [category, setCategory] = useState("");
+  const [newCategory, setNewCategory] = useState("");
   // const [type, setType]= useState('Parts')
-  const [desc1, setDesc1]= useState('')
-  const [desc2, setDesc2]= useState('')
-  const [currentDate, setCurrentDate] = useState('');
-  const [data, setData]= useState([])
-  const [partNumber, setpartNumber] = useState('')
-    const [sgst, setSgst] = useState("");
-    const [igst, setIgst] = useState("");
-    const [cgst, setCgst] = useState("");
-  
-  
-//handle category change
-  const handleCategoryChange = (event) => {
+  const [desc1, setDesc1] = useState("");
+  const [desc2, setDesc2] = useState("");
+  const [currentDate, setCurrentDate] = useState("");
+  const [data, setData] = useState([]);
+  const [partNumber, setpartNumber] = useState("");
+  const [sgst, setSgst] = useState("");
+  const [igst, setIgst] = useState("");
+  const [cgst, setCgst] = useState("");
 
+  //handle category change
+  const handleCategoryChange = (event) => {
     const selectedCategory = event.target.value;
     //console.log(selectedCategory)
-    setCategory(selectedCategory)
+    setCategory(selectedCategory);
 
-    if (selectedCategory && selectedCategory !== 'none' && selectedCategory !== 'other' && isNaN(Number(selectedCategory))) {
+    if (
+      selectedCategory &&
+      selectedCategory !== "none" &&
+      selectedCategory !== "other" &&
+      isNaN(Number(selectedCategory))
+    ) {
       setShowAdditionalFields(true);
-
     } else {
       setShowAdditionalFields(false);
     }
   };
- //  get date
- useEffect(() => {
-  const today = new Date();
-  const options = { day: 'numeric', month: 'numeric', year: 'numeric' };
-  const formattedDate = today.toLocaleDateString('en-ZA', options);
-  setCurrentDate(formattedDate);
-}, []);
+
+    const notify = (type, message) => {
+      toast[type](message, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+  };
+  
+  //  get date
+  useEffect(() => {
+    const today = new Date();
+    const options = { day: "numeric", month: "numeric", year: "numeric" };
+    const formattedDate = today.toLocaleDateString("en-ZA", options);
+    setCurrentDate(formattedDate);
+  }, []);
 
   //get category using userid
   useEffect(() => {
-    axios.get(apiUrl +`getAllCategorys/${userId}`)
-      .then(response => {
-   
+    axios
+      .get(apiUrl + `getAllCategorys/${userId}`)
+      .then((response) => {
         setData(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
   }, []);
-//concat useroptions with new data from above API GET request
+  //concat useroptions with new data from above API GET request
   const userOptions = [
     {
-      label: 'None',
-      value: 'none'
+      label: "None",
+      value: "none",
     },
     {
-      label: 'Add New Model',
-      value: 'Add New Model'
+      label: "Add New Model",
+      value: "Add New Model",
     },
     // {
     //   label: 'ETON STD 2002',
@@ -101,9 +118,7 @@ export const CreateProduct = (props) => {
     //   label: 'ETON 4000',
     //   value: 'ETON 4000'
     // },
-    
   ];
-
 
   // const typeDropdown = [
   //   {
@@ -114,16 +129,15 @@ export const CreateProduct = (props) => {
   //     label: 'Spare Parts',
   //     value: 'Spare Parts'
   //   },
-    
+
   // ];
 
   const mappedOptions = data.map(({ id, name }) => ({
     label: name,
-    value: id
+    value: id,
   }));
-  
-  const updatedUserOptions = userOptions.concat(mappedOptions);
 
+  const updatedUserOptions = userOptions.concat(mappedOptions);
 
   //handle user inputs
   const handleProduct = (event) => {
@@ -147,11 +161,19 @@ export const CreateProduct = (props) => {
   //for sending response body via route
   const navigate = useNavigate();
   //handle save
-  let requestBody
-  
-  const handleSave = () => {
+  let requestBody;
 
-    if(showAdditionalFields){
+  const handleSave = () => {
+    if (
+      showAdditionalFields &&
+      product &&
+      partNumber &&
+      desc2 &&
+      userId &&
+      ((sgst && cgst) || igst) &&
+      newCategory &&
+      desc1
+    ) {
       requestBody = {
         product: {
           productName: product,
@@ -173,7 +195,15 @@ export const CreateProduct = (props) => {
           createdDate: new Date(),
         },
       };
-    } else if(showAdditionalFields===false && product && desc2 && userId && currentDate && category){
+    } else if (
+      showAdditionalFields === false &&
+      product &&
+      desc2 &&
+      userId &&
+      category && 
+      ((sgst && cgst) || igst) && 
+      partNumber
+    ) {
       requestBody = {
         product: {
           productName: product,
@@ -192,35 +222,34 @@ export const CreateProduct = (props) => {
           id: category,
         },
       };
+    } else {
+         notify("error", "Please fill all the fields marked with *.");
     }
-    
+
     const config = {
       headers: {
-        'Accept': 'application/json',
-        'Content-Type':'application/json'
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
     };
-   console.log(JSON.stringify(requestBody))
-    axios.post(apiUrl +'addProduct', JSON.stringify(requestBody), config)
-      .then(response => {
+
+    axios
+      .post(apiUrl + "addProduct", JSON.stringify(requestBody), config)
+      .then((response) => {
         // Handle successful response
         console.log(response.data);
         if (response.status === 200) {
           //navigate to view product details (using react router)
-          navigate(`/dashboard/products/viewDetail/${response.data.id}` ,{ state: response.data });
-        
+          navigate(`/dashboard/products/viewDetail/${response.data.id}`, {
+            state: response.data,
+          });
         }
-      
-
       })
-      .catch(error => {
+      .catch((error) => {
         // Handle error
         console.error(error);
       });
   };
-
-
-
 
   return (
     <div style={{ minWidth: "100%", marginBottom: "1rem" }}>
@@ -246,6 +275,18 @@ export const CreateProduct = (props) => {
 
       <form>
         <Card>
+          <ToastContainer
+            position="top-right"
+            autoClose={2000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
           <CardHeader title="Part Detail" />
           <CardContent sx={{ pt: 0 }}>
             <Grid container spacing={3}>
@@ -419,5 +460,5 @@ export const CreateProduct = (props) => {
 };
 
 CreateProduct.propTypes = {
-  customer: PropTypes.object.isRequired
+  customer: PropTypes.object.isRequired,
 };

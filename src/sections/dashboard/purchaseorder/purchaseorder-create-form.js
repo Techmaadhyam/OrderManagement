@@ -39,6 +39,7 @@ import {
   fetchCities,
   fetchIndianStates,
 } from "src/utils/api-service";
+ import { ToastContainer, toast } from "react-toastify";
 
 //get userId from session storage
 const userId = parseInt(
@@ -176,7 +177,6 @@ export const PurchaseOrderCreateForm = (props) => {
   const [totalIgst, setTotalIgst] = useState(0);
   const [totalSgst, setTotalSgst] = useState(0);
   const [totalCost, setTotalCost] = useState(0);
-  
 
   //handle file uploads
   const [performaInvoiceFile, setPerformaInvoiceFile] = useState(null);
@@ -332,6 +332,18 @@ export const PurchaseOrderCreateForm = (props) => {
         break;
     }
   };
+  const notify = (type, message) => {
+    toast[type](message, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  };
 
   const handleDateChange = (date) => {
     setDeliveryDate(date);
@@ -417,16 +429,16 @@ export const PurchaseOrderCreateForm = (props) => {
 
       0
     );
-       const calcTotalCost = updatedRows.reduce(
-         (total, row) => total + row.quantity * row.price,
-         0
-       );
+    const calcTotalCost = updatedRows.reduce(
+      (total, row) => total + row.quantity * row.price,
+      0
+    );
 
     setTotalAmount(calculatedTotalAmount);
     setTotalCgst(calcTotalCgst);
     setTotalIgst(calcTotalIgst);
     setTotalSgst(calcTotalSgst);
-    setTotalCost(calcTotalCost)
+    setTotalCost(calcTotalCost);
   };
 
   //handle show hide popup form
@@ -446,7 +458,7 @@ export const PurchaseOrderCreateForm = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (quantity && price && productName && description && weight && size) {
+    if (quantity && price && productId && description && weight && size && (cgst && sgst || igst)) {
       const newRow = {
         product: { id: productId },
         productName,
@@ -505,16 +517,18 @@ export const PurchaseOrderCreateForm = (props) => {
 
         0
       );
-         const calcTotalCost = updatedRows.reduce(
-           (total, row) => total +(row.quantity * row.price),
-           0
-         );
+      const calcTotalCost = updatedRows.reduce(
+        (total, row) => total + row.quantity * row.price,
+        0
+      );
 
       setTotalAmount(calculatedTotalAmount);
       setTotalCgst(calcTotalCgst);
       setTotalIgst(calcTotalIgst);
       setTotalSgst(calcTotalSgst);
       setTotalCost(calcTotalCost);
+    } else {
+         notify("error", "Please fill all the fields marked with *.");
     }
   };
 
@@ -576,7 +590,21 @@ export const PurchaseOrderCreateForm = (props) => {
     let finalAmount = totalAmount.toFixed(2);
     event.preventDefault();
 
-    if (contactName) {
+    if (
+      contactName &&
+      (tempId || userState) &&
+      phone &&
+      status &&
+      payment &&
+      deliveryIST &&
+      address &&
+      currentCity &&
+      currentCountry &&
+      currentState &&
+      zipcode &&
+      userId &&
+      updatedRows
+    ) {
       try {
         const response = await fetch(apiUrl + "createPurchaseOrder", {
           method: "POST",
@@ -610,7 +638,7 @@ export const PurchaseOrderCreateForm = (props) => {
               totalsgst: totalSgst,
               totaligst: totalIgst,
               totalAmount: finalAmount,
-              totalcost: totalCost
+              totalcost: totalCost,
             },
             purchaseOrderDetails: updatedRows,
 
@@ -789,6 +817,8 @@ export const PurchaseOrderCreateForm = (props) => {
       } catch (error) {
         console.error("API call failed:", error);
       }
+    } else {
+         notify("error", "Please fill all the fields marked with *.");
     }
   };
 
@@ -851,6 +881,18 @@ export const PurchaseOrderCreateForm = (props) => {
       </div>
       <form>
         <Card>
+          <ToastContainer
+            position="top-right"
+            autoClose={2000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
           <CardHeader title="Product Order Detail" />
           <CardContent sx={{ pt: 0 }}>
             <Grid container spacing={3}>
