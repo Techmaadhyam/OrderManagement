@@ -548,26 +548,23 @@ export const ViewTemporaryUserDetail = (props) => {
           title={state?.type === "Vendor" ? "Vendor Detail" : "Customer Detail"}
         />
         <PropertyList>
-          <PropertyListItem align={align} label="Company Contact Person">
-            <Typography variant="subtitle2">
-              {state?.contactpersonname}
-            </Typography>
+          <PropertyListItem align={align} label="Company Name">
+            <Typography variant="subtitle2">{state?.companyName}</Typography>
           </PropertyListItem>
           <Divider />
           <PropertyListItem
             align={align}
-            label="Email"
-            value={state?.emailId}
+            label="Company Contact Person"
+            value={state?.contactpersonname}
           />
-          <Divider />
-          <PropertyListItem align={align} label="Type" value={state?.type} />
           <Divider />
           <PropertyListItem
             align={align}
-            label="Company"
-            value={state?.companyName}
+            label="Company Email"
+            value={state?.emailId}
           />
           <Divider />
+          
           <PropertyListItem
             align={align}
             label="Address"
@@ -620,7 +617,7 @@ export const ViewTemporaryUserDetail = (props) => {
                 Quotation list
               </Typography>
               <Typography variant="h6" sx={{ ml: 1 }}>
-                ({ quotation.length})
+                ({quotation.length})
               </Typography>
             </Box>
           }
@@ -666,7 +663,7 @@ export const ViewTemporaryUserDetail = (props) => {
                 Sales Order list
               </Typography>
               <Typography variant="h6" sx={{ ml: 1 }}>
-                ({ so.length })
+                ({so.length})
               </Typography>
             </Box>
           }
@@ -712,7 +709,7 @@ export const ViewTemporaryUserDetail = (props) => {
                 Purchase Order list
               </Typography>
               <Typography variant="h6" sx={{ ml: 1 }}>
-                ({ po.length })
+                ({po.length})
               </Typography>
             </Box>
           }
@@ -758,7 +755,7 @@ export const ViewTemporaryUserDetail = (props) => {
                 Work Order list
               </Typography>
               <Typography variant="h6" sx={{ ml: 1 }}>
-                ({ wo.length })
+                ({wo.length})
               </Typography>
             </Box>
           }
