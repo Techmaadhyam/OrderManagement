@@ -319,7 +319,10 @@ console.log(uploadFile)
         currentCity &&
         zipcode &&
         password &&
-        currentDate
+        address &&
+        gstn && 
+        pan
+      
       ) {
         try {
           const response = await fetch(apiUrl + "addUser", {
