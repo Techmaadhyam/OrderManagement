@@ -7,7 +7,9 @@ import { Box } from "@mui/system";
 import { apiUrl } from "src/config";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "../pdfAssets/vfs_fonts";
-import { LogoContext } from 'src/utils/logoContext'
+import { LogoContext } from 'src/utils/logoContext';
+import CircularProgress from "@mui/material/CircularProgress";
+
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 pdfMake.fonts = {
   Helvetica: {
@@ -18,6 +20,7 @@ pdfMake.fonts = {
 const AmcAccounts = ({ year, category }) => {
   const { logo } = useContext(LogoContext);
   const [userData, setUserData] = useState({});
+   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const userId =
@@ -26,6 +29,7 @@ const AmcAccounts = ({ year, category }) => {
     axios
       .get(apiUrl + `getWorkOrderAccountingForMonthYear/${userId}/${category}/${year}`)
       .then((response) => {
+        
         const groupedData = {};
 
         for (const { workOrder, monthname } of response.data) {
@@ -37,6 +41,7 @@ const AmcAccounts = ({ year, category }) => {
         }
 
         setUserData(groupedData);
+        setLoading(false);
       })
       .catch((error) => {
         console.error(error);
@@ -51,7 +56,30 @@ const AmcAccounts = ({ year, category }) => {
     return `${year}/${month}/${day}`;
   };
 
+  
+
   const renderTablesForMonths = () => {
+
+      if (loading) {
+        return (
+          <div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100px",
+              }}
+            >
+              <CircularProgress />
+            </div>
+          </div>
+        ); // Show a loading indicator while waiting for the response
+      }
+
+      if (Object.keys(userData).length === 0) {
+        return <NoRecordsComponent />;
+      }
     return Object.entries(userData).map(([month, data]) => {
       const dataWithKeys = data?.map((item) => ({
         ...item,
@@ -374,6 +402,29 @@ const AmcAccounts = ({ year, category }) => {
         </Box>
       );
     });
+  };
+  const NoRecordsComponent = () => {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "50vh", // Adjust the height as needed
+        }}
+      >
+        <img
+          src="/assets/logos/accounting.svg"
+          alt="No Records"
+          style={{ width: "100px", height: "100px" }}
+        />
+        <Typography variant="h6" sx={{ mt: 2 }}>
+          Oops!
+        </Typography>
+        <Typography variant="body1">No records found.</Typography>
+      </Box>
+    );
   };
 
   return <>{renderTablesForMonths()}</>;
