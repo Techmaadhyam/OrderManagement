@@ -40,7 +40,7 @@ const User = () => {
           </SvgIcon>
         </ButtonBase>
         <div className="popup-content">
-          <span className='title'>TechMaadhyam</span>
+          <span className='title'>{logo?.company}</span>
           <span className='user'>User: {logo?.firstName+' '+logo?.lastName}</span>
           <span className='mail'>Mail: {logo?.userName}</span>
         </div>
