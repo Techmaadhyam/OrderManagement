@@ -304,7 +304,7 @@ const ViewWarehouse = () => {
           style={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
+
           }}
         >
           Warehouse Name
@@ -323,7 +323,7 @@ const ViewWarehouse = () => {
             onClick={handleNavigation}
             sx={{
               alignItems: "center",
-              textAlign: "center",
+         
             }}
             underline="hover"
           >

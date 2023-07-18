@@ -188,7 +188,7 @@ const PurchaseOrderViewForm = () => {
           style={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
+ 
           }}
         >
           Purchase Order Number
@@ -210,7 +210,7 @@ const PurchaseOrderViewForm = () => {
             onClick={handleNavigation}
             sx={{
               alignItems: "center",
-              textAlign: "center",
+ 
             }}
             underline="hover"
           >

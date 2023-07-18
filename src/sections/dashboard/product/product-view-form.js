@@ -257,7 +257,7 @@ const columns = [
         style={{
           display: "flex",
           alignItems: "center",
-          justifyContent: "center",
+
         }}
       >
         {!isSearching ? (
@@ -298,7 +298,7 @@ const columns = [
           onClick={handleNavigation}
           sx={{
             alignItems: "center",
-            textAlign: "center",
+     
           }}
           underline="hover"
         >

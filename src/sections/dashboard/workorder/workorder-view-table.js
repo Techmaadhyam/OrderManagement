@@ -179,7 +179,7 @@ import Logo from '../logo/logo';
             style={{
               display: "flex",
               alignItems: "center",
-              justifyContent: "center",
+
             }}
           >
             Work Order Number
@@ -198,7 +198,7 @@ import Logo from '../logo/logo';
               onClick={handleNavigation}
               sx={{
                 alignItems: "center",
-                textAlign: "center",
+         
               }}
               underline="hover"
             >

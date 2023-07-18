@@ -90,9 +90,11 @@ const WorkAccounts = ({ year, category }) => {
 
       const column = [
         {
-          title: "Sl No",
+          title: <span style={{ textAlign: "center" }}>SlNO</span>,
           key: "slNo",
-          render: (text, record, index) => index + 1,
+          render: (text, record, index) => (
+            <div style={{ textAlign: "center" }}>{index + 1}</div>
+          ),
         },
         {
           title: "Order Date",

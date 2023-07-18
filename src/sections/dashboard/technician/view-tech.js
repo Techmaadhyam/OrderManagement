@@ -229,7 +229,7 @@ const handleCompanyCancel = () => {
           style={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
+    
           }}
         >
           Name
@@ -248,7 +248,7 @@ const handleCompanyCancel = () => {
             onClick={handleNavigation}
             sx={{
               alignItems: "center",
-              textAlign: "center",
+ 
             }}
             underline="hover"
           >

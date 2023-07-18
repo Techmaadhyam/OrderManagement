@@ -957,7 +957,7 @@ catch(error){
           style={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
+      
           }}
         >
           Quotation Order Number
@@ -976,7 +976,7 @@ catch(error){
             onClick={handleNavigation}
             sx={{
               alignItems: "center",
-              textAlign: "center",
+
             }}
             underline="hover"
           >

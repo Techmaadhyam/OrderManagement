@@ -1101,7 +1101,7 @@ const SalesOrderViewList = () => {
           style={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
+
           }}
         >
           Sales Order Number
@@ -1122,7 +1122,7 @@ const SalesOrderViewList = () => {
             onClick={handleNavigation}
             sx={{
               alignItems: "center",
-              textAlign: "center",
+ 
             }}
             underline="hover"
           >

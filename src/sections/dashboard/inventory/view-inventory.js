@@ -202,7 +202,7 @@ const filteredProducts = filteredData.filter(product => {
           style={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
+          
           }}
         >
           {!isSearching ? (
@@ -244,7 +244,7 @@ const filteredProducts = filteredData.filter(product => {
             onClick={handleNavigation}
             sx={{
               alignItems: "center",
-              textAlign: "center",
+        
             }}
             underline="hover"
           >

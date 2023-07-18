@@ -7,20 +7,20 @@ import { Box } from "@mui/system";
 import { apiUrl } from "src/config";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "../pdfAssets/vfs_fonts";
-import { LogoContext } from 'src/utils/logoContext';
+import { LogoContext } from "src/utils/logoContext";
 import CircularProgress from "@mui/material/CircularProgress";
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 pdfMake.fonts = {
   Helvetica: {
-    normal: 'Helvetica.ttf',
-    bold: 'Helvetica-Bold.ttf',
-  }
+    normal: "Helvetica.ttf",
+    bold: "Helvetica-Bold.ttf",
+  },
 };
 
 const SalesAccounts = ({ year }) => {
   const { logo } = useContext(LogoContext);
   const [userData, setUserData] = useState({});
-    const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const userId =
@@ -40,7 +40,7 @@ const SalesAccounts = ({ year }) => {
         }
 
         setUserData(groupedData);
-         setLoading(false);
+        setLoading(false);
       })
       .catch((error) => {
         console.error(error);
@@ -56,26 +56,26 @@ const SalesAccounts = ({ year }) => {
   };
 
   const renderTablesForMonths = () => {
-     if (loading) {
-       return (
-         <div>
-           <div
-             style={{
-               display: "flex",
-               justifyContent: "center",
-               alignItems: "center",
-               height: "100px",
-             }}
-           >
-             <CircularProgress />
-           </div>
-         </div>
-       ); // Show a loading indicator while waiting for the response
-     }
+    if (loading) {
+      return (
+        <div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100px",
+            }}
+          >
+            <CircularProgress />
+          </div>
+        </div>
+      ); // Show a loading indicator while waiting for the response
+    }
 
-     if (Object.keys(userData).length === 0) {
-       return <NoRecordsComponent />;
-     }
+    if (Object.keys(userData).length === 0) {
+      return <NoRecordsComponent />;
+    }
     return Object.entries(userData).map(([month, data]) => {
       const dataWithKeys = data?.map((item) => ({
         ...item,
@@ -87,9 +87,11 @@ const SalesAccounts = ({ year }) => {
 
       const column = [
         {
-          title: "Sl No",
+          title: <span style={{ textAlign: "center" }}>SlNO</span>,
           key: "slNo",
-          render: (text, record, index) => index + 1,
+          render: (text, record, index) => (
+            <div style={{ textAlign: "center" }}>{index + 1}</div>
+          ),
         },
         {
           title: "Order Date",
@@ -145,7 +147,7 @@ const SalesAccounts = ({ year }) => {
       ];
       const handlePDF = () => {
         try {
-          console.log(dataWithKeys)
+          console.log(dataWithKeys);
           const rowData = dataWithKeys.map((item, index) => {
             return [
               { text: index + 1, style: "tableContent" },
@@ -158,8 +160,11 @@ const SalesAccounts = ({ year }) => {
               { text: item.totalcgst, style: "tableContent" },
               { text: item.totalsgst, style: "tableContent" },
               { text: item.totalAmount, style: "tableContent" },
-              { text: item.totalAmount - item.paidamount, style: "tableContent" },
-            ]
+              {
+                text: item.totalAmount - item.paidamount,
+                style: "tableContent",
+              },
+            ];
           });
           const docDefinition = {
             pageOrientation: "landscape",
@@ -185,7 +190,6 @@ const SalesAccounts = ({ year }) => {
                             style: "header",
                             alignment: "center",
                           },
-
                         ],
                         border: [true, true, true, false],
                         margin: [0, 10, 0, 20],
@@ -240,13 +244,46 @@ const SalesAccounts = ({ year }) => {
                       { text: "", style: "tableLabel" },
                       { text: "", style: "tableLabel" },
                       { text: "", style: "tableLabel" },
-                      { text: dataWithKeys?.reduce((total, item) => total + item.totalcost, 0).toFixed(2), style: "tableLabel" },
-                      { text: dataWithKeys?.reduce((total, item) => total + item.totaligst, 0).toFixed(2), style: "tableLabel" },
-                      { text: dataWithKeys?.reduce((total, item) => total + item.totalcgst, 0).toFixed(2), style: "tableLabel" },
-                      { text: dataWithKeys?.reduce((total, item) => total + item.totalsgst, 0).toFixed(2), style: "tableLabel" },
-                      { text: dataWithKeys?.reduce((total, item) => total + item.totalAmount, 0).toFixed(2), style: "tableLabel" },
-                      { text: dataWithKeys?.reduce((total, item) => total + item.pendingAmount, 0).toFixed(2), style: "tableLabel" },
-                    ]
+                      {
+                        text: dataWithKeys
+                          ?.reduce((total, item) => total + item.totalcost, 0)
+                          .toFixed(2),
+                        style: "tableLabel",
+                      },
+                      {
+                        text: dataWithKeys
+                          ?.reduce((total, item) => total + item.totaligst, 0)
+                          .toFixed(2),
+                        style: "tableLabel",
+                      },
+                      {
+                        text: dataWithKeys
+                          ?.reduce((total, item) => total + item.totalcgst, 0)
+                          .toFixed(2),
+                        style: "tableLabel",
+                      },
+                      {
+                        text: dataWithKeys
+                          ?.reduce((total, item) => total + item.totalsgst, 0)
+                          .toFixed(2),
+                        style: "tableLabel",
+                      },
+                      {
+                        text: dataWithKeys
+                          ?.reduce((total, item) => total + item.totalAmount, 0)
+                          .toFixed(2),
+                        style: "tableLabel",
+                      },
+                      {
+                        text: dataWithKeys
+                          ?.reduce(
+                            (total, item) => total + item.pendingAmount,
+                            0
+                          )
+                          .toFixed(2),
+                        style: "tableLabel",
+                      },
+                    ],
                   ],
                 },
                 layout: {
@@ -304,13 +341,12 @@ const SalesAccounts = ({ year }) => {
                 bold: true,
               },
             },
-          }
+          };
           pdfMake.createPdf(docDefinition).open();
-
         } catch (error) {
-          console.error(error)
+          console.error(error);
         }
-      }
+      };
       return (
         <Box key={month} sx={{ mt: 3 }}>
           <Box
@@ -321,7 +357,12 @@ const SalesAccounts = ({ year }) => {
               marginBottom: 1,
             }}
           >
-            <Button color="primary" variant="contained" align="right" onClick={() => handlePDF()}>
+            <Button
+              color="primary"
+              variant="contained"
+              align="right"
+              onClick={() => handlePDF()}
+            >
               Generate PDF
             </Button>
           </Box>
@@ -397,29 +438,29 @@ const SalesAccounts = ({ year }) => {
       );
     });
   };
-    const NoRecordsComponent = () => {
-      return (
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "50vh", // Adjust the height as needed
-          }}
-        >
-          <img
-            src="/assets/logos/accounting.svg"
-            alt="No Records"
-            style={{ width: "100px", height: "100px" }}
-          />
-          <Typography variant="h6" sx={{ mt: 2 }}>
-            Oops!
-          </Typography>
-          <Typography variant="body1">No records found.</Typography>
-        </Box>
-      );
-    };
+  const NoRecordsComponent = () => {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "50vh", // Adjust the height as needed
+        }}
+      >
+        <img
+          src="/assets/logos/accounting.svg"
+          alt="No Records"
+          style={{ width: "100px", height: "100px" }}
+        />
+        <Typography variant="h6" sx={{ mt: 2 }}>
+          Oops!
+        </Typography>
+        <Typography variant="body1">No records found.</Typography>
+      </Box>
+    );
+  };
 
   return <>{renderTablesForMonths()}</>;
 };
