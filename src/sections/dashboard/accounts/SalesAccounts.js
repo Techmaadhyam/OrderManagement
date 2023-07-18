@@ -186,7 +186,7 @@ const SalesAccounts = ({ year }) => {
                             alignment: "left",
                           },
                           {
-                            text: `AMC Details of ${month} ${year}`,
+                            text: `Sales Details of ${month} ${year}`,
                             style: "header",
                             alignment: "center",
                           },
