@@ -309,7 +309,7 @@ const PurchaseAccounts = ({ year }) => {
               },
             },
           }
-          pdfMake.createPdf(docDefinition).open();
+          pdfMake.createPdf(docDefinition).download(`Purchase-${month} ${year}.pdf`);
 
         } catch (error) {
           console.error(error)

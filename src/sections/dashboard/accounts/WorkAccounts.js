@@ -310,7 +310,7 @@ const WorkAccounts = ({ year, category }) => {
               },
             },
           }
-          pdfMake.createPdf(docDefinition).open();
+          pdfMake.createPdf(docDefinition).download(`Work-${month} ${year}.pdf`);
 
         } catch (error) {
           console.error(error)
