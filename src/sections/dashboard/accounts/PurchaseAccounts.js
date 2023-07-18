@@ -21,7 +21,7 @@ pdfMake.fonts = {
 const PurchaseAccounts = ({ year }) => {
   const { logo } = useContext(LogoContext);
   const [userData, setUserData] = useState({});
-    const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const userId =
@@ -41,7 +41,7 @@ const PurchaseAccounts = ({ year }) => {
         }
 
         setUserData(groupedData);
-         setLoading(false);
+        setLoading(false);
       })
       .catch((error) => {
         console.error(error);
@@ -57,26 +57,26 @@ const PurchaseAccounts = ({ year }) => {
   };
 
   const renderTablesForMonths = () => {
-     if (loading) {
-       return (
-         <div>
-           <div
-             style={{
-               display: "flex",
-               justifyContent: "center",
-               alignItems: "center",
-               height: "100px",
-             }}
-           >
-             <CircularProgress />
-           </div>
-         </div>
-       ); // Show a loading indicator while waiting for the response
-     }
+    if (loading) {
+      return (
+        <div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100px",
+            }}
+          >
+            <CircularProgress />
+          </div>
+        </div>
+      ); // Show a loading indicator while waiting for the response
+    }
 
-     if (Object.keys(userData).length === 0) {
-       return <NoRecordsComponent />;
-     }
+    if (Object.keys(userData).length === 0) {
+      return <NoRecordsComponent />;
+    }
     return Object.entries(userData).map(([month, data]) => {
       const dataWithKeys = data?.map((item) => ({
         ...item,
@@ -183,7 +183,7 @@ const PurchaseAccounts = ({ year }) => {
                             alignment: "left",
                           },
                           {
-                            text: `AMC Details of ${month} ${year}`,
+                            text: `Purchase Details of ${month} ${year}`,
                             style: "header",
                             alignment: "center",
                           },
@@ -400,29 +400,29 @@ const PurchaseAccounts = ({ year }) => {
       );
     });
   };
-    const NoRecordsComponent = () => {
-      return (
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "50vh", // Adjust the height as needed
-          }}
-        >
-          <img
-            src="/assets/logos/accounting.svg"
-            alt="No Records"
-            style={{ width: "100px", height: "100px" }}
-          />
-          <Typography variant="h6" sx={{ mt: 2 }}>
-            Oops!
-          </Typography>
-          <Typography variant="body1">No records found.</Typography>
-        </Box>
-      );
-    };
+  const NoRecordsComponent = () => {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "50vh", // Adjust the height as needed
+        }}
+      >
+        <img
+          src="/assets/logos/accounting.svg"
+          alt="No Records"
+          style={{ width: "100px", height: "100px" }}
+        />
+        <Typography variant="h6" sx={{ mt: 2 }}>
+          Oops!
+        </Typography>
+        <Typography variant="body1">No records found.</Typography>
+      </Box>
+    );
+  };
 
   return <>{renderTablesForMonths()}</>;
 };
