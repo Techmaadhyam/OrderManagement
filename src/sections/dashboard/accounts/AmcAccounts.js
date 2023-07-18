@@ -20,7 +20,7 @@ pdfMake.fonts = {
 const AmcAccounts = ({ year, category }) => {
   const { logo } = useContext(LogoContext);
   const [userData, setUserData] = useState({});
-   const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const userId =
@@ -29,7 +29,7 @@ const AmcAccounts = ({ year, category }) => {
     axios
       .get(apiUrl + `getWorkOrderAccountingForMonthYear/${userId}/${category}/${year}`)
       .then((response) => {
-        
+
         const groupedData = {};
 
         for (const { workOrder, monthname } of response.data) {
@@ -56,30 +56,30 @@ const AmcAccounts = ({ year, category }) => {
     return `${year}/${month}/${day}`;
   };
 
-  
+
 
   const renderTablesForMonths = () => {
 
-      if (loading) {
-        return (
-          <div>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100px",
-              }}
-            >
-              <CircularProgress />
-            </div>
+    if (loading) {
+      return (
+        <div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100px",
+            }}
+          >
+            <CircularProgress />
           </div>
-        ); // Show a loading indicator while waiting for the response
-      }
+        </div>
+      ); // Show a loading indicator while waiting for the response
+    }
 
-      if (Object.keys(userData).length === 0) {
-        return <NoRecordsComponent />;
-      }
+    if (Object.keys(userData).length === 0) {
+      return <NoRecordsComponent />;
+    }
     return Object.entries(userData).map(([month, data]) => {
       const dataWithKeys = data?.map((item) => ({
         ...item,
@@ -317,7 +317,7 @@ const AmcAccounts = ({ year, category }) => {
               },
             },
           }
-          pdfMake.createPdf(docDefinition).open();
+          pdfMake.createPdf(docDefinition).download(`AMC-${month} ${year}.pdf`);
 
         } catch (error) {
           console.error(error)

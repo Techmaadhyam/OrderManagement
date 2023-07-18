@@ -342,7 +342,7 @@ const SalesAccounts = ({ year }) => {
               },
             },
           };
-          pdfMake.createPdf(docDefinition).open();
+          pdfMake.createPdf(docDefinition).download(`Sales-${month} ${year}.pdf`);
         } catch (error) {
           console.error(error);
         }
