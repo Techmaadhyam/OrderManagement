@@ -92,6 +92,7 @@ const QuotationViewTable = () => {
       })
       .catch(error => {
         console.error(error);
+          setLoading(false);
       });
   }, []);
 

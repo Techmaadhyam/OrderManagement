@@ -146,6 +146,7 @@ export const paths = {
     social: {
       index: "/dashboard/social",
       profile: "/dashboard/social/profile",
+      password: "/dashboard/social/password",
       feed: "/dashboard/social/feed",
     },
   },

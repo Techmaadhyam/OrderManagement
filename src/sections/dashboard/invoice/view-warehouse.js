@@ -66,6 +66,7 @@ const ViewWarehouse = () => {
       })
       .catch((error) => {
         console.error(error);
+          setLoading(false);
       });
   }, []);
 

@@ -82,6 +82,7 @@ const SalesOrderViewList = () => {
       })
       .catch((error) => {
         console.error(error);
+          setLoading(false);
       });
   }, []);
   const numberToWords = require("number-to-words");

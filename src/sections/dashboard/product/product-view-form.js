@@ -77,6 +77,7 @@ const ViewProduct = () => {
       })
       .catch(error => {
         console.error(error);
+          setLoading(false);
       });
   }, []);
 

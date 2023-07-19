@@ -80,6 +80,7 @@ const ViewInventory = () => {
       })
       .catch(error => {
         console.error(error);
+          setLoading(false);
       });
   }, []);
   console.log(userData)

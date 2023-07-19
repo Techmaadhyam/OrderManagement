@@ -57,6 +57,7 @@ import Logo from '../logo/logo';
         })
         .catch(error => {
           console.error(error);
+            setLoading(false);
         });
     }, []);
   

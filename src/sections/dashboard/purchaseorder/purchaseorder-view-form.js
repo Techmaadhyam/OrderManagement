@@ -66,6 +66,7 @@ const PurchaseOrderViewForm = () => {
       })
       .catch((error) => {
         console.error(error);
+          setLoading(false);
       });
   }, []);
 

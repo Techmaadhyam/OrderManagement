@@ -63,6 +63,7 @@ const ViewTechnician = () => {
       })
       .catch(error => {
         console.error(error);
+          setLoading(false);
       });
   }, []);
 
