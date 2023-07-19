@@ -26,6 +26,7 @@ import { PurchaseChart } from 'src/sections/dashboard/overview/PurchaseChart';
 import { QuotationChart } from 'src/sections/dashboard/overview/QuotationChart';
 import { WarehouseList } from 'src/sections/dashboard/overview/WarehouseList';
 import { InventoryList } from 'src/sections/dashboard/overview/InventoryList';
+import { Balance } from 'src/sections/dashboard/overview/Balance';
 import IconWithPopup from '../../sections/dashboard/user/user-icon';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -177,43 +178,25 @@ const Page = () => {
                 </div>
               </Stack>
             </Grid>
-            {/* <Grid
-              xs={12}
-              md={4}
-            >
-              <TotalInventoryCount amount={inventoryCount} />
+            {/* <Grid xs={12} md={4}>
+              <TotalInventoryCount amount={38384} />
             </Grid>
-            <Grid
-              xs={12}
-              md={4}
-            >
-              <TotalWareHouseCount amount={wareHouseCount} />
+            <Grid xs={12} md={4}>
+              <TotalWareHouseCount amount={435354} />
             </Grid>
-            <Grid
-              xs={12}
-              md={4}
-            >
-              <TotalCost amount={total.toLocaleString("en-IN")} />
+            <Grid xs={12} md={4}>
+              <TotalCost amount={(232434).toLocaleString("en-IN")} />
             </Grid>
-            <Grid
-              xs={12}
-              md={4}
-            >
-              <TotalQuotation amount={quotation} />
+            <Grid xs={12} md={4}>
+              <TotalQuotation amount={44343} />
             </Grid>
-            <Grid
-              xs={12}
-              md={4}
-            >
-              <TotalSO amount={so} />
+            <Grid xs={12} md={4}>
+              <TotalSO amount={44} />
             </Grid>
-            <Grid
-              xs={12}
-              md={4}
-            >
-              <TotalPO amount={po} />
-            </Grid>
-           */}
+            <Grid xs={12} md={4}>
+              <TotalPO amount={35434} />
+            </Grid> */}
+
             {/* <Grid xs={12} md={12}>
               <OverviewSubscriptionUsage
                 chartSeries={[
@@ -233,6 +216,9 @@ const Page = () => {
             </Grid>
             <Grid xs={12} md={12}>
               <QuotationChart />
+            </Grid>
+            <Grid xs={12} md={12}>
+              <Balance  />
             </Grid>
             <Grid xs={12} md={6}>
               <WarehouseList messages={warehouseData} />

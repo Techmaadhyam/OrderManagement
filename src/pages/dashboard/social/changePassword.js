@@ -212,7 +212,7 @@ const Page = () => {
                     <CardHeader
                       titleTypographyProps={{ variant: "h5" }}
                       title="Update Your Password"
-                      subheader="Need Assistance? Get in touch with us at ."
+                      subheader="Need Assistance? Get in touch with us at contactus@techmaadhyam.com"
                     />
                     <CardHeader
                       titleTypographyProps={{ variant: "subtitle2" }}
