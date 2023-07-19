@@ -106,6 +106,7 @@ const WorkAccounts = ({ year, category }) => {
           title: "Invoice No",
           dataIndex: "id",
           key: "id",
+          render: (text) => `WO:${text}`,
         },
         {
           title: "Customer Name",

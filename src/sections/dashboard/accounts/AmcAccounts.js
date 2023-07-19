@@ -112,6 +112,7 @@ const AmcAccounts = ({ year, category }) => {
           title: "Invoice No",
           dataIndex: "id",
           key: "id",
+          render: (text)=> `SR:${text}`
         },
         {
           title: "Customer Name",

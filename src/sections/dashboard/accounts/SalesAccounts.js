@@ -103,6 +103,7 @@ const SalesAccounts = ({ year }) => {
           title: "Invoice No",
           dataIndex: "id",
           key: "id",
+          render: (text) => `SP:${text}`,
         },
         {
           title: "Customer Name",

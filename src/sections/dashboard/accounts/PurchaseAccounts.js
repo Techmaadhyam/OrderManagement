@@ -104,6 +104,7 @@ const PurchaseAccounts = ({ year }) => {
           title: "Invoice No",
           dataIndex: "id",
           key: "id",
+          render: (text) => `PO:${text}`,
         },
         {
           title: "Customer Name",
