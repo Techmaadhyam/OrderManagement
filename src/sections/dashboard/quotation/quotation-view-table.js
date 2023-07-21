@@ -787,8 +787,8 @@ const QuotationViewTable = () => {
                 ...(rowData.length > 0
                   ? Array(rowData.length - 1)
                     .fill(0)
-                    .concat([120 - (rowData.length - 1) * 20])
-                  : [120]),
+                    .concat([100 - (rowData.length - 1) * 20])
+                  : [100]),
               ],
               widths: record.category === 'Service Quotation' ? ['auto', '*', 'auto', 'auto', 'auto'] : ['auto', '*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
               body: [
