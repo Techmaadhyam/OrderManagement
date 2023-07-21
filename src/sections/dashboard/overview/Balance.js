@@ -51,8 +51,12 @@ export const Balance = (props) => {
     setYear(newYear);
 
     const apiCalls = [
-      axios.get(apiUrl + `getEndpoint1/${userId}/${newYear }`),
-      axios.get(apiUrl + `getEndpoint2/${userId}/${newYear }`),
+      axios.get(
+        apiUrl + `getPurchaseOrderTotalAmountByMonthYear/${userId}/${newYear}`
+      ),
+      axios.get(
+        apiUrl + `getSalesOrderTotalAmountByMonthYear/${userId}/${newYear}`
+      ),
     ];
 
     Promise.all(apiCalls)
