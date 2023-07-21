@@ -666,12 +666,8 @@ export const WorkOrderEditForm = (props) => {
                   fullWidth
                   label="Type"
                   name="type"
-               
                   value={type}
-               
-                >
-                 
-                </TextField>
+                ></TextField>
               </Grid>
               <Grid xs={12} md={4}>
                 <TextField
@@ -680,6 +676,13 @@ export const WorkOrderEditForm = (props) => {
                   name="quotation"
                   value={quotation}
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   onChange={handleInputChange}
                 >
                   {approvedQuotation.map((option) => (
@@ -697,6 +700,13 @@ export const WorkOrderEditForm = (props) => {
                   label="Company Name"
                   name="user"
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   value={user}
                   onChange={(e) => {
                     const selectedOption = userData?.find(
@@ -736,6 +746,13 @@ export const WorkOrderEditForm = (props) => {
                   value={status}
                   onChange={handleInputChange}
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                 >
                   {userOptions.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -750,6 +767,13 @@ export const WorkOrderEditForm = (props) => {
                   label="Technician"
                   name="technician"
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   value={technician}
                   onChange={handleInputChange}
                 >
@@ -862,6 +886,13 @@ export const WorkOrderEditForm = (props) => {
                             label="Part Name"
                             name="name"
                             select
+                            SelectProps={{
+                              MenuProps: {
+                                style: {
+                                  maxHeight: 300,
+                                },
+                              },
+                            }}
                             value={productName}
                             onChange={(e) => {
                               const selectedOption = userData2.find(
@@ -872,7 +903,7 @@ export const WorkOrderEditForm = (props) => {
                               setProductName(e.target.value);
                               setDescription(selectedOption.description);
                               setDiscount(0);
-                                setIgst(selectedOption.igst);
+                              setIgst(selectedOption.igst);
                             }}
                             style={{ marginBottom: 10 }}
                           >

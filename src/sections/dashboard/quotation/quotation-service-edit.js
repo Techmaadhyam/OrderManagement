@@ -542,13 +542,8 @@ console.log(idx, row)
                   fullWidth
                   label="Type"
                   name="type"
-          
                   value={type}
-            
-                >
-                 
-        
-                </TextField>
+                ></TextField>
               </Grid>
               <Grid xs={12} md={4}>
                 <DatePicker
@@ -579,6 +574,13 @@ console.log(idx, row)
                   label="Company Name"
                   name="user"
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   value={user}
                   onChange={(e) => {
                     const selectedOption = userData?.find(
@@ -618,6 +620,13 @@ console.log(idx, row)
                   value={status}
                   onChange={handleInputChange}
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                 >
                   {userOptions.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -736,6 +745,13 @@ console.log(idx, row)
                             label="Part Name"
                             name="name"
                             select
+                            SelectProps={{
+                              MenuProps: {
+                                style: {
+                                  maxHeight: 300,
+                                },
+                              },
+                            }}
                             value={productName}
                             onChange={(e) => {
                               const selectedOption = userData2.find(
@@ -745,7 +761,7 @@ console.log(idx, row)
                               setProductId(selectedOption.id);
                               setProductName(e.target.value);
                               setDescription(selectedOption.description);
-                                      setIgst(selectedOption.igst);
+                              setIgst(selectedOption.igst);
                             }}
                             style={{ marginBottom: 10 }}
                           >

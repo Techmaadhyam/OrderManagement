@@ -963,10 +963,7 @@ const notify = (type, message) => {
                   label="Type"
                   name="type"
                   value={type}
-  
-                >
-                  
-                </TextField>
+                ></TextField>
               </Grid>
               <Grid xs={12} md={6}>
                 <TextField
@@ -983,6 +980,13 @@ const notify = (type, message) => {
                   label="Company Name"
                   name="user"
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   value={user}
                   onChange={(e) => {
                     const selectedOption = userData?.find(
@@ -1020,6 +1024,13 @@ const notify = (type, message) => {
                   name="quotation"
                   value={quotation}
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   onChange={handleInputChange}
                 >
                   {approvedQuotation.map((option) => (
@@ -1206,8 +1217,7 @@ const notify = (type, message) => {
                             value={productName}
                             onChange={(e) => {
                               const selectedOption = inventoryData.find(
-                                (option) =>
-                                  option.id === e.target.value
+                                (option) => option.id === e.target.value
                               );
                               if (selectedOption) {
                                 setProductId(selectedOption.product.id);
@@ -1232,10 +1242,7 @@ const notify = (type, message) => {
                             style={{ marginBottom: 10 }}
                           >
                             {inventoryData.map((option) => (
-                              <MenuItem
-                                key={option.id}
-                                value={option.id}
-                              >
+                              <MenuItem key={option.id} value={option.id}>
                                 {option.product.productName}
                               </MenuItem>
                             ))}

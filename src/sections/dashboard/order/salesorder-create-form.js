@@ -771,6 +771,13 @@ export const SalesOrderCreateForm = (props) => {
                   name="user"
                   required
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   value={userName}
                   onChange={(e) => {
                     const selectedOption = userData.find(
@@ -808,6 +815,13 @@ export const SalesOrderCreateForm = (props) => {
                   name="quotation"
                   value={quotation}
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   onChange={handleInputChange}
                 >
                   {approvedQuotation.map((option) => (
@@ -835,6 +849,13 @@ export const SalesOrderCreateForm = (props) => {
                   value={status}
                   onChange={handleInputChange}
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                 >
                   {userOptions.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -896,6 +917,13 @@ export const SalesOrderCreateForm = (props) => {
                   name="country"
                   required
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   defaultValue=""
                   value={currentCountry}
                   onChange={handleCountry}
@@ -914,6 +942,13 @@ export const SalesOrderCreateForm = (props) => {
                   name="state"
                   required
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   defaultValue=""
                   value={currentState}
                   onChange={handleState}
@@ -933,6 +968,13 @@ export const SalesOrderCreateForm = (props) => {
                   name="city"
                   required
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   defaultValue=""
                   value={currentCity}
                   onChange={handleCities}
@@ -995,6 +1037,13 @@ export const SalesOrderCreateForm = (props) => {
                             label="Part Name"
                             name="name"
                             select
+                            SelectProps={{
+                              MenuProps: {
+                                style: {
+                                  maxHeight: 300,
+                                },
+                              },
+                            }}
                             required
                             value={productName}
                             onChange={(e) => {

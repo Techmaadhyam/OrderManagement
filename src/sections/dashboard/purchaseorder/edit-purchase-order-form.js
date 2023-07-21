@@ -1152,12 +1152,8 @@ setTotalCost(calcTotalCost);
                   fullWidth
                   label="Type"
                   name="type"
-    
                   value={type}
-       
-                >
-                 
-                </TextField>
+                ></TextField>
               </Grid>
               <Grid xs={12} md={6}>
                 <TextField
@@ -1175,6 +1171,13 @@ setTotalCost(calcTotalCost);
                   label="Company Name"
                   name="user"
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   value={user}
                   onChange={(e) => {
                     const selectedOption = userData?.find(
@@ -1212,6 +1215,13 @@ setTotalCost(calcTotalCost);
                   name="quotation"
                   value={quotation}
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   onChange={handleInputChange}
                 >
                   {approvedQuotation.map((option) => (
@@ -1240,6 +1250,13 @@ setTotalCost(calcTotalCost);
                   value={status}
                   onChange={handleInputChange}
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                 >
                   {userOptions.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -1286,6 +1303,13 @@ setTotalCost(calcTotalCost);
                   name="country"
                   required
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   defaultValue=""
                   value={currentCountry}
                   onChange={handleCountry}
@@ -1304,6 +1328,13 @@ setTotalCost(calcTotalCost);
                   name="state"
                   required
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   defaultValue=""
                   value={currentState}
                   onChange={handleState}
@@ -1323,6 +1354,13 @@ setTotalCost(calcTotalCost);
                   name="city"
                   required
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   defaultValue=""
                   value={currentCity}
                   onChange={handleCities}
@@ -1384,6 +1422,13 @@ setTotalCost(calcTotalCost);
                             label="Part Name"
                             name="name"
                             select
+                            SelectProps={{
+                              MenuProps: {
+                                style: {
+                                  maxHeight: 300,
+                                },
+                              },
+                            }}
                             value={productName}
                             onChange={(e) => {
                               const selectedOption = userData2.find(

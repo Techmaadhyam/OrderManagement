@@ -103,197 +103,177 @@ export const EditQuotation = (props) => {
   });
 
   return (
-    <div style={{minWidth: "100%" }}>
+    <div style={{ minWidth: "100%" }}>
       <div>
-                <Link
-                  color="text.primary"
-                  component={RouterLink}
-                  href={paths.dashboard.quotation.view}
-                  sx={{
-                    alignItems: 'center',
-                    display: 'inline-flex'
-                  }}
-                  underline="hover"
-                >
-                  <SvgIcon sx={{ mr: 1 }}>
-                    <ArrowLeftIcon />
-                  </SvgIcon>
-                  <Typography variant="subtitle2">
-                    Quotation List
-                  </Typography>
-                </Link>
-              </div>
- <h2>Edit Quotation</h2>
-    <form
-      onSubmit={formik.handleSubmit}
-      {...other}>
-      <Card>
-        <CardHeader title="Product Order Detail" />
-        <CardContent sx={{ pt: 0 }}>
-          <Grid
-            container
-            spacing={3}
-          >
-            <Grid
-              xs={12}
-              md={6}
-            >
-              <TextField
-                    error={!!(formik.touched.category && formik.errors.category)}
-                    fullWidth
-                    label="User"
-                    name="user"
-                    onBlur={formik.handleBlur}
-                    onChange={formik.handleChange}
-                    select
-                    value={formik.values.category}
-                  >
-                    {userOptions.map((option) => (
-                      <MenuItem
-                        key={option.value}
-                        value={option.value}
-                      >
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-            </Grid>
-            <Grid/>
-            <Grid
-              xs={12}
-              md={6}
-            >
+        <Link
+          color="text.primary"
+          component={RouterLink}
+          href={paths.dashboard.quotation.view}
+          sx={{
+            alignItems: "center",
+            display: "inline-flex",
+          }}
+          underline="hover"
+        >
+          <SvgIcon sx={{ mr: 1 }}>
+            <ArrowLeftIcon />
+          </SvgIcon>
+          <Typography variant="subtitle2">Quotation List</Typography>
+        </Link>
+      </div>
+      <h2>Edit Quotation</h2>
+      <form onSubmit={formik.handleSubmit} {...other}>
+        <Card>
+          <CardHeader title="Product Order Detail" />
+          <CardContent sx={{ pt: 0 }}>
+            <Grid container spacing={3}>
+              <Grid xs={12} md={6}>
                 <TextField
-                    error={!!(formik.touched.category && formik.errors.category)}
-                    fullWidth
-                    label="Type"
-                    name="type"
-                    onBlur={formik.handleBlur}
-                    onChange={formik.handleChange}
-                    select
-                    value={formik.values.category}
-                  >
-                    {userOptions.map((option) => (
-                      <MenuItem
-                        key={option.value}
-                        value={option.value}
-                      >
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
+                  error={!!(formik.touched.category && formik.errors.category)}
+                  fullWidth
+                  label="User"
+                  name="user"
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
+                  value={formik.values.category}
+                >
+                  {userOptions.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid />
+              <Grid xs={12} md={6}>
+                <TextField
+                  error={!!(formik.touched.category && formik.errors.category)}
+                  fullWidth
+                  label="Type"
+                  name="type"
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
+                  value={formik.values.category}
+                >
+                  {userOptions.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid xs={12} md={6}>
+                <TextField
+                  error={!!(formik.touched.category && formik.errors.category)}
+                  fullWidth
+                  label="Quotation"
+                  name="quotation"
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
+                  value={formik.values.category}
+                >
+                  {userOptions.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid xs={12} md={6}>
+                <DatePicker placeholder="Delivery Date" height="50px" />
+              </Grid>
+              <Grid xs={12} md={6}>
+                <TextField
+                  error={!!(formik.touched.category && formik.errors.category)}
+                  fullWidth
+                  label="Status"
+                  name="status"
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
+                  value={formik.values.category}
+                >
+                  {userOptions.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid xs={12} md={6}>
+                <TextField
+                  error={!!(formik.touched.address1 && formik.errors.address1)}
+                  fullWidth
+                  helperText={formik.touched.address1 && formik.errors.address1}
+                  label="Contact Name"
+                  name="contactName"
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  // value={formik.values.address1}
+                />
+              </Grid>
+              <Grid xs={12} md={6}>
+                <TextField
+                  error={!!(formik.touched.address1 && formik.errors.address1)}
+                  fullWidth
+                  helperText={formik.touched.address1 && formik.errors.address1}
+                  label="Mobile No."
+                  name="mobileno"
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  // value={formik.values.address1}
+                />
+              </Grid>
             </Grid>
-            <Grid
-              xs={12}
-              md={6}
-            >
-               <TextField
-                    error={!!(formik.touched.category && formik.errors.category)}
-                    fullWidth
-                    label="Quotation"
-                    name="quotation"
-                    onBlur={formik.handleBlur}
-                    onChange={formik.handleChange}
-                    select
-                    value={formik.values.category}
-                  >
-                    {userOptions.map((option) => (
-                      <MenuItem
-                        key={option.value}
-                        value={option.value}
-                      >
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-            </Grid>
-            <Grid
-              xs={12}
-              md={6}
-            >
-                <DatePicker placeholder="Delivery Date" 
-height='50px'/>
-            </Grid>
-            <Grid
-              xs={12}
-              md={6}
-            >
-              <TextField
-                    error={!!(formik.touched.category && formik.errors.category)}
-                    fullWidth
-                    label="Status"
-                    name="status"
-                    onBlur={formik.handleBlur}
-                    onChange={formik.handleChange}
-                    select
-                    value={formik.values.category}
-                  >
-                    {userOptions.map((option) => (
-                      <MenuItem
-                        key={option.value}
-                        value={option.value}
-                      >
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-            </Grid>
-            <Grid
-              xs={12}
-              md={6}
-            >
-              <TextField
-                error={!!(formik.touched.address1 && formik.errors.address1)}
-                fullWidth
-                helperText={formik.touched.address1 && formik.errors.address1}
-                label="Contact Name"
-                name="contactName"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                // value={formik.values.address1}
-              />
-            </Grid>
-            <Grid
-              xs={12}
-              md={6}
-            >
-              <TextField
-                error={!!(formik.touched.address1 && formik.errors.address1)}
-                fullWidth
-                helperText={formik.touched.address1 && formik.errors.address1}
-                label="Mobile No."
-                name="mobileno"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                // value={formik.values.address1}
-              />
-            </Grid>
-         
-       
-          </Grid>
-        </CardContent>
-        <Divider/>
-      </Card>
-    </form>
-    <CustomTable regular={true}/>
-    <Grid
-              xs={12}
-              md={6}
-            >
- <Box sx={{ mt: 2 }}
-display="flex"
-justifyContent="flex-end"
-marginRight="12px"
-marginBottom="30px">
-          <Button
-            color="primary"
-            variant="contained"
-            align="right"
-          >
+          </CardContent>
+          <Divider />
+        </Card>
+      </form>
+      <CustomTable regular={true} />
+      <Grid xs={12} md={6}>
+        <Box
+          sx={{ mt: 2 }}
+          display="flex"
+          justifyContent="flex-end"
+          marginRight="12px"
+          marginBottom="30px"
+        >
+          <Button color="primary" variant="contained" align="right">
             Save
           </Button>
         </Box>
-          </Grid>
+      </Grid>
     </div>
   );
 };

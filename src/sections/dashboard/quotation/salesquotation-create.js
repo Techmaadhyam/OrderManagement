@@ -647,6 +647,13 @@ export const QuotationOrderCreateForm = (props) => {
                   name="user"
                   required
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   value={userName}
                   onChange={(e) => {
                     const selectedOption = userData.find(
@@ -703,6 +710,13 @@ export const QuotationOrderCreateForm = (props) => {
                   value={status}
                   onChange={handleInputChange}
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                 >
                   {userOptions.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -752,6 +766,13 @@ export const QuotationOrderCreateForm = (props) => {
                   name="country"
                   required
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   defaultValue=""
                   value={currentCountry}
                   onChange={handleCountry}
@@ -770,6 +791,13 @@ export const QuotationOrderCreateForm = (props) => {
                   name="state"
                   required
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   defaultValue=""
                   value={currentState}
                   onChange={handleState}
@@ -789,6 +817,13 @@ export const QuotationOrderCreateForm = (props) => {
                   name="city"
                   required
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   defaultValue=""
                   value={currentCity}
                   onChange={handleCities}
@@ -850,6 +885,13 @@ export const QuotationOrderCreateForm = (props) => {
                             label="Part Name"
                             name="name"
                             select
+                            SelectProps={{
+                              MenuProps: {
+                                style: {
+                                  maxHeight: 300,
+                                },
+                              },
+                            }}
                             required
                             value={productName}
                             onChange={(e) => {

@@ -454,13 +454,9 @@ const deliveryIST2 = deliveryDateJS2
                   fullWidth
                   label="Type"
                   name="type"
-                
                   required
                   value={type}
-         
-                >
-                
-                </TextField>
+                ></TextField>
               </Grid>
               <Grid xs={12} md={4}>
                 <DatePicker
@@ -488,6 +484,13 @@ const deliveryIST2 = deliveryDateJS2
                   name="user"
                   required
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   value={userName}
                   onChange={(e) => {
                     const selectedOption = userData.find(
@@ -527,6 +530,13 @@ const deliveryIST2 = deliveryDateJS2
                   value={status}
                   onChange={handleInputChange}
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                 >
                   {userOptions.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -652,6 +662,13 @@ const deliveryIST2 = deliveryDateJS2
                             name="name"
                             required
                             select
+                            SelectProps={{
+                              MenuProps: {
+                                style: {
+                                  maxHeight: 300,
+                                },
+                              },
+                            }}
                             value={productName}
                             onChange={(e) => {
                               const selectedOption = userData2.find(
@@ -661,7 +678,7 @@ const deliveryIST2 = deliveryDateJS2
                               setProductId(selectedOption.id);
                               setProductName(e.target.value);
                               setDescription(selectedOption.description);
-                                      setIgst(selectedOption.igst);
+                              setIgst(selectedOption.igst);
                             }}
                             style={{ marginBottom: 10 }}
                           >

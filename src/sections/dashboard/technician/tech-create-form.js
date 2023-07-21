@@ -433,6 +433,13 @@ export const TechnicianCreateForm = (props) => {
                   name="country"
                   required
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   defaultValue=""
                   value={currentCountry}
                   onChange={handleCountry}
@@ -452,6 +459,13 @@ export const TechnicianCreateForm = (props) => {
                   name="state"
                   required
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   defaultValue=""
                   value={currentState}
                   onChange={handleState}
@@ -471,6 +485,13 @@ export const TechnicianCreateForm = (props) => {
                   label="City"
                   name="city"
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   required
                   defaultValue=""
                   value={currentCity}

@@ -613,6 +613,13 @@ debugger
                   name="quotation"
                   value={quotation}
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   onChange={handleInputChange}
                 >
                   {approvedQuotation.map((option) => (
@@ -630,6 +637,13 @@ debugger
                   name="user"
                   required
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   value={userName}
                   onChange={(e) => {
                     const selectedOption = userData.find(
@@ -668,6 +682,13 @@ debugger
                   value={status}
                   onChange={handleInputChange}
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   required
                 >
                   {userOptions.map((option) => (
@@ -684,6 +705,13 @@ debugger
                   name="technician"
                   required
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   value={technician}
                   onChange={handleInputChange}
                 >
@@ -797,10 +825,18 @@ debugger
                       <div className="popup-left">
                         <Grid xs={12} md={6}>
                           <TextField
-                            fullWidth
+                        
                             label="Part Name"
                             name="name"
                             select
+                            SelectProps={{
+                              MenuProps: {
+                                style: {
+                                  maxHeight: 300,
+                                  
+                                },
+                              },
+                            }}
                             required
                             value={productName}
                             onChange={(e) => {

@@ -1143,6 +1143,13 @@ if (deliveryDateIndex !== -1 && filteredList.some(item => item.category === "Ser
         value={selectedCategory}
         onChange={handleCategoryChange}
         select
+        SelectProps={{
+          MenuProps: {
+            style: {
+              maxHeight: 300,
+            },
+          },
+        }}
       >
         {categoryBuySell.map((option) => (
           <MenuItem key={option.value} value={option.value}>
@@ -1152,7 +1159,7 @@ if (deliveryDateIndex !== -1 && filteredList.some(item => item.category === "Ser
       </TextField>
 
       <Box sx={{ position: "relative", overflowX: "auto", marginTop: "30px" }}>
-        {loading=== false ? (
+        {loading === false ? (
           <Scrollbar>
             <Table
               sx={{ minWidth: 800, overflowX: "auto" }}

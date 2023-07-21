@@ -40,6 +40,7 @@ import {
   fetchIndianStates,
 } from "src/utils/api-service";
 import { ToastContainer, toast } from "react-toastify";
+import Autocomplete from "@mui/material/Autocomplete";
 
 //get userId from session storage
 const userId = parseInt(
@@ -932,6 +933,13 @@ export const PurchaseOrderCreateForm = (props) => {
                   name="user"
                   required
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300, // Adjust this value to control the dropdown height
+                      },
+                    },
+                  }}
                   value={userName}
                   onChange={(e) => {
                     const selectedOption = userData.find(
@@ -969,6 +977,13 @@ export const PurchaseOrderCreateForm = (props) => {
                   name="quotation"
                   value={quotation}
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300, // Adjust this value to control the dropdown height
+                      },
+                    },
+                  }}
                   onChange={handleInputChange}
                 >
                   {approvedQuotation.map((option) => (
@@ -996,6 +1011,13 @@ export const PurchaseOrderCreateForm = (props) => {
                   value={status}
                   onChange={handleInputChange}
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300, // Adjust this value to control the dropdown height
+                      },
+                    },
+                  }}
                 >
                   {userOptions.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -1048,6 +1070,13 @@ export const PurchaseOrderCreateForm = (props) => {
                   defaultValue=""
                   value={currentCountry}
                   onChange={handleCountry}
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                 >
                   {userOptionsCountry?.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -1067,6 +1096,13 @@ export const PurchaseOrderCreateForm = (props) => {
                   value={currentState}
                   onChange={handleState}
                   onFocus={handleDefaultState}
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300, // Adjust this value to control the dropdown height
+                      },
+                    },
+                  }}
                 >
                   {userOptionsState?.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -1085,6 +1121,13 @@ export const PurchaseOrderCreateForm = (props) => {
                   defaultValue=""
                   value={currentCity}
                   onChange={handleCities}
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300, // Adjust this value to control the dropdown height
+                      },
+                    },
+                  }}
                 >
                   {userOptionsCities?.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -1144,6 +1187,13 @@ export const PurchaseOrderCreateForm = (props) => {
                             name="name"
                             required
                             select
+                            SelectProps={{
+                              MenuProps: {
+                                style: {
+                                  maxHeight: 300, // Adjust this value to control the dropdown height
+                                },
+                              },
+                            }}
                             value={productName}
                             onChange={(e) => {
                               const selectedOption = userData2.find(

@@ -321,6 +321,14 @@ export const CreateProduct = (props) => {
                   name="category"
                   required
                   select
+              
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   value={category}
                   onChange={(event) => {
                     handleCategoryChange(event);

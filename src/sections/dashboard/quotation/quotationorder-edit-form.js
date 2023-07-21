@@ -755,12 +755,8 @@ console.log(rowData)
                   fullWidth
                   label="Type"
                   name="type"
-             
                   value={type}
-            
-                >
-  
-                </TextField>
+                ></TextField>
               </Grid>
               <Grid xs={12} md={6}></Grid>
               <Grid xs={12} md={6}>
@@ -770,6 +766,13 @@ console.log(rowData)
                   label="Company Name"
                   name="user"
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   value={user}
                   onChange={(e) => {
                     const selectedOption = userData?.find(
@@ -820,6 +823,13 @@ console.log(rowData)
                   value={status}
                   onChange={handleInputChange}
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                 >
                   {userOptions.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -866,6 +876,13 @@ console.log(rowData)
                   name="country"
                   required
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   defaultValue=""
                   value={currentCountry}
                   onChange={handleCountry}
@@ -884,6 +901,13 @@ console.log(rowData)
                   name="state"
                   required
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   defaultValue=""
                   value={currentState}
                   onChange={handleState}
@@ -903,6 +927,13 @@ console.log(rowData)
                   name="city"
                   required
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   defaultValue=""
                   value={currentCity}
                   onChange={handleCities}
@@ -964,6 +995,13 @@ console.log(rowData)
                             label="Part Name"
                             name="name"
                             select
+                            SelectProps={{
+                              MenuProps: {
+                                style: {
+                                  maxHeight: 300,
+                                },
+                              },
+                            }}
                             value={productName}
                             onChange={(e) => {
                               const selectedOption = userData2.find(
@@ -973,9 +1011,9 @@ console.log(rowData)
                               setProductId(selectedOption.id);
                               setProductName(e.target.value);
                               setDescription(selectedOption.description);
-                                    setCgst(selectedOption.cgst);
-                                    setIgst(selectedOption.igst);
-                                    setSgst(selectedOption.sgst);
+                              setCgst(selectedOption.cgst);
+                              setIgst(selectedOption.igst);
+                              setSgst(selectedOption.sgst);
                             }}
                             style={{ marginBottom: 10 }}
                           >
