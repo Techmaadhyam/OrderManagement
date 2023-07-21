@@ -825,7 +825,7 @@ debugger
                       <div className="popup-left">
                         <Grid xs={12} md={6}>
                           <TextField
-                        
+                            fullWidth
                             label="Part Name"
                             name="name"
                             select
