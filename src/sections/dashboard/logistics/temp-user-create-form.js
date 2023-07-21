@@ -335,6 +335,13 @@ export const TempUserCreateForm = (props) => {
         label="Type"
         name="type"
         select
+        SelectProps={{
+          MenuProps: {
+            style: {
+              maxHeight: 300,
+            },
+          },
+        }}
         sx={{ minWidth: 250, mb: 2 }}
         value={type}
         onChange={handleInputChange}
@@ -480,6 +487,13 @@ export const TempUserCreateForm = (props) => {
                   name="country"
                   required
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   defaultValue=""
                   value={currentCountry}
                   onChange={handleCountry}
@@ -498,6 +512,13 @@ export const TempUserCreateForm = (props) => {
                   name="state"
                   required
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   defaultValue=""
                   value={currentState}
                   onChange={handleState}
@@ -517,6 +538,13 @@ export const TempUserCreateForm = (props) => {
                   name="city"
                   required
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   defaultValue=""
                   value={currentCity}
                   onChange={handleCities}

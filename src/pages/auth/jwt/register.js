@@ -639,6 +639,13 @@ console.log(uploadFile)
                             name="type"
                             value={type}
                             select
+                            SelectProps={{
+                              MenuProps: {
+                                style: {
+                                  maxHeight: 300,
+                                },
+                              },
+                            }}
                             onChange={handleInputChange}
                           >
                             {customerType.map((option) => (
@@ -665,6 +672,13 @@ console.log(uploadFile)
                             label="Country"
                             name="country"
                             select
+                            SelectProps={{
+                              MenuProps: {
+                                style: {
+                                  maxHeight: 300,
+                                },
+                              },
+                            }}
                             defaultValue=""
                             value={currentCountry}
                             onChange={handleCountry}
@@ -682,6 +696,13 @@ console.log(uploadFile)
                             label="State"
                             name="state"
                             select
+                            SelectProps={{
+                              MenuProps: {
+                                style: {
+                                  maxHeight: 300,
+                                },
+                              },
+                            }}
                             defaultValue=""
                             value={currentState}
                             onChange={handleState}
@@ -700,6 +721,13 @@ console.log(uploadFile)
                             label="City"
                             name="city"
                             select
+                            SelectProps={{
+                              MenuProps: {
+                                style: {
+                                  maxHeight: 300,
+                                },
+                              },
+                            }}
                             defaultValue=""
                             value={currentCity}
                             onChange={handleCities}

@@ -667,12 +667,8 @@ export const AmcEditForm = (props) => {
                   fullWidth
                   label="Type"
                   name="type"
-             
                   value={type}
-   
-                >
-                  
-                </TextField>
+                ></TextField>
               </Grid>
               <Grid xs={12} md={4}>
                 <DatePicker
@@ -703,6 +699,13 @@ export const AmcEditForm = (props) => {
                   label="Company Name"
                   name="user"
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   value={user}
                   onChange={(e) => {
                     const selectedOption = userData?.find(
@@ -742,6 +745,13 @@ export const AmcEditForm = (props) => {
                   value={status}
                   onChange={handleInputChange}
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                 >
                   {userOptions.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -756,6 +766,13 @@ export const AmcEditForm = (props) => {
                   label="Technician"
                   name="technician"
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   value={technician}
                   onChange={handleInputChange}
                 >
@@ -868,6 +885,13 @@ export const AmcEditForm = (props) => {
                             label="Part Name"
                             name="name"
                             select
+                            SelectProps={{
+                              MenuProps: {
+                                style: {
+                                  maxHeight: 300,
+                                },
+                              },
+                            }}
                             value={productName}
                             onChange={(e) => {
                               const selectedOption = userData2.find(

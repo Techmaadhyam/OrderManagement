@@ -227,7 +227,6 @@ const ViewTemporaryUser = () => {
           style={{
             display: "flex",
             alignItems: "center",
-
           }}
         >
           Name
@@ -246,7 +245,6 @@ const ViewTemporaryUser = () => {
             onClick={handleNavigation}
             sx={{
               alignItems: "center",
-     
             }}
             underline="hover"
           >
@@ -304,6 +302,13 @@ const ViewTemporaryUser = () => {
           value={selectedType}
           onChange={handleTypeChange}
           select
+          SelectProps={{
+            MenuProps: {
+              style: {
+                maxHeight: 300,
+              },
+            },
+          }}
         >
           <MenuItem value="">All</MenuItem>
           {customerType.map((option) => (
@@ -387,6 +392,13 @@ const ViewTemporaryUser = () => {
                 label="Type"
                 name="type"
                 select
+                SelectProps={{
+                  MenuProps: {
+                    style: {
+                      maxHeight: 300,
+                    },
+                  },
+                }}
                 value={editedRecord.type}
                 onChange={handleChange}
                 fullWidth

@@ -1102,7 +1102,6 @@ const SalesOrderViewList = () => {
           style={{
             display: "flex",
             alignItems: "center",
-
           }}
         >
           Sales Order Number
@@ -1123,7 +1122,6 @@ const SalesOrderViewList = () => {
             onClick={handleNavigation}
             sx={{
               alignItems: "center",
- 
             }}
             underline="hover"
           >
@@ -1191,6 +1189,13 @@ const SalesOrderViewList = () => {
           value={selectedType}
           onChange={handleTypeChange}
           select
+          SelectProps={{
+            MenuProps: {
+              style: {
+                maxHeight: 300,
+              },
+            },
+          }}
         >
           <MenuItem value="">All</MenuItem>
           {customerType.map((option) => (

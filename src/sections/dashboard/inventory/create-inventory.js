@@ -450,6 +450,13 @@ export const CreateInventory = (props) => {
                   name="warehouse"
                   required
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   value={warehouseId ? warehouseId : ""}
                   onChange={(e) => {
                     const selectedOption = warehouse?.find(
@@ -475,6 +482,13 @@ export const CreateInventory = (props) => {
                   label="Purchase Order"
                   name="purchaseorder"
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   value={purchaseId ? purchaseId : ""}
                   onChange={(e) => {
                     const selectedOption = purchaseOrder?.find(
@@ -501,6 +515,13 @@ export const CreateInventory = (props) => {
                   name="category"
                   required
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   value={categoryName ? categoryName : ""}
                   onChange={(e) => {
                     const selectedOption = category?.find(
@@ -528,6 +549,13 @@ export const CreateInventory = (props) => {
                   label="Part Name"
                   name="product"
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   required
                   value={selectedId ? selectedId : ""}
                   onChange={(e) => {
@@ -562,6 +590,13 @@ export const CreateInventory = (props) => {
                   name="rack"
                   required
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   value={rack}
                   onChange={(event) => {
                     handleCategoryChange(event);

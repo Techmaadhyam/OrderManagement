@@ -349,6 +349,13 @@ export const CreateWarehouse = (props) => {
                   label="Country"
                   name="country"
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   required
                   defaultValue=""
                   value={currentCountry}
@@ -367,6 +374,13 @@ export const CreateWarehouse = (props) => {
                   label="State"
                   name="state"
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   required
                   defaultValue=""
                   value={currentState}
@@ -386,6 +400,13 @@ export const CreateWarehouse = (props) => {
                   label="City"
                   name="city"
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   required
                   defaultValue=""
                   value={currentCity}

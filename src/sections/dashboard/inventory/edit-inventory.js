@@ -427,6 +427,13 @@ useEffect(() => {
                   name="warehouse"
                   required
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   value={warehouseId ? warehouseId : ""}
                   onChange={(e) => {
                     const selectedOption = warehouse?.find(
@@ -452,6 +459,13 @@ useEffect(() => {
                   label="Purchase Order"
                   name="purchaseorder"
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   value={purchaseId ? purchaseId : ""}
                   onChange={(e) => {
                     const selectedOption = purchaseOrder?.find(
@@ -478,6 +492,13 @@ useEffect(() => {
                   name="category"
                   required
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   value={categoryId ? categoryId : ""}
                   onChange={(e) => {
                     const selectedOption = category?.find(
@@ -505,6 +526,13 @@ useEffect(() => {
                   name="product"
                   required
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   value={selectedId ? selectedId : ""}
                   onChange={(e) => {
                     const selectedProductId = e.target.value;
@@ -538,6 +566,13 @@ useEffect(() => {
                   name="rack"
                   required
                   select
+                  SelectProps={{
+                    MenuProps: {
+                      style: {
+                        maxHeight: 300,
+                      },
+                    },
+                  }}
                   value={rack}
                   onChange={(event) => {
                     handleCategoryChange(event);
