@@ -196,7 +196,7 @@ export const ViewInventoryDetail = (props) => {
                 value={
                   state?.rackName ||
                   state?.rack?.name ||
-                  matchingObject?.rack.name
+                  matchingObject?.rack?.name || "Not created"
                 }
               />
               <Divider />

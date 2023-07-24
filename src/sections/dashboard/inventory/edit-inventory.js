@@ -22,10 +22,7 @@ import Logo from '../logo/logo';
 const userId = sessionStorage.getItem('user') || localStorage.getItem('user');
 
 const userOptions = [
-  {
-    label: 'None',
-    value: 'none'
-  },
+
   {
     label: 'Add New Rack',
     value: 'others'
@@ -218,10 +215,10 @@ useEffect(() => {
 
     const selectedValue = event.target.value;
     const selectedOption = updatedUserOptions.find(option => option.value === selectedValue);
-    const selectedLabel = selectedOption ? selectedOption.label : '';
+
   
     setRack(selectedValue);
-    setRackName(selectedLabel);
+   
 
     if (selectedValue && selectedValue !== 'none' && selectedValue !== 'other' && isNaN(Number(selectedValue))) {
       setShowAdditionalFields(true);
@@ -238,10 +235,12 @@ useEffect(() => {
     setRackDesc(event.target.value);
   };
 
-  const mappedOptions = userData.map(({ rack}) => ({
-    label: rack.name,
-    value: rack.id
-  }));
+const filteredUserData = userData.filter(({ rack }) => rack !== null);
+
+const mappedOptions = filteredUserData.map(({ rack }) => ({
+  label: rack?.name,
+  value: rack?.id,
+}));
 
 
   const rackIdSet = new Set(); 
@@ -332,9 +331,7 @@ useEffect(() => {
     warehouse: {
       id: warehouseId,
     },
-    rack: {
-      id: rack,
-    },
+       rack: rack ? { id: rack } : { id: -1 },
 
     category: {
       id: categoryId,
@@ -543,6 +540,9 @@ useEffect(() => {
                     if (selectedOption) {
                       setSelectedId(selectedOption.id);
                       setSelectedName(selectedOption.productName);
+                               setCgst(selectedOption.cgst);
+                               setIgst(selectedOption.igst);
+                               setSgst(selectedOption.sgst);
                     } else {
                       setSelectedId(null);
                       setSelectedName("");
