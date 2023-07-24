@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://techmaadhyam.c9rkgm3yp4eh.ap-northeast-1.rds.amazonaws.com/techmaadhyam
+    username: admin
+    password: 1234567890
+  jpa:
+    hibernate.ddl-auto: update
+    generate-ddl: true
+    show-sql: true
+  servlet:
+    multipart:
+      max-file-size: 30MB
+      max-request-size: 30MB
