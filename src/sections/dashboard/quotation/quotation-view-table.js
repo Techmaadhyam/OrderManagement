@@ -29,8 +29,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SearchIcon from '@mui/icons-material/Search';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-// import imgUrl from '../pdfAssets/imageDataUrl';
-// import techMaadhyam from '../pdfAssets/imageDataUrl2';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from '../pdfAssets/vfs_fonts';
 import { apiUrl } from 'src/config';
