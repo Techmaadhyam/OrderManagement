@@ -379,7 +379,7 @@ export const AmcEditForm = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (productName && workstation && igst && description) {
+    if (productName && workstation && description) {
       const newRow = {
         id: Id,
         product: { id: productId },

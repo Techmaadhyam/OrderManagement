@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import {
   Card,
   CardHeader,
@@ -7,99 +7,92 @@ import {
   Link,
   SvgIcon,
   Grid,
-  CardContent
-} from '@mui/material';
+  CardContent,
+} from "@mui/material";
 
-import { PropertyListItem } from 'src/components/property-list-item';
-import { RouterLink } from 'src/components/router-link';
-import { paths } from 'src/paths';
-import { primaryColor } from 'src/primaryColor';
-import ArrowCircleLeftOutlinedIcon from '@mui/icons-material/ArrowCircleLeftOutlined';
-import IconWithPopup from '../user/user-icon';
-import { useLocation } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { apiUrl } from 'src/config';
-import { useNavigate } from 'react-router-dom';
-import Logo from '../logo/logo';
+import { PropertyListItem } from "src/components/property-list-item";
+import { RouterLink } from "src/components/router-link";
+import { paths } from "src/paths";
+import { primaryColor } from "src/primaryColor";
+import ArrowCircleLeftOutlinedIcon from "@mui/icons-material/ArrowCircleLeftOutlined";
+import IconWithPopup from "../user/user-icon";
+import { useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { apiUrl } from "src/config";
+import { useNavigate } from "react-router-dom";
+import Logo from "../logo/logo";
 
-const userId = sessionStorage.getItem('user') || localStorage.getItem('user');
-
+const userId = sessionStorage.getItem("user") || localStorage.getItem("user");
 
 export const ViewInventoryDetail = (props) => {
-
   const location = useLocation();
   const navigate = useNavigate();
   const state = location.state;
-  const [userData, setUserData] = useState([])
+  const [userData, setUserData] = useState([]);
 
+  console.log(state);
 
-  console.log(state)
-
-
-
-  const align = 'horizontal'
+  const align = "horizontal";
 
   useEffect(() => {
-    axios.get(apiUrl + `getInventoryByUserId/${userId}`)
-      .then(response => {
+    axios
+      .get(apiUrl + `getInventoryByUserId/${userId}`)
+      .then((response) => {
         setUserData(response.data);
-        console.log(response.data)
-    
+        console.log(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
   }, []);
 
-
-  const matchingObject = userData.find(item => item.id === state?.id || state?.inventoryId );
+  const matchingObject = userData.find(
+    (item) => item.id === state?.id || state?.inventoryId
+  );
   const warehouseName = matchingObject?.warehouse.name;
   const productName = matchingObject?.product?.productName;
 
-  console.log(matchingObject)
-
+  console.log(matchingObject);
 
   const handleWarehouseNavigation = () => {
-
     axios
-    .get(apiUrl + `getAllWareHouse/${userId}`)
-    .then(response => {
-      const matchedData = response.data.filter(obj => obj.id === matchingObject?.warehouse.id );
+      .get(apiUrl + `getAllWareHouse/${userId}`)
+      .then((response) => {
+        const matchedData = response.data.filter(
+          (obj) => obj.id === matchingObject?.warehouse.id
+        );
 
-      if (matchedData.length > 0) {
-        navigate(`/dashboard/invoices/viewDetail`, { state: matchedData[0] });
-      } else {
-        console.log('No matching data found.');
-      }
-    })
-    .catch(error => {
-      console.error(error);
-    });
+        if (matchedData.length > 0) {
+          navigate(`/dashboard/invoices/viewDetail`, { state: matchedData[0] });
+        } else {
+          console.log("No matching data found.");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
   const handleProductNavigation = () => {
-
     axios
-    .get(apiUrl +`getAllItem/${userId}`)
-    .then(response => {
-      const matchedData = response.data.filter(obj => {
-
-  return obj.id === state?.product?.id || obj.id === state?.productId;
-});
-      if (matchedData.length > 0) {
-        navigate(`/dashboard/products/viewDetail/${matchedData[0].id}`, { state: matchedData[0] });
-      } else {
-        console.log('No matching data found.');
-      }
-    })
-    .catch(error => {
-      console.error(error);
-    });
+      .get(apiUrl + `getAllItem/${userId}`)
+      .then((response) => {
+        const matchedData = response.data.filter((obj) => {
+          return obj.id === state?.product?.id || obj.id === state?.productId;
+        });
+        if (matchedData.length > 0) {
+          navigate(`/dashboard/products/viewDetail/${matchedData[0].id}`, {
+            state: matchedData[0],
+          });
+        } else {
+          console.log("No matching data found.");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
-
-
- 
   return (
     <div style={{ minWidth: "100%", marginTop: "1rem", marginBottom: "1rem" }}>
       <div
@@ -159,7 +152,9 @@ export const ViewInventoryDetail = (props) => {
                   style={{ cursor: "pointer" }}
                 >
                   <Typography variant="subtitle2">
-                    {state?.warehouse?.name || state?.inventory.warehouse.name || warehouseName}
+                    {state?.warehouse?.name ||
+                      state?.inventory.warehouse.name ||
+                      warehouseName}
                   </Typography>
                 </Link>
               </PropertyListItem>
@@ -196,7 +191,8 @@ export const ViewInventoryDetail = (props) => {
                 value={
                   state?.rackName ||
                   state?.rack?.name ||
-                  matchingObject?.rack.name
+                  matchingObject?.rack?.name ||
+                  "Not created"
                 }
               />
               <Divider />
@@ -210,7 +206,9 @@ export const ViewInventoryDetail = (props) => {
                   style={{ cursor: "pointer" }}
                 >
                   <Typography variant="subtitle2">
-                    {state?.productName || productName || state?.product?.productName}
+                    {state?.productName ||
+                      productName ||
+                      state?.product?.productName}
                   </Typography>
                 </Link>
               </PropertyListItem>
@@ -290,5 +288,5 @@ export const ViewInventoryDetail = (props) => {
 };
 
 ViewInventoryDetail.propTypes = {
-  customer: PropTypes.object.isRequired
+  customer: PropTypes.object.isRequired,
 };

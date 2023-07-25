@@ -25,10 +25,6 @@ const userId = sessionStorage.getItem("user") || localStorage.getItem("user");
 
 const userOptions = [
   {
-    label: "None",
-    value: "none",
-  },
-  {
     label: "Add New Rack",
     value: "others",
   },
@@ -124,19 +120,19 @@ export const CreateInventory = (props) => {
       });
   }, []);
 
-    const notify = (type, message) => {
-      toast[type](message, {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+  const notify = (type, message) => {
+    toast[type](message, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
   };
-  
+
   //  get date
   useEffect(() => {
     const today = new Date();
@@ -223,9 +219,11 @@ export const CreateInventory = (props) => {
     setRackDesc(event.target.value);
   };
 
-  const mappedOptions = userData.map(({ rack }) => ({
-    label: rack.name,
-    value: rack.id,
+  const filteredUserData = userData.filter(({ rack }) => rack !== null);
+
+  const mappedOptions = filteredUserData.map(({ rack }) => ({
+    label: rack?.name,
+    value: rack?.id,
   }));
 
   const rackIdSet = new Set();
@@ -315,9 +313,7 @@ export const CreateInventory = (props) => {
         id: warehouseId,
       },
 
-      rack: {
-        id: rack,
-      },
+      rack: rack ? { id: rack } : { id: -1 },
 
       category: {
         id: categoryId,
@@ -370,7 +366,6 @@ export const CreateInventory = (props) => {
       cost &&
       description &&
       selectedId &&
-      rack !== "none" &&
       categoryId &&
       ((sgst && cgst) || igst) &&
       userId
@@ -397,8 +392,6 @@ export const CreateInventory = (props) => {
       } catch (error) {
         console.error("API call failed:", error);
       }
-    } else if (rack === "none") {
-      notify("error", "Cannot submit the form with empty Rack.");
     } else {
       notify("error", "Please fill all the fields marked with *.");
     }
@@ -567,6 +560,9 @@ export const CreateInventory = (props) => {
                     if (selectedOption) {
                       setSelectedId(selectedOption.id);
                       setSelectedName(selectedOption.productName);
+                      setCgst(selectedOption.cgst);
+                      setIgst(selectedOption.igst);
+                      setSgst(selectedOption.sgst);
                     } else {
                       setSelectedId(null);
                       setSelectedName("");

@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import {
   Button,
   Card,
@@ -7,110 +7,108 @@ import {
   Divider,
   TextField,
   MenuItem,
-  Unstable_Grid2 as Grid
-} from '@mui/material';
-import './inventory.css'
-import { Box } from '@mui/system';
-import IconWithPopup from '../user/user-icon';
-import axios from 'axios';
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
-import { apiUrl } from 'src/config';
-import Logo from '../logo/logo';
+  Unstable_Grid2 as Grid,
+} from "@mui/material";
+import "./inventory.css";
+import { Box } from "@mui/system";
+import IconWithPopup from "../user/user-icon";
+import axios from "axios";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { apiUrl } from "src/config";
+import Logo from "../logo/logo";
 
-const userId = sessionStorage.getItem('user') || localStorage.getItem('user');
+const userId = sessionStorage.getItem("user") || localStorage.getItem("user");
 
 const userOptions = [
   {
-    label: 'None',
-    value: 'none'
+    label: "Add New Rack",
+    value: "others",
   },
-  {
-    label: 'Add New Rack',
-    value: 'others'
-  },
-  
 ];
 export const EditInventory = (props) => {
-
-    const location = useLocation();
-    const state = location.state;
-  console.log(state)
-
-
+  const location = useLocation();
+  const state = location.state;
+  console.log(state);
 
   const [showAdditionalFields, setShowAdditionalFields] = useState(false);
-//warehouse
-  const [warehouse, setWarehouse]= useState()
-  const [warehouseId, setWarehouseId]=useState()
+  //warehouse
+  const [warehouse, setWarehouse] = useState();
+  const [warehouseId, setWarehouseId] = useState();
   //purchase order
-  const [purchaseOrder, setPurchaseOrder]=useState()
-  const [purchaseId, setPurchaseId]=useState()
+  const [purchaseOrder, setPurchaseOrder] = useState();
+  const [purchaseId, setPurchaseId] = useState();
   //category
-  const [category, setCategory]=useState()
-  const [categoryId, setCategoryId]=useState()
+  const [category, setCategory] = useState();
+  const [categoryId, setCategoryId] = useState();
 
   //product name
-  const [selectedName, setSelectedName]= useState()
+  const [selectedName, setSelectedName] = useState();
   const [selectedId, setSelectedId] = useState();
-  const [product, setProduct]=useState([])
+  const [product, setProduct] = useState([]);
   //remaining form states
 
-  const [hsnCode, setHsnCode] = useState(state.hsncode||'');
-  const [size, setSize] = useState(state.size||"");
-  const [rack,  setRack]= useState(state.rack?.id||'')
-  const [weight, setWeight] = useState(state.weight||'');
-  const [createdDate, setCreatedDate] = useState('');
-  const [quantity, setQuantity] = useState(state.quantity||'');
-  const [cost,setCost] = useState(state.price||'')
-  const [sgst, setSgst] = useState(state.sgst||'');
-  const [igst, setIgst] = useState(state.igst||'');
-  const [cgst, setCgst] = useState(state.cgst||'');
-  const [description, setDescription] = useState(state.description||'');
+  const [hsnCode, setHsnCode] = useState(state.hsncode || "");
+  const [size, setSize] = useState(state.size || "");
+  const [rack, setRack] = useState(state.rack?.id || "");
+  const [weight, setWeight] = useState(state.weight || "");
+  const [createdDate, setCreatedDate] = useState("");
+  const [quantity, setQuantity] = useState(state.quantity || "");
+  const [cost, setCost] = useState(state.price || "");
+  const [sgst, setSgst] = useState(state.sgst || "");
+  const [igst, setIgst] = useState(state.igst || "");
+  const [cgst, setCgst] = useState(state.cgst || "");
+  const [description, setDescription] = useState(state.description || "");
 
-  const [rackName, setRackName] =useState(state.rack?.name||'')
-  const [rackDesc, setRackDesc] =useState('')
+  const [rackName, setRackName] = useState(state.rack?.name || "");
+  const [rackDesc, setRackDesc] = useState("");
 
-  const [userData, setUserData]= useState([])
+  const [userData, setUserData] = useState([]);
 
   const navigate = useNavigate();
-  
- console.log(selectedName)
+
+  console.log(selectedName);
   //get warehouse data
   useEffect(() => {
-    axios.get(apiUrl +`getAllWareHouse/${userId}`)
-      .then(response => {
+    axios
+      .get(apiUrl + `getAllWareHouse/${userId}`)
+      .then((response) => {
+        setWarehouse(response.data);
 
-        setWarehouse(response.data)
-
-
-        const selectedWarehouseId = response.data.find((option) => option.id === state?.warehouse?.id);
-        const selectedWarehouse = selectedWarehouseId ? selectedWarehouseId.id :'';
-       setWarehouseId(selectedWarehouse)
-
+        const selectedWarehouseId = response.data.find(
+          (option) => option.id === state?.warehouse?.id
+        );
+        const selectedWarehouse = selectedWarehouseId
+          ? selectedWarehouseId.id
+          : "";
+        setWarehouseId(selectedWarehouse);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
   }, [state?.warehouseId]);
   //get purchase order
-   
+
   useEffect(() => {
-    axios.get(apiUrl +`getAllPurchaseOrderByUser/${userId}`)
-      .then(response => {
+    axios
+      .get(apiUrl + `getAllPurchaseOrderByUser/${userId}`)
+      .then((response) => {
+        setPurchaseOrder(response.data);
 
-        setPurchaseOrder(response.data)
-
-        const selectedPurchaseId = response.data.find((option) => option.id === state?.purchaseOrderId);
-        const selectedPurchase = selectedPurchaseId ? selectedPurchaseId.id :'';
-       setPurchaseId(selectedPurchase)
+        const selectedPurchaseId = response.data.find(
+          (option) => option.id === state?.purchaseOrderId
+        );
+        const selectedPurchase = selectedPurchaseId
+          ? selectedPurchaseId.id
+          : "";
+        setPurchaseId(selectedPurchase);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
   }, [state?.purchaseOrderId]);
-//get category
+  //get category
   useEffect(() => {
     axios
       .get(apiUrl + `getAllCategorys/${userId}`)
@@ -153,79 +151,80 @@ export const EditInventory = (props) => {
   }, [state?.product.id]);
 
   //  get date
- useEffect(() => {
-  const today = new Date();
-  const options = { day: 'numeric', month: 'numeric', year: 'numeric' };
-  const formattedDate = today.toLocaleDateString('IN', options);
-  setCreatedDate(formattedDate);
-}, []);
+  useEffect(() => {
+    const today = new Date();
+    const options = { day: "numeric", month: "numeric", year: "numeric" };
+    const formattedDate = today.toLocaleDateString("IN", options);
+    setCreatedDate(formattedDate);
+  }, []);
 
-useEffect(() => {
-  axios.get(apiUrl +`getInventoryByUserId/${userId}`)
-    .then(response => {
-      setUserData(response.data);
-      console.log(response.data);
-    })
-    .catch(error => {
-      console.error(error);
-    });
-}, []);
+  useEffect(() => {
+    axios
+      .get(apiUrl + `getInventoryByUserId/${userId}`)
+      .then((response) => {
+        setUserData(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-  
+
     switch (name) {
-    
-        case 'hsncode':
-          setHsnCode(value);
-            break;
-        case 'rack':
+      case "hsncode":
+        setHsnCode(value);
+        break;
+      case "rack":
         setRack(value);
-          break;
-        case 'size':
-          setSize(value);
-          break;
-        case 'weight':
-          setWeight(value);
-          break;
-        case 'quantity':
-          setQuantity(value);
-          break;
-        case 'cost':
-          setCost(value);
-          break;
-        case 'cgst':
-          setCgst(value);
-          break;
-      case 'sgst':
+        break;
+      case "size":
+        setSize(value);
+        break;
+      case "weight":
+        setWeight(value);
+        break;
+      case "quantity":
+        setQuantity(value);
+        break;
+      case "cost":
+        setCost(value);
+        break;
+      case "cgst":
+        setCgst(value);
+        break;
+      case "sgst":
         setSgst(value);
-          break;
-      case 'igst':
+        break;
+      case "igst":
         setIgst(value);
-          break;
-      case 'description':
+        break;
+      case "description":
         setDescription(value);
-          break;
+        break;
       default:
         break;
     }
   };
 
-
-
   //handle rack change
   const handleCategoryChange = (event) => {
-
     const selectedValue = event.target.value;
-    const selectedOption = updatedUserOptions.find(option => option.value === selectedValue);
-    const selectedLabel = selectedOption ? selectedOption.label : '';
-  
+    const selectedOption = updatedUserOptions.find(
+      (option) => option.value === selectedValue
+    );
+
     setRack(selectedValue);
-    setRackName(selectedLabel);
 
-    if (selectedValue && selectedValue !== 'none' && selectedValue !== 'other' && isNaN(Number(selectedValue))) {
+    if (
+      selectedValue &&
+      selectedValue !== "none" &&
+      selectedValue !== "other" &&
+      isNaN(Number(selectedValue))
+    ) {
       setShowAdditionalFields(true);
-
     } else {
       setShowAdditionalFields(false);
     }
@@ -238,24 +237,26 @@ useEffect(() => {
     setRackDesc(event.target.value);
   };
 
-  const mappedOptions = userData.map(({ rack}) => ({
-    label: rack.name,
-    value: rack.id
+  const filteredUserData = userData.filter(({ rack }) => rack !== null);
+
+  const mappedOptions = filteredUserData.map(({ rack }) => ({
+    label: rack?.name,
+    value: rack?.id,
   }));
 
+  const rackIdSet = new Set();
+  const updatedUserOptions = userOptions.concat(
+    mappedOptions.filter((newOption) => {
+      if (rackIdSet.has(newOption.value)) {
+        return false;
+      } else {
+        rackIdSet.add(newOption.value);
+        return true;
+      }
+    })
+  );
 
-  const rackIdSet = new Set(); 
-  const updatedUserOptions = userOptions.concat(mappedOptions.filter(newOption => {
-    if (rackIdSet.has(newOption.value)) {
-      return false; 
-    } else {
-      rackIdSet.add(newOption.value); 
-      return true; 
-    }
-  }));
-
-  const handleSave=async ()=>{
-
+  const handleSave = async () => {
     // let inventory ={
     //   productId: selectedId,
     //   purchaseOrderId:purchaseId,
@@ -309,89 +310,95 @@ useEffect(() => {
       },
     };
 
-  let inventoryWithRack = {
-    inventory: {
-      quantity: parseFloat(quantity),
-      id: state?.id,
-      weight: weight,
-      size: size,
-      hsncode: hsnCode,
-      price: parseFloat(cost),
-      description: description,
-      createdBy: parseFloat(userId),
-      //productId: selectedId,
-      product: { id: selectedId },
-      purchaseOrderId: purchaseId,
+    let inventoryWithRack = {
+      inventory: {
+        quantity: parseFloat(quantity),
+        id: state?.id,
+        weight: weight,
+        size: size,
+        hsncode: hsnCode,
+        price: parseFloat(cost),
+        description: description,
+        createdBy: parseFloat(userId),
+        //productId: selectedId,
+        product: { id: selectedId },
+        purchaseOrderId: purchaseId,
 
-      sgst: parseFloat(sgst) || 0,
-      cgst: parseFloat(cgst) || 0,
-      igst: parseFloat(igst) || 0,
-      lastModifiedByUser: { id: userId },
-    },
-    
-    warehouse: {
-      id: warehouseId,
-    },
-    rack: {
-      id: rack,
-    },
+        sgst: parseFloat(sgst) || 0,
+        cgst: parseFloat(cgst) || 0,
+        igst: parseFloat(igst) || 0,
+        lastModifiedByUser: { id: userId },
+      },
 
-    category: {
-      id: categoryId,
-    },
-  };
-  console.log(JSON.stringify(inventory))
+      warehouse: {
+        id: warehouseId,
+      },
+      rack: rack ? { id: rack } : { id: -1 },
 
-    if ( showAdditionalFields && warehouseId && quantity && weight  && hsnCode && rack && cost && description && userId) {
+      category: {
+        id: categoryId,
+      },
+    };
+    console.log(JSON.stringify(inventory));
+
+    if (
+      showAdditionalFields &&
+      warehouseId &&
+      quantity &&
+      weight &&
+      hsnCode &&
+      rack &&
+      cost &&
+      description &&
+      userId
+    ) {
       try {
-        const response = await fetch(apiUrl +'addInventory', {
-          method: 'POST',
+        const response = await fetch(apiUrl + "addInventory", {
+          method: "POST",
           headers: {
-  
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify(inventory)
+          body: JSON.stringify(inventory),
         });
-        
+
         if (response.ok) {
           // Redirect to home page upon successful submission
-      
-         response.json().then(data => {
-  
-          console.log(data)
-          navigate(`/dashboard/inventory/viewDetail/${state?.id}`, { state: data });
-        });
-        } 
+
+          response.json().then((data) => {
+            console.log(data);
+            navigate(`/dashboard/inventory/viewDetail/${state?.id}`, {
+              state: data,
+            });
+          });
+        }
       } catch (error) {
-        console.error('API call failed:', error);
+        console.error("API call failed:", error);
       }
-    } else if (showAdditionalFields === false){
+    } else if (showAdditionalFields === false) {
       try {
-        const response = await fetch(apiUrl +'addInventory', {
-          method: 'POST',
+        const response = await fetch(apiUrl + "addInventory", {
+          method: "POST",
           headers: {
-  
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify(inventoryWithRack)
+          body: JSON.stringify(inventoryWithRack),
         });
-        
+
         if (response.ok) {
           // Redirect to home page upon successful submission
-      
-         response.json().then(data => {
-  
-          console.log(data)
-          navigate(`/dashboard/inventory/viewDetail/${state?.inventoryId}`, { state: data });
-        });
-        } 
+
+          response.json().then((data) => {
+            console.log(data);
+            navigate(`/dashboard/inventory/viewDetail/${state?.inventoryId}`, {
+              state: data,
+            });
+          });
+        }
       } catch (error) {
-        console.error('API call failed:', error);
+        console.error("API call failed:", error);
       }
     }
-  }
-
-
+  };
 
   return (
     <div style={{ minWidth: "100%", marginBottom: "1rem" }}>
@@ -543,6 +550,9 @@ useEffect(() => {
                     if (selectedOption) {
                       setSelectedId(selectedOption.id);
                       setSelectedName(selectedOption.productName);
+                      setCgst(selectedOption.cgst);
+                      setIgst(selectedOption.igst);
+                      setSgst(selectedOption.sgst);
                     } else {
                       setSelectedId(null);
                       setSelectedName("");
@@ -745,5 +755,5 @@ useEffect(() => {
 };
 
 EditInventory.propTypes = {
-  customer: PropTypes.object.isRequired
+  customer: PropTypes.object.isRequired,
 };
