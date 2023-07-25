@@ -482,8 +482,12 @@ debugger
           // Redirect to home page upon successful submission
 
           response.json().then((data) => {
-            navigate("/dashboard/services/workorderDetail", { state: data });
-            console.log(data);
+            const updatedData = { ...data, showpaid: true };
+
+            // Navigate to the desired page with the updated data
+            navigate("/dashboard/services/workorderDetail", {
+              state: updatedData,
+            });
           });
         }
       } catch (error) {
@@ -547,8 +551,12 @@ debugger
           // Redirect to home page upon successful submission
 
           response.json().then((data) => {
-            navigate("/dashboard/services/workorderDetail", { state: data });
-            console.log(data);
+           const updatedData = { ...data, showpaid: true };
+
+           // Navigate to the desired page with the updated data
+           navigate("/dashboard/services/workorderDetail", {
+             state: updatedData,
+           });
           });
         }
       } catch (error) {
