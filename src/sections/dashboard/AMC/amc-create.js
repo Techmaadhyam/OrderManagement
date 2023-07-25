@@ -39,8 +39,6 @@ const userId = parseInt(
   sessionStorage.getItem("user") || localStorage.getItem("user")
 );
 
-
-
 //set status type
 const userOptions = [
   {
@@ -146,7 +144,7 @@ export const AmcCreateForm = (props) => {
 
   const [totalAmount, setTotalAmount] = useState(0);
   const [totalIgst, setTotalIgst] = useState(0);
-    const [totalCost, setTotalCost] = useState(0);
+  const [totalCost, setTotalCost] = useState(0);
   const [touched, setTouched] = useState(false);
 
   const handleInputChange = (event) => {
@@ -188,18 +186,18 @@ export const AmcCreateForm = (props) => {
     }
   };
 
-    const notify = (type, message) => {
-      toast[type](message, {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-    };
+  const notify = (type, message) => {
+    toast[type](message, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  };
   //email validation
   const handleBlur = () => {
     setTouched(true);
@@ -272,19 +270,19 @@ export const AmcCreateForm = (props) => {
       return total + igstAmount;
     }, 0);
 
-           const calcTotalCost = updatedRows.reduce((total, row) => {
-             const discountFactor =
-               row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
-             const discountedPrice = row.unitPrice * discountFactor;
+    const calcTotalCost = updatedRows.reduce((total, row) => {
+      const discountFactor =
+        row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+      const discountedPrice = row.unitPrice * discountFactor;
 
-             const cost = row.workstationcount * discountedPrice;
+      const cost = row.workstationcount * discountedPrice;
 
-             return total + cost;
-           }, 0);
+      return total + cost;
+    }, 0);
 
-           setTotalAmount(calculatedTotalAmount);
-           setTotalIgst(calcTotalIgst);
-           setTotalCost(calcTotalCost);
+    setTotalAmount(calculatedTotalAmount);
+    setTotalIgst(calcTotalIgst);
+    setTotalCost(calcTotalCost);
   };
 
   //show/hide popup form
@@ -353,21 +351,21 @@ export const AmcCreateForm = (props) => {
         return total + igstAmount;
       }, 0);
 
-       const calcTotalCost = updatedRows.reduce((total, row) => {
-         const discountFactor =
-           row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
-         const discountedPrice = row.unitPrice * discountFactor;
+      const calcTotalCost = updatedRows.reduce((total, row) => {
+        const discountFactor =
+          row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+        const discountedPrice = row.unitPrice * discountFactor;
 
-         const cost = row.workstationcount * discountedPrice;
+        const cost = row.workstationcount * discountedPrice;
 
-         return total + cost;
-       }, 0);
+        return total + cost;
+      }, 0);
 
-       setTotalAmount(calculatedTotalAmount);
-       setTotalIgst(calcTotalIgst);
-       setTotalCost(calcTotalCost);
+      setTotalAmount(calculatedTotalAmount);
+      setTotalIgst(calcTotalIgst);
+      setTotalCost(calcTotalCost);
     } else {
-       notify("error", "Please fill all the fields marked with *.");
+      notify("error", "Please fill all the fields marked with *.");
     }
   };
 
@@ -431,7 +429,6 @@ export const AmcCreateForm = (props) => {
       technician &&
       updatedRows &&
       status &&
-
       deliveryIST &&
       deliveryIST2 &&
       tempId
@@ -480,8 +477,8 @@ export const AmcCreateForm = (props) => {
           // Redirect to home page upon successful submission
 
           response.json().then((data) => {
-            navigate("/dashboard/services/amcDetail", { state: data });
-            console.log(data);
+            const updatedData = { ...data, showpaid: true };
+            navigate("/dashboard/services/amcDetail", { state: updatedData });
           });
         }
       } catch (error) {
@@ -497,7 +494,6 @@ export const AmcCreateForm = (props) => {
       adminEmail &&
       type &&
       technician &&
-
       status &&
       updatedRows &&
       deliveryIST &&
@@ -546,7 +542,8 @@ export const AmcCreateForm = (props) => {
           // Redirect to home page upon successful submission
 
           response.json().then((data) => {
-            navigate("/dashboard/services/amcDetail", { state: data });
+            const updatedData = { ...data, showpaid: true };
+            navigate("/dashboard/services/amcDetail", { state: updatedData });
             console.log(data);
           });
         }

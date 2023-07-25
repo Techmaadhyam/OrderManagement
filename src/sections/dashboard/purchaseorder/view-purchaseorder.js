@@ -66,7 +66,7 @@ export const ViewPurchaseOrder = (props) => {
       igst: obj.sgst,
       cgst: obj.cgst,
       weight: obj.weight,
-    
+
       price: obj.price,
       description: obj.description,
       comments: state?.comments,
@@ -239,8 +239,7 @@ export const ViewPurchaseOrder = (props) => {
           }`
       )
       .then((response) => {
-
-        console.log(response.data)
+        console.log(response.data);
         const modifiedData = response.data.map((item) => {
           const { quantity, price, cgst, igst, sgst } = item;
           const netAmount = (
@@ -258,11 +257,7 @@ export const ViewPurchaseOrder = (props) => {
           try {
             parsedProduct = obj.product;
           } catch (error) {
-            console.error(
-              "Error parsing product JSON for object:",
-              obj,
-              error
-            );
+            console.error("Error parsing product JSON for object:", obj, error);
           }
 
           return {
@@ -500,9 +495,7 @@ export const ViewPurchaseOrder = (props) => {
             align={align}
             label="Quotation"
             value={String(
-              state?.quotid ||
-                state?.purchaseOrderRec?.quotid ||
-                "Empty"
+              state?.quotid || state?.purchaseOrderRec?.quotid || "Empty"
             )}
           />
           <Divider />
@@ -561,48 +554,50 @@ export const ViewPurchaseOrder = (props) => {
             {state?.totalAmount || state?.purchaseOrderRec?.totalAmount}
           </Typography>
         </Grid>
-        <Grid style={{ marginTop: "20px" }}>
-          <Typography
-            style={{
-              fontFamily: "Arial, Helvetica, sans-serif",
-              fontSize: "14px",
-              display: "flex",
-              marginLeft: "10px",
-              color: "black",
-              fontWeight: "bold",
-              alignItems: "center",
-            }}
-          >
-            Paid Amount : ₹
-            {isEditable ? (
-              <TextField
-                type="number"
-                value={paidAmount}
-                onChange={(e) => setPaidAmount(e.target.value)}
-                style={{
-                  width: "100px",
-                  height: "40px",
-                  marginLeft: "10px",
-                }}
-              />
-            ) : (
-              <span>{paidAmount}</span>
-            )}
-            {isEditable ? (
-              <IconButton onClick={handleSaveClick}>
-                <Icon>
-                  <SaveIcon />
-                </Icon>
-              </IconButton>
-            ) : (
-              <IconButton onClick={handleEditClick}>
-                <Icon>
-                  <EditIcon />
-                </Icon>
-              </IconButton>
-            )}
-          </Typography>
-        </Grid>
+        {!state?.purchaseOrderRec && (
+          <Grid style={{ marginTop: "20px" }}>
+            <Typography
+              style={{
+                fontFamily: "Arial, Helvetica, sans-serif",
+                fontSize: "14px",
+                display: "flex",
+                marginLeft: "10px",
+                color: "black",
+                fontWeight: "bold",
+                alignItems: "center",
+              }}
+            >
+              Paid Amount : ₹
+              {isEditable ? (
+                <TextField
+                  type="number"
+                  value={paidAmount}
+                  onChange={(e) => setPaidAmount(e.target.value)}
+                  style={{
+                    width: "100px",
+                    height: "40px",
+                    marginLeft: "10px",
+                  }}
+                />
+              ) : (
+                <span>{paidAmount}</span>
+              )}
+              {isEditable ? (
+                <IconButton onClick={handleSaveClick}>
+                  <Icon>
+                    <SaveIcon />
+                  </Icon>
+                </IconButton>
+              ) : (
+                <IconButton onClick={handleEditClick}>
+                  <Icon>
+                    <EditIcon />
+                  </Icon>
+                </IconButton>
+              )}
+            </Typography>
+          </Grid>
+        )}
         <Grid style={{ marginTop: "20px" }}>
           <Typography
             style={{

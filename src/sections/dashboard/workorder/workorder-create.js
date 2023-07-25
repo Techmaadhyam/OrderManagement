@@ -32,7 +32,7 @@ import { useNavigate } from "react-router-dom";
 import "moment-timezone";
 import { apiUrl } from "src/config";
 import Logo from "../logo/logo";
-  import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 
 //get userId
 const userId = parseInt(
@@ -189,18 +189,18 @@ export const WorkOrderCreateForm = (props) => {
     }
   };
 
-    const notify = (type, message) => {
-      toast[type](message, {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-    };
+  const notify = (type, message) => {
+    toast[type](message, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  };
 
   //email validation
   const handleBlur = () => {
@@ -424,7 +424,7 @@ export const WorkOrderCreateForm = (props) => {
     let finalAmount = totalAmount.toFixed(2);
 
     event.preventDefault();
-debugger
+    debugger;
     if (
       contactName &&
       userId &&
@@ -482,8 +482,12 @@ debugger
           // Redirect to home page upon successful submission
 
           response.json().then((data) => {
-            navigate("/dashboard/services/workorderDetail", { state: data });
-            console.log(data);
+            const updatedData = { ...data, showpaid: true };
+
+            // Navigate to the desired page with the updated data
+            navigate("/dashboard/services/workorderDetail", {
+              state: updatedData,
+            });
           });
         }
       } catch (error) {
@@ -491,7 +495,7 @@ debugger
       }
       debugger;
     } else if (
-    contactName &&
+      contactName &&
       userId &&
       phone &&
       inchargeEmail &&
@@ -503,7 +507,6 @@ debugger
       status &&
       updatedRows &&
       userState
- 
     ) {
       try {
         const response = await fetch(apiUrl + "addWorkOrderWithItems", {
@@ -547,15 +550,19 @@ debugger
           // Redirect to home page upon successful submission
 
           response.json().then((data) => {
-            navigate("/dashboard/services/workorderDetail", { state: data });
-            console.log(data);
+            const updatedData = { ...data, showpaid: true };
+
+            // Navigate to the desired page with the updated data
+            navigate("/dashboard/services/workorderDetail", {
+              state: updatedData,
+            });
           });
         }
       } catch (error) {
         console.error("API call failed:", error);
       }
     } else {
-       notify("error", "Please fill all the fields marked with *.");
+      notify("error", "Please fill all the fields marked with *.");
     }
   };
 
@@ -833,7 +840,6 @@ debugger
                               MenuProps: {
                                 style: {
                                   maxHeight: 300,
-                                  
                                 },
                               },
                             }}
