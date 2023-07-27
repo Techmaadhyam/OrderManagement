@@ -4,6 +4,7 @@ import { useState, useEffect, useContext } from "react";
 import { LogoContext } from "src/utils/logoContext";
 import axios from "axios";
 import { apiUrl } from "src/config";
+import useAuthStore from "src/store/store";
 
 const Logo = () => {
 
@@ -39,7 +40,7 @@ const Logo = () => {
             });
     }, [setLogo]);
 
-  
+  useAuthStore.setState({ user: "testinggggggg" });
   
 };
 

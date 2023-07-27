@@ -45,10 +45,14 @@ import { useEffect } from "react";
 import FileUploadRoundedIcon from "@mui/icons-material/FileUploadRounded";
 import { users } from "src/api/auth/data";
 import { useNavigate } from "react-router-dom";
+import useAuthStore from "src/store/store";
 
 const mail = sessionStorage.getItem("mail");
 
 export const Page = () => {
+  const user = useAuthStore((state) => state.user);
+  console.log(user);
+
   const { logo } = useContext(LogoContext);
   const navigate = useNavigate();
 
