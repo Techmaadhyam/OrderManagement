@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 import {
   Card,
@@ -7,20 +7,20 @@ import {
   Typography,
   Link,
   SvgIcon,
-} from '@mui/material';
+} from "@mui/material";
 
-import { PropertyList } from 'src/components/property-list';
-import { PropertyListItem } from 'src/components/property-list-item';
-import { RouterLink } from 'src/components/router-link';
-import { paths } from 'src/paths';
-import { primaryColor } from 'src/primaryColor';
-import ArrowCircleLeftOutlinedIcon from '@mui/icons-material/ArrowCircleLeftOutlined';
-import IconWithPopup from '../user/user-icon';
-import { useLocation } from 'react-router-dom';
-import Logo from '../logo/logo';
-import axios from 'axios';
-import { useState, useEffect } from 'react';
-import { apiUrl } from 'src/config';
+import { PropertyList } from "src/components/property-list";
+import { PropertyListItem } from "src/components/property-list-item";
+import { RouterLink } from "src/components/router-link";
+import { paths } from "src/paths";
+import { primaryColor } from "src/primaryColor";
+import ArrowCircleLeftOutlinedIcon from "@mui/icons-material/ArrowCircleLeftOutlined";
+import IconWithPopup from "../user/user-icon";
+import { useLocation } from "react-router-dom";
+import Logo from "../logo/logo";
+import axios from "axios";
+import { useState, useEffect } from "react";
+import { apiUrl } from "src/config";
 import { Table } from "antd";
 import { Box } from "@mui/system";
 import { Scrollbar } from "src/components/scrollbar";
@@ -35,28 +35,37 @@ import InventoryTwoToneIcon from "@mui/icons-material/InventoryTwoTone";
 import LayoutAlt02Icon from "src/icons/untitled-ui/duocolor/layout-alt-02";
 import ListAltTwoToneIcon from "@mui/icons-material/ListAltTwoTone";
 
-
+//get user id
 const userId = sessionStorage.getItem("user") || localStorage.getItem("user");
+//get current month
 const currentMonth = new Date().toLocaleString("default", { month: "long" });
+//get current year
 const currentYear = new Date().getFullYear().toString();
 
-
-
 export const ViewTemporaryUserDetail = (props) => {
-
+  //get state data of other component using useLocation hook
   const location = useLocation();
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const state = location.state;
 
-  const [po, setPo] = useState([])
+  //store purchase order data
+  const [po, setPo] = useState([]);
+  //store sales order data
   const [so, setSo] = useState([]);
+  //store work order data
   const [wo, setWo] = useState([]);
+
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
+
+  //store quotation order data
   const [quotation, setQuotation] = useState([]);
-   const [selectedDate, setSelectedDate] = useState(
-     dayjs(`${currentMonth} ${currentYear}`)
+  //change date format usong dayjs
+  const [selectedDate, setSelectedDate] = useState(
+    dayjs(`${currentMonth} ${currentYear}`)
   );
+
+  //Quotation column with table title and render data
   const quotationColumn = [
     {
       title: "Quotation Order Number",
@@ -73,7 +82,6 @@ export const ViewTemporaryUserDetail = (props) => {
             onClick={handleNavigation}
             sx={{
               alignItems: "center",
-     
             }}
             underline="hover"
           >
@@ -118,6 +126,7 @@ export const ViewTemporaryUserDetail = (props) => {
       dataIndex: "totalAmount",
     },
   ];
+  //sales column with table title and render data
   const salesColumn = [
     {
       title: "Sales Order Number",
@@ -136,7 +145,6 @@ export const ViewTemporaryUserDetail = (props) => {
             onClick={handleNavigation}
             sx={{
               alignItems: "center",
-            
             }}
             underline="hover"
           >
@@ -181,6 +189,7 @@ export const ViewTemporaryUserDetail = (props) => {
       dataIndex: "totalAmount",
     },
   ];
+  //purchase column with table title and render data
   const purchaseColumn = [
     {
       title: "Purchase Order Number",
@@ -199,7 +208,6 @@ export const ViewTemporaryUserDetail = (props) => {
             onClick={handleNavigation}
             sx={{
               alignItems: "center",
-   
             }}
             underline="hover"
           >
@@ -244,7 +252,7 @@ export const ViewTemporaryUserDetail = (props) => {
       dataIndex: "totalAmount",
     },
   ];
-
+  //work column with table title and render data
   const workColumn = [
     {
       title: "Work Order Number",
@@ -261,7 +269,6 @@ export const ViewTemporaryUserDetail = (props) => {
             onClick={handleNavigation}
             sx={{
               alignItems: "center",
-             
             }}
             underline="hover"
           >
@@ -303,18 +310,17 @@ export const ViewTemporaryUserDetail = (props) => {
     },
   ];
 
+  const align = "horizontal";
 
-  const align = 'horizontal' 
-
-    function formatDate(dateString) {
-      const parsedDate = new Date(dateString);
-      const year = parsedDate.getFullYear();
-      const month = String(parsedDate.getMonth() + 1).padStart(2, "0");
-      const day = String(parsedDate.getDate()).padStart(2, "0");
-      return `${year}/${month}/${day}`;
+  //this formats the default date string to redable YYYY/MM/DD format
+  function formatDate(dateString) {
+    const parsedDate = new Date(dateString);
+    const year = parsedDate.getFullYear();
+    const month = String(parsedDate.getMonth() + 1).padStart(2, "0");
+    const day = String(parsedDate.getDate()).padStart(2, "0");
+    return `${year}/${month}/${day}`;
   }
-  
-
+  //this function makes API call when date is changed in calendar
   const handleDateChange = (date) => {
     setSelectedDate(date);
     const monthYear = date?.format("MMMM/YYYY").toLowerCase();
@@ -330,6 +336,7 @@ export const ViewTemporaryUserDetail = (props) => {
           }/${newYear || currentYear}`
       )
       .then((response) => {
+        //categorize and store API data in diffrent variables based on their category
         let poList = [
           ...response.data.poList.slice(-4).map((obj) => ({
             ...obj,
@@ -385,8 +392,7 @@ export const ViewTemporaryUserDetail = (props) => {
       });
   };
 
-
-
+  //this API call is triggered as soon as the page loads.
   useEffect(() => {
     const fetchData = () => {
       axios
@@ -398,7 +404,7 @@ export const ViewTemporaryUserDetail = (props) => {
         )
         .then((response) => {
           console.log(response.data);
-
+          //categorize and store API data in diffrent variables based on their category
           let poList = [
             ...response.data.poList.slice(-4).map((obj) => ({
               ...obj,
@@ -456,26 +462,25 @@ export const ViewTemporaryUserDetail = (props) => {
 
     fetchData();
   }, [userId, state?.id, currentMonth, currentYear]);
-
-
-   const handleNavigation1 = () => {
-     navigate(`/dashboard/logistics/viewAllQo`, {
-       state: {
-         id: state.id,
-         month: month || currentMonth?.toLowerCase(),
-         year: year || currentYear,
-       },
-     });
+  //these handle navigate functions take us to diffrent pages which render table of the above po,so, wo ..data similar to view table
+  const handleNavigation1 = () => {
+    navigate(`/dashboard/logistics/viewAllQo`, {
+      state: {
+        id: state.id,
+        month: month || currentMonth?.toLowerCase(),
+        year: year || currentYear,
+      },
+    });
   };
-    const handleNavigation2 = () => {
-      navigate(`/dashboard/logistics/viewAllSo`, {
-        state: {
-          id: state.id,
-          month: month || currentMonth?.toLowerCase(),
-          year: year || currentYear,
-        },
-      });
-    };
+  const handleNavigation2 = () => {
+    navigate(`/dashboard/logistics/viewAllSo`, {
+      state: {
+        id: state.id,
+        month: month || currentMonth?.toLowerCase(),
+        year: year || currentYear,
+      },
+    });
+  };
   const handleNavigation3 = () => {
     navigate(`/dashboard/logistics/viewAllPo`, {
       state: {
@@ -485,16 +490,15 @@ export const ViewTemporaryUserDetail = (props) => {
       },
     });
   };
-    const handleNavigation4 = () => {
-      navigate(`/dashboard/logistics/viewAllWo`, {
-        state: {
-          id: state.id,
-          month: month || currentMonth?.toLowerCase(),
-          year: year || currentYear,
-        },
-      });
-    };
-  console.log(month, year)
+  const handleNavigation4 = () => {
+    navigate(`/dashboard/logistics/viewAllWo`, {
+      state: {
+        id: state.id,
+        month: month || currentMonth?.toLowerCase(),
+        year: year || currentYear,
+      },
+    });
+  };
 
   return (
     <div style={{ minWidth: "100%", marginTop: "1rem" }}>
@@ -564,7 +568,7 @@ export const ViewTemporaryUserDetail = (props) => {
             value={state?.emailId}
           />
           <Divider />
-          
+
           <PropertyListItem
             align={align}
             label="Address"
@@ -792,5 +796,5 @@ export const ViewTemporaryUserDetail = (props) => {
 };
 
 ViewTemporaryUserDetail.propTypes = {
-  customer: PropTypes.object.isRequired
+  customer: PropTypes.object.isRequired,
 };

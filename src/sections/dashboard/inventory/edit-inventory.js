@@ -19,19 +19,24 @@ import { useLocation } from "react-router-dom";
 import { apiUrl } from "src/config";
 import Logo from "../logo/logo";
 
+//get user id
+
 const userId = sessionStorage.getItem("user") || localStorage.getItem("user");
 
+//default rack
 const userOptions = [
   {
     label: "Add New Rack",
     value: "others",
   },
 ];
+
 export const EditInventory = (props) => {
+  //get data from useNavigate hook in view table page when clicking on edit icon
   const location = useLocation();
   const state = location.state;
-  console.log(state);
 
+  //show/ hides additional rack fields
   const [showAdditionalFields, setShowAdditionalFields] = useState(false);
   //warehouse
   const [warehouse, setWarehouse] = useState();
@@ -47,28 +52,25 @@ export const EditInventory = (props) => {
   const [selectedName, setSelectedName] = useState();
   const [selectedId, setSelectedId] = useState();
   const [product, setProduct] = useState([]);
-  //remaining form states
-
+  //other form input states
   const [hsnCode, setHsnCode] = useState(state.hsncode || "");
   const [size, setSize] = useState(state.size || "");
   const [rack, setRack] = useState(state.rack?.id || "");
   const [weight, setWeight] = useState(state.weight || "");
-  const [createdDate, setCreatedDate] = useState("");
   const [quantity, setQuantity] = useState(state.quantity || "");
   const [cost, setCost] = useState(state.price || "");
   const [sgst, setSgst] = useState(state.sgst || "");
   const [igst, setIgst] = useState(state.igst || "");
   const [cgst, setCgst] = useState(state.cgst || "");
   const [description, setDescription] = useState(state.description || "");
-
   const [rackName, setRackName] = useState(state.rack?.name || "");
   const [rackDesc, setRackDesc] = useState("");
 
+  //inventory data from API is stored here
   const [userData, setUserData] = useState([]);
 
   const navigate = useNavigate();
 
-  console.log(selectedName);
   //get warehouse data
   useEffect(() => {
     axios
@@ -88,8 +90,7 @@ export const EditInventory = (props) => {
         console.error(error);
       });
   }, [state?.warehouseId]);
-  //get purchase order
-
+  //get purchase order data
   useEffect(() => {
     axios
       .get(apiUrl + `getAllPurchaseOrderByUser/${userId}`)
@@ -108,7 +109,7 @@ export const EditInventory = (props) => {
         console.error(error);
       });
   }, [state?.purchaseOrderId]);
-  //get category
+  //get category data
   useEffect(() => {
     axios
       .get(apiUrl + `getAllCategorys/${userId}`)
@@ -129,7 +130,7 @@ export const EditInventory = (props) => {
       });
   }, [state?.category.id]);
 
-  //get Product
+  //get Product data
   useEffect(() => {
     axios
       .get(apiUrl + `getAllItem/${userId}`)
@@ -150,14 +151,7 @@ export const EditInventory = (props) => {
       });
   }, [state?.product.id]);
 
-  //  get date
-  useEffect(() => {
-    const today = new Date();
-    const options = { day: "numeric", month: "numeric", year: "numeric" };
-    const formattedDate = today.toLocaleDateString("IN", options);
-    setCreatedDate(formattedDate);
-  }, []);
-
+  //get inventory data
   useEffect(() => {
     axios
       .get(apiUrl + `getInventoryByUserId/${userId}`)
@@ -170,6 +164,7 @@ export const EditInventory = (props) => {
       });
   }, []);
 
+  //update edited form input state
   const handleInputChange = (event) => {
     const { name, value } = event.target;
 
@@ -212,12 +207,9 @@ export const EditInventory = (props) => {
   //handle rack change
   const handleCategoryChange = (event) => {
     const selectedValue = event.target.value;
-    const selectedOption = updatedUserOptions.find(
-      (option) => option.value === selectedValue
-    );
 
     setRack(selectedValue);
-
+    // Check if the selected rack is not empty, not "none", not "other", and not a number.
     if (
       selectedValue &&
       selectedValue !== "none" &&
@@ -230,52 +222,40 @@ export const EditInventory = (props) => {
     }
   };
 
+  // This function handles changes in the "rack" name input element
   const handleRack = (event) => {
     setRackName(event.target.value);
   };
+  // This function handles changes in the "rack" description input element
   const handleRackDesc = (event) => {
     setRackDesc(event.target.value);
   };
-
+  // Filter out user data where the "rack" property is not null
   const filteredUserData = userData.filter(({ rack }) => rack !== null);
-
+  // Map the filtered user data to an array of options with label and value properties
   const mappedOptions = filteredUserData.map(({ rack }) => ({
     label: rack?.name,
     value: rack?.id,
   }));
-
+  // Create a Set to store unique "rack" IDs
   const rackIdSet = new Set();
+  /*Concatenate the userOptions array with the new mappedOptions array, 
+  filtering out duplicates based on "rack" IDs*/
   const updatedUserOptions = userOptions.concat(
     mappedOptions.filter((newOption) => {
       if (rackIdSet.has(newOption.value)) {
+        /*Skip adding the new option if its "rack" ID 
+        is already in the rackIdSet (i.e., it's a duplicate) */
         return false;
       } else {
         rackIdSet.add(newOption.value);
+        /*Add the "rack" ID to the rackIdSet to avoid duplicates in the future */
         return true;
       }
     })
   );
-
+  //submit form
   const handleSave = async () => {
-    // let inventory ={
-    //   productId: selectedId,
-    //   purchaseOrderId:purchaseId,
-    //   warehouseId:warehouseId,
-    //   quantity: parseFloat(quantity),
-    //   weight:weight,
-    //   size:size,
-    //   hsncode:hsnCode,
-    //   rack:rack,
-    //   cgst: parseFloat(cgst),
-    //   igst: parseFloat(igst),
-    //   sgst: parseFloat(sgst),
-    //   price: parseFloat(cost),
-    //   description: description,
-    //   createdBy:parseFloat(userId),
-    //   createdDate: createdDate,
-    //   lastModifiedDate: createdDate
-    // }
-
     let inventory = {
       inventory: {
         id: state?.id,
@@ -286,10 +266,8 @@ export const EditInventory = (props) => {
         price: parseFloat(cost),
         description: description,
         createdBy: parseFloat(userId),
-        //productId: selectedId,
         product: { id: selectedId },
         purchaseOrderId: purchaseId,
-
         sgst: parseFloat(sgst) || 0,
         cgst: parseFloat(cgst) || 0,
         igst: parseFloat(igst) || 0,
@@ -320,10 +298,8 @@ export const EditInventory = (props) => {
         price: parseFloat(cost),
         description: description,
         createdBy: parseFloat(userId),
-        //productId: selectedId,
         product: { id: selectedId },
         purchaseOrderId: purchaseId,
-
         sgst: parseFloat(sgst) || 0,
         cgst: parseFloat(cgst) || 0,
         igst: parseFloat(igst) || 0,
@@ -362,7 +338,7 @@ export const EditInventory = (props) => {
         });
 
         if (response.ok) {
-          // Redirect to home page upon successful submission
+          // Redirect to inventory page upon successful submission
 
           response.json().then((data) => {
             console.log(data);
@@ -385,7 +361,7 @@ export const EditInventory = (props) => {
         });
 
         if (response.ok) {
-          // Redirect to home page upon successful submission
+          // Redirect to inventory page upon successful submission
 
           response.json().then((data) => {
             console.log(data);

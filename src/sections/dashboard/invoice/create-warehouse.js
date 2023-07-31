@@ -45,11 +45,10 @@ export const CreateWarehouse = (props) => {
   const [address, setAddress] = useState("");
   const [zipcode, setZipcode] = useState("");
   const [description, setDescription] = useState("");
-  const [currentDate, setCurrentDate] = useState("");
   const [phone, setPhone] = useState("");
   const [contactName, setContactName] = useState("");
 
-  ////
+  //handle state change
   const handleInputChange = (event) => {
     const { name, value } = event.target;
 
@@ -77,6 +76,7 @@ export const CreateWarehouse = (props) => {
     }
   };
 
+  //toast notification from tostify library
   const notify = (type, message) => {
     toast[type](message, {
       position: "top-right",
@@ -89,16 +89,6 @@ export const CreateWarehouse = (props) => {
       theme: "light",
     });
   };
-
-  //getting current date
-  useEffect(() => {
-    const today = new Date();
-    const year = today.getFullYear().toString();
-    const month = (today.getMonth() + 1).toString().padStart(2, "0");
-    const day = today.getDate().toString().padStart(2, "0");
-    const formattedDate = `${year}/${month}/${day}`;
-    setCurrentDate(formattedDate);
-  }, []);
 
   //get access token
   useEffect(() => {
@@ -205,6 +195,7 @@ export const CreateWarehouse = (props) => {
   //for sending response body via route
   const navigate = useNavigate();
 
+  //handle form submission
   const handleClick = async (event) => {
     event.preventDefault();
 
@@ -218,8 +209,7 @@ export const CreateWarehouse = (props) => {
       userId &&
       description &&
       currentCity &&
-      zipcode &&
-      currentDate
+      zipcode
     ) {
       try {
         const response = await fetch(apiUrl + "addWareHouse", {
@@ -244,10 +234,10 @@ export const CreateWarehouse = (props) => {
         });
 
         if (response.ok) {
-          // Redirect to home page upon successful submission
+          
 
           response.json().then((data) => {
-            console.log(data);
+            // Redirect to viewDetail page upon successful submission with response data
             navigate("/dashboard/invoices/viewDetail", { state: data });
           });
         }

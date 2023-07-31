@@ -38,6 +38,7 @@ import {
 //get userid
 const userId = sessionStorage.getItem("user") || localStorage.getItem("user");
 
+//default customer type
 const customerType = [
   {
     label: "Customer",
@@ -50,38 +51,45 @@ const customerType = [
 ];
 
 const ViewTemporaryUser = () => {
+  //customer data
   const [userData, setUserData] = useState([]);
 
+  //edit popup related states
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [editRecord, setEditRecord] = useState(null);
-  const [currentDate, setCurrentDate] = useState("");
 
+  //search bar related state
   const [isSearching, setIsSearching] = useState(false);
   const [searchText, setSearchText] = useState("");
 
   const [selectedType, setSelectedType] = useState("");
+  //state for confirm delete
   const [open, setOpen] = useState(false);
-      const [loading, setLoading] = useState(true);
+  //state for page load
+  const [loading, setLoading] = useState(true);
+  //customer id
   const [selectedProductId, setSelectedProductId] = useState(null);
 
   const navigate = useNavigate();
 
+  //get all customers
   useEffect(() => {
     axios
       .get(apiUrl + `getAllTempUsers/${userId}`)
       .then((response) => {
         setUserData(response.data);
-        setLoading(false)
+        setLoading(false);
         console.log(response.data);
       })
       .catch((error) => {
         console.error(error);
-          setLoading(false);
+        setLoading(false);
       });
   }, []);
 
   const dataWithKeys = userData.map((item) => ({ ...item, key: item.id }));
 
+  //filter based on company name while searching
   const filteredList = dataWithKeys.filter((product) => {
     const companyMatch = product.companyName
       .toLowerCase()
@@ -90,10 +98,12 @@ const ViewTemporaryUser = () => {
     return companyMatch;
   });
 
+  //dont show onjects that has type= "Technician" since both tabs use same API
   const removeTechnician = filteredList.filter(
     (obj) => obj.type !== "Technician"
   );
 
+  //customer type selection filter
   const filteredData = selectedType
     ? removeTechnician.filter((item) => item.type === selectedType)
     : removeTechnician;
@@ -116,12 +126,13 @@ const ViewTemporaryUser = () => {
     });
   };
 
-  
-
+  //delete row
   const handleRemoveRow = async () => {
     try {
       await axios.delete(apiUrl + `deleteTempUserId/${selectedProductId.id}`);
-      const updatedRows = userData.filter((item) => item.id !== selectedProductId.id);
+      const updatedRows = userData.filter(
+        (item) => item.id !== selectedProductId.id
+      );
       setUserData(updatedRows);
       notify("success", `Sucessfully deleted customer row.`);
     } catch (error) {
@@ -141,24 +152,23 @@ const ViewTemporaryUser = () => {
     setOpen(false);
   };
 
+  //close delete confirmation popup
   const handleClose = () => {
     setOpen(false);
   };
-
+  //delete confirmation popup
   const handleConfirmDelete = (product) => {
     setSelectedProductId(product);
     setOpen(true);
   };
-
+  //edit customer popup
   const handleEditRecord = (record) => {
     setEditRecord(record);
     setPopupVisible(true);
   };
-
+  //submit edited customer
   const handleSaveRecord = async (editedRecord) => {
-    console.log("Saving edited record:", editedRecord);
-
-    if (currentDate) {
+    if (editedRecord) {
       try {
         const response = await fetch(apiUrl + "addTempUser", {
           method: "POST",
@@ -198,14 +208,6 @@ const ViewTemporaryUser = () => {
     }
   };
 
-  //Get date
-  useEffect(() => {
-    const today = new Date();
-    const options = { day: "numeric", month: "numeric", year: "numeric" };
-    const formattedDate = today.toLocaleDateString("en-ZA", options);
-    setCurrentDate(formattedDate);
-  }, []);
-
   //company search
   const handleCompanyClick = () => {
     setIsSearching(true);
@@ -220,6 +222,7 @@ const ViewTemporaryUser = () => {
     setSearchText("");
   };
 
+  //render table title and body
   const columns = [
     {
       title: (
@@ -348,17 +351,25 @@ const ViewTemporaryUser = () => {
     },
   ];
 
+  //edit popup component
   const PopupComponent = ({ record, onClose, onSave }) => {
     const [editedRecord, setEditedRecord] = useState(record);
 
+    // This function handles changes in form input elements and updates the "editedRecord" state.
+    // It takes an "event" parameter representing the event triggered by user interaction with an input element.
     const handleChange = (event) => {
+      // Extract the "name" and "value" properties from the event target (input element).
       const { name, value } = event.target;
+
+      // Update the "editedRecord" state using the setter function.
+      // The new state is created by spreading the previous "prevRecord" state to keep its existing values.
+      // Then, the property specified by the "name" (derived from the input element) is updated with the new "value".
       setEditedRecord((prevRecord) => ({
         ...prevRecord,
         [name]: value,
       }));
     };
-
+    //trigger submission of form
     const handleSave = () => {
       onSave(editedRecord);
       onClose();
@@ -541,7 +552,8 @@ const ViewTemporaryUser = () => {
         <Dialog open={open} onClose={handleClose}>
           <DialogTitle>Confirm Delete</DialogTitle>
           <DialogContent>
-            Are you sure you want to delete this {selectedProductId.type.toLowerCase()}?
+            Are you sure you want to delete this{" "}
+            {selectedProductId.type.toLowerCase()}?
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} color="primary">

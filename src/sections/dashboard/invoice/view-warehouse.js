@@ -33,6 +33,7 @@ import {
   TextField,
 } from "@mui/material";
 
+//pdf font
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 pdfMake.fonts = {
   Helvetica: {
@@ -45,28 +46,32 @@ pdfMake.fonts = {
 const userId = sessionStorage.getItem("user") || localStorage.getItem("user");
 
 const ViewWarehouse = () => {
+  //set api data to state
   const [userData, setUserData] = useState([]);
 
+  //handle edit popup and data
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [editRecord, setEditRecord] = useState(null);
-  const [currentDate, setCurrentDate] = useState("");
+  //handle delete confirmation popup
   const [open, setOpen] = useState(false);
-      const [loading, setLoading] = useState(true);
+  //handle loading
+  const [loading, setLoading] = useState(true);
+  //store warehouse id
   const [selectedProductId, setSelectedProductId] = useState(null);
-
+  //calls useNavigate from react router to send data as state to diffrent page
   const navigate = useNavigate();
-
+  //get all warehouse
   useEffect(() => {
     axios
       .get(apiUrl + `getAllWareHouse/${userId}`)
       .then((response) => {
         setUserData(response.data);
         console.log(response.data);
-        setLoading(false)
+        setLoading(false);
       })
       .catch((error) => {
         console.error(error);
-          setLoading(false);
+        setLoading(false);
       });
   }, []);
 
@@ -85,7 +90,7 @@ const ViewWarehouse = () => {
       theme: "light",
     });
   };
-
+  //delete warehouse
   const handleRemoveRow = async () => {
     try {
       await axios.delete(apiUrl + `deleteWareHouseById/${selectedProductId}`);
@@ -100,23 +105,25 @@ const ViewWarehouse = () => {
     }
     setOpen(false);
   };
-
+  //close delete confirmation popup
   const handleClose = () => {
     setOpen(false);
   };
 
+  //handle delete confirmation
   const handleConfirmDelete = (productId) => {
     setSelectedProductId(productId);
     setOpen(true);
   };
-
+  //handle edit of warehouse
   const handleEditRecord = (record) => {
     setEditRecord(record);
     setPopupVisible(true);
   };
 
+  // submit edited warehouse data
   const handleSaveRecord = async (editedRecord) => {
-    if (currentDate) {
+    if (editedRecord) {
       try {
         const response = await fetch(apiUrl + "addWareHouse", {
           method: "POST",
@@ -149,16 +156,7 @@ const ViewWarehouse = () => {
     }
   };
 
-  //Get date
-  useEffect(() => {
-    const today = new Date();
-    const year = today.getFullYear().toString();
-    const month = (today.getMonth() + 1).toString().padStart(2, "0");
-    const day = today.getDate().toString().padStart(2, "0");
-    const formattedDate = `${year}/${month}/${day}`;
-    setCurrentDate(formattedDate);
-  }, []);
-
+  //generate warehouse pdf
   const handleWarehouseDownload = async (record) => {
     const date = new Date().toLocaleDateString("IN");
     //heading
@@ -208,7 +206,7 @@ const ViewWarehouse = () => {
       style: "subheader",
       margin: [0, 20, 0, 10],
     };
-
+    //get inventory id
     const inventoryData = await fetchInventoryData(record.id);
     // inventory table
     const inventoryTable = {
@@ -286,6 +284,7 @@ const ViewWarehouse = () => {
     pdfMake.createPdf(docDefinition).download("warehouse_details.pdf");
   };
 
+  //fetch inventory for respective warehouseId
   const fetchInventoryData = async (warehouseId) => {
     try {
       const response = await axios.get(
@@ -298,6 +297,7 @@ const ViewWarehouse = () => {
     }
   };
 
+  //rendering table parameters
   const columns = [
     {
       title: (
@@ -305,7 +305,6 @@ const ViewWarehouse = () => {
           style={{
             display: "flex",
             alignItems: "center",
-
           }}
         >
           Warehouse Name
@@ -324,7 +323,6 @@ const ViewWarehouse = () => {
             onClick={handleNavigation}
             sx={{
               alignItems: "center",
-         
             }}
             underline="hover"
           >
@@ -387,9 +385,10 @@ const ViewWarehouse = () => {
     },
   ];
 
+  //edit warehouse component
   const PopupComponent = ({ record, onClose, onSave }) => {
     const [editedRecord, setEditedRecord] = useState(record);
-
+    //update edit warehouse state
     const handleChange = (event) => {
       const { name, value } = event.target;
       setEditedRecord((prevRecord) => ({
@@ -397,7 +396,7 @@ const ViewWarehouse = () => {
         [name]: value,
       }));
     };
-
+    //trigger save and submission
     const handleSave = () => {
       onSave(editedRecord);
       onClose();

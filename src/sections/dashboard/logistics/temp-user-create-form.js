@@ -27,6 +27,7 @@ import {
 //get userid
 const userId = sessionStorage.getItem("user") || localStorage.getItem("user");
 
+//default customer type
 const customerType = [
   {
     label: "Customer",
@@ -35,12 +36,6 @@ const customerType = [
   {
     label: "Vendor",
     value: "Vendor",
-  },
-];
-const addressOption = [
-  {
-    label: "Add Address",
-    value: "address",
   },
 ];
 
@@ -67,18 +62,18 @@ export const TempUserCreateForm = (props) => {
   const [type, setType] = useState("Customer");
   const [address, setAddress] = useState("");
   const [zipcode, setZipcode] = useState("");
-  const [currentDate, setCurrentDate] = useState("");
   const [gstn, setGstn] = useState("");
   const [touched, setTouched] = useState(false);
   const [pan, setPan] = useState("");
 
+  //email validation
   const handleBlur = () => {
     setTouched(true);
   };
-
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const hasError = touched && !emailRegex.test(email);
-  ////
+
+  //handle form input state updates
   const handleInputChange = (event) => {
     const { name, value } = event.target;
 
@@ -120,8 +115,7 @@ export const TempUserCreateForm = (props) => {
         break;
     }
   };
-  ////
-
+  //toast notification from toastify library
   const notify = (type, message) => {
     toast[type](message, {
       position: "top-right",
@@ -134,13 +128,6 @@ export const TempUserCreateForm = (props) => {
       theme: "light",
     });
   };
-  //getting current date
-  useEffect(() => {
-    const today = new Date();
-    const options = { day: "numeric", month: "numeric", year: "numeric" };
-    const formattedDate = today.toLocaleDateString("en-ZA", options);
-    setCurrentDate(formattedDate);
-  }, []);
 
   //get access token
   useEffect(() => {
@@ -246,7 +233,7 @@ export const TempUserCreateForm = (props) => {
 
   //for sending response body via route
   const navigate = useNavigate();
-
+  //form submission
   const handleClick = async (event) => {
     event.preventDefault();
 
@@ -293,7 +280,7 @@ export const TempUserCreateForm = (props) => {
         });
 
         if (response.ok) {
-          // Redirect to home page upon successful submission
+          // Redirect to viewDetail upon successful submission
 
           response.json().then((data) => {
             console.log(data);

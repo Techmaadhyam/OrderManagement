@@ -1,4 +1,3 @@
-
 import {
   Typography,
   IconButton,
@@ -13,189 +12,170 @@ import {
   DialogActions,
   Button,
 } from "@mui/material";
-import { Table } from 'antd';
-import { Box } from '@mui/system';
-import React from 'react';
-import { Scrollbar } from 'src/components/scrollbar';
-import EditIcon from '@mui/icons-material/Edit';
-import {  Delete } from '@mui/icons-material';
-import IconWithPopup from '../user/user-icon';
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import SearchIcon from '@mui/icons-material/Search';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import './inventory.css'
-import { apiUrl } from 'src/config';
-import Logo from '../logo/logo';
+import { Table } from "antd";
+import { Box } from "@mui/system";
+import React from "react";
+import { Scrollbar } from "src/components/scrollbar";
+import EditIcon from "@mui/icons-material/Edit";
+import { Delete } from "@mui/icons-material";
+import IconWithPopup from "../user/user-icon";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import SearchIcon from "@mui/icons-material/Search";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import "./inventory.css";
+import { apiUrl } from "src/config";
+import Logo from "../logo/logo";
 import CircularProgress from "@mui/material/CircularProgress";
 
-  //get userid 
-  const userId = sessionStorage.getItem('user') || localStorage.getItem('user');
-
-  // const typeDropdown = [
-  //   {
-  //     label: 'Parts',
-  //     value: 'Parts'
-  //   },
-  //   {
-  //     label: 'Spare Parts',
-  //     value: 'Spare Parts'
-  //   },
-    
-  // ];
-
+//get userid
+const userId = sessionStorage.getItem("user") || localStorage.getItem("user");
 const ViewInventory = () => {
-
-  const [userData, setUserData]= useState([])
-  //product
+  //inventory data
+  const [userData, setUserData] = useState([]);
+  //product search
   const [isSearching, setIsSearching] = useState(false);
-  const [searchText, setSearchText] = useState('');
-  //warehouse
+  const [searchText, setSearchText] = useState("");
+  //warehouse search
   const [isSearchingWarehouse, setIsSearchingWarehouse] = useState(false);
-  const [warehouseText, setWarehouseText] = useState('');
-  //category
+  const [warehouseText, setWarehouseText] = useState("");
+  //category search
   const [isSearchingCategory, setIsSearchingCategory] = useState(false);
-  const [categoryText, setCategoryText] = useState('');
+  const [categoryText, setCategoryText] = useState("");
 
-  const [selectedCategory, setSelectedCategory] = useState('');
+  //loading screen
   const [open, setOpen] = useState(false);
-      const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
+  //inventory id
   const [selectedProductId, setSelectedProductId] = useState(null);
 
-
-
-
   const navigate = useNavigate();
-  
- 
+  //get inventory data
   useEffect(() => {
-    axios.get(apiUrl +`getInventoryByUserId/${userId}`)
-      .then(response => {
-        setUserData(response.data)
-        setLoading(false)
-
+    axios
+      .get(apiUrl + `getInventoryByUserId/${userId}`)
+      .then((response) => {
+        setUserData(response.data);
+        setLoading(false);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
-          setLoading(false);
+        setLoading(false);
       });
   }, []);
-  console.log(userData)
+  console.log(userData);
 
   const dataWithKeys = userData.map((item) => ({ ...item, key: item.id }));
 
-  const filteredData = selectedCategory
-  ? dataWithKeys.filter((item) => item.productType === selectedCategory)
-  : dataWithKeys;
-
-  const handleCategoryChange = (event) => {
-    setSelectedCategory(event.target.value);
+  //toast notification from toastify library
+  const notify = (type, message) => {
+    toast[type](message, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
   };
-  
-
-    //toast notification from toastify library
-const notify = (type, message) => {
-  toast[type](message, {
-    position: "top-right",
-    autoClose: 2000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "light",
-  });
-};
-
-  
+  //delete inventory
   const handleRemoveRow = async () => {
-   try {
-     await axios.delete(apiUrl + `deleteInventoryById/${selectedProductId}`);
-     const updatedRows = userData.filter((item) => item.id !== selectedProductId);
-     setUserData(updatedRows);
-     notify("success", `Sucessfully deleted inventory row.`);
-   } catch (error) {
-     console.error("Error deleting row:", error.message);
-     notify(
-       "error",
-       `This record is linked with a Sales Quotation or Sales Order.`
-     );
-   }
+    try {
+      await axios.delete(apiUrl + `deleteInventoryById/${selectedProductId}`);
+      const updatedRows = userData.filter(
+        (item) => item.id !== selectedProductId
+      );
+      setUserData(updatedRows);
+      notify("success", `Sucessfully deleted inventory row.`);
+    } catch (error) {
+      console.error("Error deleting row:", error.message);
+      notify(
+        "error",
+        `This record is linked with a Sales Quotation or Sales Order.`
+      );
+    }
     setOpen(false);
   };
 
+  //close delete confirmation popup
   const handleClose = () => {
     setOpen(false);
   };
-
+  //delete confirmation popup
   const handleConfirmDelete = (productId) => {
     setSelectedProductId(productId);
     setOpen(true);
   };
+  //navigate to diffrent page while passing data
+  const handleNavigation = (record) => {
+    navigate("/dashboard/inventory/edit", { state: record });
+  };
 
-const handleNavigation = record => {
-  navigate('/dashboard/inventory/edit', { state: record });
-};
+  //product search
+  const handleProductClick = () => {
+    setIsSearching(true);
+  };
 
-//product search
-const handleProductClick = () => {
-  setIsSearching(true);
-};
+  const handleProductInputChange = (event) => {
+    setSearchText(event.target.value);
+  };
 
-const handleProductInputChange = event => {
-  setSearchText(event.target.value);
-};
+  const handleProductCancel = () => {
+    setIsSearching(false);
+    setSearchText("");
+  };
+  //warehouse search
+  const handleWarehouseClick = () => {
+    setIsSearchingWarehouse(true);
+  };
 
-const handleProductCancel = () => {
-  setIsSearching(false);
-  setSearchText('');
-};
-//warehouse search
-const handleWarehouseClick = () => {
-  setIsSearchingWarehouse(true);
-};
+  const handleWarehouseInputChange = (event) => {
+    setWarehouseText(event.target.value);
+  };
 
-const handleWarehouseInputChange = event => {
-  setWarehouseText(event.target.value);
-};
+  const handleWarehouseCancel = () => {
+    setIsSearchingWarehouse(false);
+    setWarehouseText("");
+  };
 
-const handleWarehouseCancel = () => {
-  setIsSearchingWarehouse(false);
-  setWarehouseText('');
-};
+  //category search
+  const handleCategoryClick = () => {
+    setIsSearchingCategory(true);
+  };
 
-//category search
-const handleCategoryClick = () => {
-  setIsSearchingCategory(true);
-};
+  const handleCategoryInputChange = (event) => {
+    setCategoryText(event.target.value);
+  };
 
-const handleCategoryInputChange = event => {
-  setCategoryText(event.target.value);
-};
+  const handleCategoryCancel = () => {
+    setIsSearchingCategory(false);
+    setCategoryText("");
+  };
 
-const handleCategoryCancel = () => {
-  setIsSearchingCategory(false);
-  setCategoryText('');
-};
+  //filtering and rendering based on search
+  const filteredProducts = dataWithKeys.filter((product) => {
+    const productNameMatch = product?.product?.productName
+      ?.toLowerCase()
+      .includes(searchText.toLowerCase());
+    const warehouseNameMatch = product?.warehouse?.name
+      ?.toLowerCase()
+      .includes(warehouseText.toLowerCase());
+    const categoryNameMatch = product?.category?.name
+      ?.toLowerCase()
+      .includes(categoryText.toLowerCase());
 
-const filteredProducts = filteredData.filter(product => {
-  const productNameMatch = product?.product?.productName?.toLowerCase().includes(searchText.toLowerCase());
-  const warehouseNameMatch = product?.warehouse?.name?.toLowerCase().includes(warehouseText.toLowerCase());
-  const categoryNameMatch = product?.category?.name?.toLowerCase().includes(categoryText.toLowerCase());
-
-  return (
-    (searchText === '' || productNameMatch) &&
-    (warehouseText === '' || warehouseNameMatch) &&
-    (categoryText === '' || categoryNameMatch)
-  );
-});
-  
-  console.log(filteredProducts)
- 
-
+    return (
+      (searchText === "" || productNameMatch) &&
+      (warehouseText === "" || warehouseNameMatch) &&
+      (categoryText === "" || categoryNameMatch)
+    );
+  });
+  //table title and content
   const columns = [
     {
       title: (
@@ -203,7 +183,6 @@ const filteredProducts = filteredData.filter(product => {
           style={{
             display: "flex",
             alignItems: "center",
-          
           }}
         >
           {!isSearching ? (
@@ -245,7 +224,6 @@ const filteredProducts = filteredData.filter(product => {
             onClick={handleNavigation}
             sx={{
               alignItems: "center",
-        
             }}
             underline="hover"
           >
@@ -376,22 +354,6 @@ const filteredProducts = filteredData.filter(product => {
         </div>
       </div>
 
-      {/* <TextField
-      label="Type"
-      name="type"
-      sx={{ minWidth: 250 }}
-      value={selectedCategory}
-      onChange={handleCategoryChange}
-      select
-      >
-      <MenuItem value="">All</MenuItem>
-        {typeDropdown.map((option) => (
-          <MenuItem key={option.value} 
-          value={option.value}>
-            {option.label}
-          </MenuItem>
-        ))}
-      </TextField> */}
       <Box sx={{ position: "relative", overflowX: "auto", marginTop: "30px" }}>
         {loading === false ? (
           <Scrollbar>
@@ -399,7 +361,6 @@ const filteredProducts = filteredData.filter(product => {
               sx={{ minWidth: 800, overflowX: "auto" }}
               columns={columns}
               dataSource={filteredProducts}
-            
               rowClassName={() => "table-data-row"}
             ></Table>
           </Scrollbar>
@@ -446,6 +407,6 @@ const filteredProducts = filteredData.filter(product => {
       )}
     </div>
   );
-    };
-    
-    export default ViewInventory;
+};
+
+export default ViewInventory;

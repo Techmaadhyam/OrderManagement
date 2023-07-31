@@ -21,6 +21,7 @@ import Logo from "../logo/logo";
 import IconWithPopup from "../user/user-icon";
 import { ToastContainer, toast } from "react-toastify";
 
+//userId
 const userId = sessionStorage.getItem("user") || localStorage.getItem("user");
 
 const userOptions = [
@@ -29,6 +30,7 @@ const userOptions = [
     value: "others",
   },
 ];
+
 export const CreateInventory = (props) => {
   const [showAdditionalFields, setShowAdditionalFields] = useState(false);
   //warehouse
@@ -46,28 +48,23 @@ export const CreateInventory = (props) => {
   const [selectedName, setSelectedName] = useState();
   const [selectedId, setSelectedId] = useState();
   const [product, setProduct] = useState([]);
-  //remaining form states
-
+  //other form states
   const [hsnCode, setHsnCode] = useState("");
   const [size, setSize] = useState("");
   const [rack, setRack] = useState("");
   const [weight, setWeight] = useState("");
-  const [createdDate, setCreatedDate] = useState("");
   const [quantity, setQuantity] = useState("");
   const [cost, setCost] = useState("");
   const [sgst, setSgst] = useState("");
   const [igst, setIgst] = useState("");
   const [cgst, setCgst] = useState("");
   const [description, setDescription] = useState("");
-
   const [rackName, setRackName] = useState("");
   const [rackDesc, setRackDesc] = useState("");
 
   const [userData, setUserData] = useState([]);
-
+  //react router hook
   const navigate = useNavigate();
-
-  console.log(selectedName, createdDate);
 
   //get warehouse data
   useEffect(() => {
@@ -82,7 +79,6 @@ export const CreateInventory = (props) => {
       });
   }, []);
   //get purchase order
-
   useEffect(() => {
     axios
       .get(apiUrl + `getAllPurchaseOrderByUser/${userId}`)
@@ -120,6 +116,7 @@ export const CreateInventory = (props) => {
       });
   }, []);
 
+  //Toast notification
   const notify = (type, message) => {
     toast[type](message, {
       position: "top-right",
@@ -133,16 +130,7 @@ export const CreateInventory = (props) => {
     });
   };
 
-  //  get date
-  useEffect(() => {
-    const today = new Date();
-    const year = today.getFullYear().toString();
-    const month = (today.getMonth() + 1).toString().padStart(2, "0");
-    const day = today.getDate().toString().padStart(2, "0");
-    const formattedDate = `${year}/${month}/${day}`;
-    setCreatedDate(formattedDate);
-  }, []);
-
+  //get rack from inventory
   useEffect(() => {
     axios
       .get(apiUrl + `getInventoryByUserId/${userId}`)
@@ -155,6 +143,7 @@ export const CreateInventory = (props) => {
       });
   }, []);
 
+  //update form state
   const handleInputChange = (event) => {
     const { name, value } = event.target;
 
@@ -199,7 +188,7 @@ export const CreateInventory = (props) => {
     const selectedCategory = event.target.value;
 
     setRack(selectedCategory);
-
+    // Check if the selected rack is not empty, not "none", not "other", and not a number.
     if (
       selectedCategory &&
       selectedCategory !== "none" &&
@@ -211,53 +200,42 @@ export const CreateInventory = (props) => {
       setShowAdditionalFields(false);
     }
   };
-
+  // This function handles changes in the "rack" name input element
   const handleRack = (event) => {
     setRackName(event.target.value);
   };
+  // This function handles changes in the "rack" description input element
   const handleRackDesc = (event) => {
     setRackDesc(event.target.value);
   };
-
+  // Filter out user data where the "rack" property is not null
   const filteredUserData = userData.filter(({ rack }) => rack !== null);
-
+  // Map the filtered user data to an array of options with label and value properties
   const mappedOptions = filteredUserData.map(({ rack }) => ({
     label: rack?.name,
     value: rack?.id,
   }));
-
+  // Create a Set to store unique "rack" IDs
   const rackIdSet = new Set();
+  /*Concatenate the userOptions array with the new mappedOptions array, 
+  filtering out duplicates based on "rack" IDs*/
   const updatedUserOptions = userOptions.concat(
     mappedOptions.filter((newOption) => {
       if (rackIdSet.has(newOption.value)) {
+        /*Skip adding the new option if its "rack" ID 
+        is already in the rackIdSet (i.e., it's a duplicate) */
         return false;
       } else {
         rackIdSet.add(newOption.value);
+        /*Add the "rack" ID to the rackIdSet to avoid duplicates in the future */
         return true;
       }
     })
   );
 
-  const handleSave = async () => {
-    // let inventory ={
-    //   productId: selectedId,
-    //   purchaseOrderId:purchaseId,
-    //   warehouseId:warehouseId,
-    //   quantity: parseFloat(quantity),
-    //   weight:weight,
-    //   size:size,
-    //   hsncode:hsnCode,
-    //   rack:rack,
-    //   cgst: parseFloat(cgst),
-    //   igst: parseFloat(igst),
-    //   sgst: parseFloat(sgst),
-    //   price: parseFloat(cost),
-    //   description: description,
-    //   createdBy:parseFloat(userId),
-    //   createdDate: createdDate,
-    //   lastModifiedDate: createdDate
-    // }
+  //submit form
 
+  const handleSave = async () => {
     let inventory = {
       inventory: {
         quantity: parseFloat(quantity),
@@ -345,7 +323,7 @@ export const CreateInventory = (props) => {
         });
 
         if (response.ok) {
-          // Redirect to home page upon successful submission
+          // Redirect to inventory view page upon successful submission
 
           response.json().then((data) => {
             console.log(data);
@@ -380,7 +358,7 @@ export const CreateInventory = (props) => {
         });
 
         if (response.ok) {
-          // Redirect to home page upon successful submission
+          // Redirect to  inventory view page upon successful submission
 
           response.json().then((data) => {
             console.log(data);

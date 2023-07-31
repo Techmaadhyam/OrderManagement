@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import {
   Card,
   CardHeader,
@@ -6,51 +6,50 @@ import {
   Typography,
   Link,
   SvgIcon,
-} from '@mui/material';
-import { PropertyList } from 'src/components/property-list';
-import { PropertyListItem } from 'src/components/property-list-item';
-import { RouterLink } from 'src/components/router-link';
-import { paths } from 'src/paths';
-import { primaryColor } from 'src/primaryColor';
-import ArrowCircleLeftOutlinedIcon from '@mui/icons-material/ArrowCircleLeftOutlined';
-import IconWithPopup from '../user/user-icon';
-import { useLocation } from 'react-router-dom';
-import {  Box } from '@mui/system';
-import { Scrollbar } from 'src/components/scrollbar';
-import { Table } from 'antd';
-import axios from 'axios';
-import { useState, useEffect } from 'react';
-import { apiUrl } from 'src/config';
-import { useNavigate } from 'react-router-dom';
-import Logo from '../logo/logo';
-
-
+} from "@mui/material";
+import { PropertyList } from "src/components/property-list";
+import { PropertyListItem } from "src/components/property-list-item";
+import { RouterLink } from "src/components/router-link";
+import { paths } from "src/paths";
+import { primaryColor } from "src/primaryColor";
+import ArrowCircleLeftOutlinedIcon from "@mui/icons-material/ArrowCircleLeftOutlined";
+import IconWithPopup from "../user/user-icon";
+import { useLocation } from "react-router-dom";
+import { Box } from "@mui/system";
+import { Scrollbar } from "src/components/scrollbar";
+import { Table } from "antd";
+import axios from "axios";
+import { useState, useEffect } from "react";
+import { apiUrl } from "src/config";
+import { useNavigate } from "react-router-dom";
+import Logo from "../logo/logo";
 
 export const ViewWarehouseDetail = (props) => {
-
+  //display fetched state from useNavigate
   const location = useLocation();
   const navigate = useNavigate();
   const state = location.state;
-  console.log(state)
-  const [rowData, setRowData] =useState()
-
+  //store inventory data
+  const [rowData, setRowData] = useState();
+  //rendering table parameters
   const columns = [
     {
-      title: 'Part Name',
-      dataIndex: 'product',
-      key: 'product',
+      title: "Part Name",
+      dataIndex: "product",
+      key: "product",
       render: (name, record) => {
         const handleNavigation = () => {
-          navigate(`/dashboard/inventory/viewDetail/${record.id}`, { state: record } );
+          navigate(`/dashboard/inventory/viewDetail/${record.id}`, {
+            state: record,
+          });
         };
-        
+
         return (
           <Link
             color="primary"
             onClick={handleNavigation}
             sx={{
-              alignItems: 'center',
-
+              alignItems: "center",
             }}
             underline="hover"
           >
@@ -59,74 +58,71 @@ export const ViewWarehouseDetail = (props) => {
         );
       },
     },
-    
+
     {
-      title: 'Rack',
+      title: "Rack",
       dataIndex: "rack",
-      key: 'rack',
-      render: (text)=>text.name
+      key: "rack",
+      render: (text) => text.name,
     },
     {
-        title: 'Quantity',
-        dataIndex: 'quantity',
-        key: 'quantity',
-      },
-    {
-      title: 'Weight',
-      dataIndex: 'weight',
-      key: 'weight',
+      title: "Quantity",
+      dataIndex: "quantity",
+      key: "quantity",
     },
     {
-      title: 'Size',
-      dataIndex: 'size',
-      key: 'size',
+      title: "Weight",
+      dataIndex: "weight",
+      key: "weight",
     },
-    
     {
-      title: 'Cost',
-      key: 'price',
-      dataIndex: 'price',
+      title: "Size",
+      dataIndex: "size",
+      key: "size",
     },
-      {
-        title: 'CGST',
-        key: 'cgst',
-        dataIndex: 'cgst',
-      },
-      {
-        title: 'SGST',
-        key: 'sgst',
-        dataIndex: 'sgst',
-      },
-      {
-        title: 'IGST',
-        key: 'igst',
-        dataIndex: 'igst',
-      },
-      {
-        title: 'Description',
-        key: 'description',
-        dataIndex: 'description',
-      },
+
+    {
+      title: "Cost",
+      key: "price",
+      dataIndex: "price",
+    },
+    {
+      title: "CGST",
+      key: "cgst",
+      dataIndex: "cgst",
+    },
+    {
+      title: "SGST",
+      key: "sgst",
+      dataIndex: "sgst",
+    },
+    {
+      title: "IGST",
+      key: "igst",
+      dataIndex: "igst",
+    },
+    {
+      title: "Description",
+      key: "description",
+      dataIndex: "description",
+    },
   ];
 
-
+  //get inventory for current warehouse Id
   useEffect(() => {
-    axios.get(apiUrl +`getInventoryByWareHouseId/${state?.id}`)
-      .then(response => {
-       setRowData(response.data)
-       console.log(response.data)
-
+    axios
+      .get(apiUrl + `getInventoryByWareHouseId/${state?.id}`)
+      .then((response) => {
+        setRowData(response.data);
+        console.log(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
   }, [state?.id]);
 
+  const align = "horizontal";
 
-
-
-  const align = 'horizontal' 
-  
   return (
     <div style={{ minWidth: "100%", marginTop: "1rem" }}>
       <div
@@ -232,5 +228,5 @@ export const ViewWarehouseDetail = (props) => {
 };
 
 ViewWarehouseDetail.propTypes = {
-  customer: PropTypes.object.isRequired
+  customer: PropTypes.object.isRequired,
 };

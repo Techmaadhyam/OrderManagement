@@ -26,15 +26,17 @@ import Logo from "../logo/logo";
 const userId = sessionStorage.getItem("user") || localStorage.getItem("user");
 
 export const ViewInventoryDetail = (props) => {
+  //use uselocation hook to fetch data sent by usenavigate
   const location = useLocation();
+  //hook to send data to diffrent page
   const navigate = useNavigate();
   const state = location.state;
+
+  //store inventory data in state
   const [userData, setUserData] = useState([]);
 
-  console.log(state);
-
   const align = "horizontal";
-
+  //get all inventory
   useEffect(() => {
     axios
       .get(apiUrl + `getInventoryByUserId/${userId}`)
@@ -47,14 +49,15 @@ export const ViewInventoryDetail = (props) => {
       });
   }, []);
 
+  //find the matching inventory
   const matchingObject = userData.find(
     (item) => item.id === state?.id || state?.inventoryId
   );
+  //set warehouse and product name from matched inventory
   const warehouseName = matchingObject?.warehouse.name;
   const productName = matchingObject?.product?.productName;
 
-  console.log(matchingObject);
-
+  //go to warehouse page with warehouse data
   const handleWarehouseNavigation = () => {
     axios
       .get(apiUrl + `getAllWareHouse/${userId}`)
@@ -73,6 +76,7 @@ export const ViewInventoryDetail = (props) => {
         console.error(error);
       });
   };
+  //go to product page with product data
   const handleProductNavigation = () => {
     axios
       .get(apiUrl + `getAllItem/${userId}`)
