@@ -18,32 +18,31 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { apiUrl } from "src/config";
 import Logo from "../logo/logo";
-  import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 
 //get userid
 const userId = sessionStorage.getItem("user") || localStorage.getItem("user");
 
 export const CreateProduct = (props) => {
+  //This deals with visibility of add new model
   const [showAdditionalFields, setShowAdditionalFields] = useState(false);
+  //form input state handeling
   const [product, setProduct] = useState("");
   const [category, setCategory] = useState("");
   const [newCategory, setNewCategory] = useState("");
-  // const [type, setType]= useState('Parts')
   const [desc1, setDesc1] = useState("");
   const [desc2, setDesc2] = useState("");
-  const [currentDate, setCurrentDate] = useState("");
   const [data, setData] = useState([]);
   const [partNumber, setpartNumber] = useState("");
   const [sgst, setSgst] = useState("");
   const [igst, setIgst] = useState("");
   const [cgst, setCgst] = useState("");
 
-  //handle category change
+  //handle model change
   const handleCategoryChange = (event) => {
     const selectedCategory = event.target.value;
-    //console.log(selectedCategory)
     setCategory(selectedCategory);
-
+    // Check if the selected category is not empty, not "none", not "other", and not a number.
     if (
       selectedCategory &&
       selectedCategory !== "none" &&
@@ -55,29 +54,21 @@ export const CreateProduct = (props) => {
       setShowAdditionalFields(false);
     }
   };
-
-    const notify = (type, message) => {
-      toast[type](message, {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+  //this handles toast notification from toastify library
+  const notify = (type, message) => {
+    toast[type](message, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
   };
-  
-  //  get date
-  useEffect(() => {
-    const today = new Date();
-    const options = { day: "numeric", month: "numeric", year: "numeric" };
-    const formattedDate = today.toLocaleDateString("en-ZA", options);
-    setCurrentDate(formattedDate);
-  }, []);
 
-  //get category using userid
+  //get category/model using userid
   useEffect(() => {
     axios
       .get(apiUrl + `getAllCategorys/${userId}`)
@@ -88,7 +79,7 @@ export const CreateProduct = (props) => {
         console.error(error);
       });
   }, []);
-  //concat useroptions with new data from above API GET request
+  //defaul model values
   const userOptions = [
     {
       label: "None",
@@ -98,45 +89,13 @@ export const CreateProduct = (props) => {
       label: "Add New Model",
       value: "Add New Model",
     },
-    // {
-    //   label: 'ETON STD 2002',
-    //   value: 'ETON STD 2002'
-    // },
-    // {
-    //   label: 'ETON BASIC 2002',
-    //   value: 'ETON BASIC 2002'
-    // },
-    // {
-    //   label: 'ETON 5000 APPAREL STD',
-    //   value: 'ETON 5000 APPAREL STD'
-    // },
-    // {
-    //   label: 'ETON 5000 ADVANCE SYNCRO',
-    //   value: 'ETON 5000 ADVANCE SYNCRO'
-    // },
-    // {
-    //   label: 'ETON 4000',
-    //   value: 'ETON 4000'
-    // },
   ];
-
-  // const typeDropdown = [
-  //   {
-  //     label: 'Parts',
-  //     value: 'Parts'
-  //   },
-  //   {
-  //     label: 'Spare Parts',
-  //     value: 'Spare Parts'
-  //   },
-
-  // ];
-
+  //update body structure of "getAllCategorys/${userId}" response
   const mappedOptions = data.map(({ id, name }) => ({
     label: name,
     value: id,
   }));
-
+  //concat useroptions with new data from above API GET request and render it on dropdown
   const updatedUserOptions = userOptions.concat(mappedOptions);
 
   //handle user inputs
@@ -146,9 +105,6 @@ export const CreateProduct = (props) => {
   const handleNewCategory = (event) => {
     setNewCategory(event.target.value);
   };
-  // const handleType = (event) => {
-  //   setType(event.target.value);
-  // };
   const handleDescription1 = (event) => {
     setDesc1(event.target.value);
   };
@@ -158,9 +114,10 @@ export const CreateProduct = (props) => {
   const handlePart = (event) => {
     setpartNumber(event.target.value);
   };
-  //for sending response body via route
+  //for sending response body via route (uses react router)
   const navigate = useNavigate();
-  //handle save
+
+  //handle form submission (refer documentation for full explanation)
   let requestBody;
 
   const handleSave = () => {
@@ -177,7 +134,6 @@ export const CreateProduct = (props) => {
       requestBody = {
         product: {
           productName: product,
-          //type: type,
           partnumber: partNumber,
           description: desc2,
           createdBy: parseFloat(userId),
@@ -200,15 +156,14 @@ export const CreateProduct = (props) => {
       product &&
       desc2 &&
       userId &&
-      category && 
-      ((sgst && cgst) || igst) && 
+      category &&
+      ((sgst && cgst) || igst) &&
       partNumber
     ) {
       requestBody = {
         product: {
           productName: product,
           partnumber: partNumber,
-          //type: type,
           description: desc2,
           createdBy: parseFloat(userId),
           createdDate: new Date(),
@@ -223,7 +178,7 @@ export const CreateProduct = (props) => {
         },
       };
     } else {
-         notify("error", "Please fill all the fields marked with *.");
+      notify("error", "Please fill all the fields marked with *.");
     }
 
     const config = {
@@ -237,7 +192,6 @@ export const CreateProduct = (props) => {
       .post(apiUrl + "addProduct", JSON.stringify(requestBody), config)
       .then((response) => {
         // Handle successful response
-        console.log(response.data);
         if (response.status === 200) {
           //navigate to view product details (using react router)
           navigate(`/dashboard/products/viewDetail/${response.data.id}`, {
@@ -290,30 +244,6 @@ export const CreateProduct = (props) => {
           <CardHeader title="Part Detail" />
           <CardContent sx={{ pt: 0 }}>
             <Grid container spacing={3}>
-              {" "}
-              {/*<Grid
-          xs={12}
-          md={6}
-        >
-          <TextField
-        
-                fullWidth
-                label="Type"
-                name="type"
-                select
-                value={type}
-                onChange={handleType} 
-            >
-               {typeDropdown.map((option) => (
-                  <MenuItem
-                    key={option.value}
-                    value={option.value}
-                  >
-                    {option.label}
-                  </MenuItem>
-                ))}
-            </TextField>
-               </Grid>*/}
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
@@ -321,7 +251,6 @@ export const CreateProduct = (props) => {
                   name="category"
                   required
                   select
-              
                   SelectProps={{
                     MenuProps: {
                       style: {

@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 import {
   Button,
@@ -11,113 +11,87 @@ import {
   SvgIcon,
   IconButton,
   Grid,
-  Icon
-} from '@mui/material';
-import {Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
-import { PropertyList } from 'src/components/property-list';
-import { PropertyListItem } from 'src/components/property-list-item';
-import { useState } from 'react';
-import { RouterLink } from 'src/components/router-link';
-import { paths } from 'src/paths';
-import { primaryColor } from 'src/primaryColor';
-import ArrowCircleLeftOutlinedIcon from '@mui/icons-material/ArrowCircleLeftOutlined';
-import IconWithPopup from '../user/user-icon';
-import { useLocation } from 'react-router-dom';
-import EditIcon from '@mui/icons-material/Edit';
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { apiUrl } from 'src/config';
-import Logo from '../logo/logo';
-
+  Icon,
+} from "@mui/material";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from "@mui/material";
+import { PropertyList } from "src/components/property-list";
+import { PropertyListItem } from "src/components/property-list-item";
+import { useState } from "react";
+import { RouterLink } from "src/components/router-link";
+import { paths } from "src/paths";
+import { primaryColor } from "src/primaryColor";
+import ArrowCircleLeftOutlinedIcon from "@mui/icons-material/ArrowCircleLeftOutlined";
+import IconWithPopup from "../user/user-icon";
+import { useLocation } from "react-router-dom";
+import EditIcon from "@mui/icons-material/Edit";
+import { apiUrl } from "src/config";
+import Logo from "../logo/logo";
 
 export const ViewProductDetail = (props) => {
+  //this is used to receive the passed state via useNavigate()
   const location = useLocation();
   const state = location.state;
-
-
-  const [currentDate, setCurrentDate] = useState('');
-  
-
+  //opens category edit popup
   const [editOpen, setEditOpen] = useState(false);
+  //store editable data in state
   const [editedData, setEditedData] = useState({
-  name: state?.productName || state?.name,
-  category: state?.category?.name,
-  type: state?.type,
-  description: state?.category?.description
+    name: state?.productName || state?.name,
+    category: state?.category?.name,
+    type: state?.type,
+    description: state?.category?.description,
   });
-  const [editedCategory, setEditedCategory] = useState(editedData.category || state?.category || '');
-  const [editedDescription, setEditedDescription] = useState(editedData.description || state?.description ||"");
-
-    //for sending response body via route
-    const navigate = useNavigate();
-
+  const [editedCategory, setEditedCategory] = useState(
+    editedData.category || state?.category || ""
+  );
+  const [editedDescription, setEditedDescription] = useState(
+    editedData.description || state?.description || ""
+  );
+//open edit popup
   const handleEditOpen = () => {
     setEditOpen(true);
   };
-
+//close edit popup
   const handleEditClose = () => {
     setEditOpen(false);
   };
-
-  const handleEditFieldChange = (field, value) => {
-    setEditedData((prevData) => ({
-      ...prevData,
-      [field]: value
-    }));
-  };
-  
-
-  console.log(editedData)
-   //  get date
- useEffect(() => {
-  const today = new Date();
-  const options = { day: 'numeric', month: 'numeric', year: 'numeric' };
-  const formattedDate = today.toLocaleDateString('IN', options);
-  setCurrentDate(formattedDate);
-}, []);
-
-
-
+//submit category update form request
   const handleSave = () => {
+    const responseBody = {
+      name: editedCategory,
+      id: state?.category.id,
+      description: editedDescription,
+      lastModifiedDate: new Date(),
+    };
 
-    const responseBody ={
-        name: editedCategory,
-        id: state?.category.id,
-        description: editedDescription,
-        lastModifiedDate: new Date()
-      }
-      console.log(JSON.stringify(responseBody))
-    
     if (editedData?.category && editedData?.description) {
-        try {
-  
-          const response = fetch(apiUrl +`addCategory`, {
-            method: 'POST',
-            headers: {
-    
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(responseBody)
-          });
-   
-          if (response.ok || response === 200) {
-         
-           response.json().then(data => {
-           
-           });
-     
-           window.location.reload()
-          } 
-        } catch (error) {
-          console.error('API call failed:', error);
+      try {
+        const response = fetch(apiUrl + `addCategory`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(responseBody),
+        });
+
+        if (response.ok || response === 200) {
+          response.json().then((data) => {});
+
+          window.location.reload();
         }
-      } 
-    
+      } catch (error) {
+        console.error("API call failed:", error);
+      }
+    }
+
     handleEditClose();
   };
- 
-  const align = 'horizontal' 
 
+  const align = "horizontal";
 
   return (
     <div style={{ minWidth: "100%", marginTop: "1rem" }}>
@@ -234,23 +208,11 @@ export const ViewProductDetail = (props) => {
             </IconButton>
           </div>
           <Divider />
-          <PropertyListItem
-            align={align}
-            label="CGST"
-            value={state?.cgst}
-          />
+          <PropertyListItem align={align} label="CGST" value={state?.cgst} />
           <Divider />
-          <PropertyListItem
-            align={align}
-            label="IGST"
-            value={state?.igst}
-          />
+          <PropertyListItem align={align} label="IGST" value={state?.igst} />
           <Divider />
-          <PropertyListItem
-            align={align}
-            label="SGST"
-            value={state?.sgst}
-          />
+          <PropertyListItem align={align} label="SGST" value={state?.sgst} />
           <Divider />
 
           <PropertyListItem
@@ -266,5 +228,5 @@ export const ViewProductDetail = (props) => {
 };
 
 ViewProductDetail.propTypes = {
-  customer: PropTypes.object.isRequired
+  customer: PropTypes.object.isRequired,
 };
