@@ -37,14 +37,10 @@ import 'moment-timezone';
 import { apiUrl } from 'src/config';
 import Logo from '../logo/logo';
 
+//current user id
 const userId = parseInt(sessionStorage.getItem('user')|| localStorage.getItem('user'))
-const dateFormat = 'M/D/YYYY, h:mm:ss A';
 
-
-
-
-
-
+//default status
 const userOptions = [
   {
     label: 'Draft',
@@ -68,7 +64,7 @@ const userOptions = [
   },
  
 ];
-
+//defining parts table title and width for each column
 const tableHeader=[
   {
       id:'product_name',

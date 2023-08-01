@@ -42,10 +42,12 @@ import {
   fetchIndianStates,
 } from "src/utils/api-service";
 
+//current user id
 const userId = parseInt(
   sessionStorage.getItem("user") || localStorage.getItem("user")
 );
 
+//default status
 const userOptions = [
   {
     label: "Draft",
@@ -69,6 +71,7 @@ const userOptions = [
   },
 ];
 
+//defining parts table title and width for each column
 const tableHeader = [
   {
     id: "product_name",
@@ -129,6 +132,7 @@ const tableHeader = [
 ];
 
 export const QuotationOrderCreateForm = (props) => {
+  //stores customer details fetched from API
   const [userData, setUserData] = useState([]);
   const navigate = useNavigate();
   //form state handeling
@@ -145,8 +149,6 @@ export const QuotationOrderCreateForm = (props) => {
   const [comment, setComment] = useState("");
   const [category, setCategory] = useState("");
 
-  const [currentDate, setCurrentDate] = useState("");
-
   //add product state
   const [productName, setProductName] = useState("");
   const [weight, setWeight] = useState("");
@@ -160,10 +162,9 @@ export const QuotationOrderCreateForm = (props) => {
   const [rows, setRows] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
-
   const [userData2, setUserData2] = useState([]);
   const [productId, setProductId] = useState();
-
+  //total amount
   const [totalAmount, setTotalAmount] = useState(0);
 
   // country, state, city API access token
@@ -190,18 +191,6 @@ export const QuotationOrderCreateForm = (props) => {
       setType("Customer");
     }
   }, [location.pathname]);
-
-  //currentdate
-  useEffect(() => {
-    const today = new Date();
-    const year = today.getFullYear().toString();
-    const month = (today.getMonth() + 1).toString().padStart(2, "0");
-    const day = today.getDate().toString().padStart(2, "0");
-    const formattedDate = `${year}/${month}/${day}`;
-    const date = moment.tz(formattedDate, "YYYY/MM/DD", "Asia/Kolkata");
-    const currentIST = date.format("YYYY-MM-DDTHH:mm:ssZ");
-    setCurrentDate(currentIST);
-  }, []);
 
   //get access token
   useEffect(() => {
@@ -305,6 +294,7 @@ export const QuotationOrderCreateForm = (props) => {
     }));
   }, [cities]);
 
+  //handle form update
   const handleInputChange = (event) => {
     const { name, value } = event.target;
 
@@ -337,7 +327,7 @@ export const QuotationOrderCreateForm = (props) => {
   const handleDateChange = (date) => {
     setDeliveryDate(date);
   };
-  //get temp user
+  //get temp user (customer)
   useEffect(() => {
     axios
       .get(apiUrl + `getAllTempUsers/${userId}`)
@@ -349,9 +339,9 @@ export const QuotationOrderCreateForm = (props) => {
       });
 
     axios
-      .get(apiUrl + `getAllUsersBasedOnType/${userId}`)
+      .get(apiUrl + `getAllUsersBasedOnType/${userId}`) //this gets registed users (from registeration page)
       .then((response) => {
-        setUserData((prevData) => [...prevData, ...response.data]);
+        setUserData((prevData) => [...prevData, ...response.data]); //both are combined
       })
       .catch((error) => {
         console.error(error);
@@ -365,10 +355,7 @@ export const QuotationOrderCreateForm = (props) => {
 
   const deliveryIST = deliveryDateJS;
 
-  //////////////
-  //add product//
-  /////////////
-
+  //this removes created parts row and recalculates total amount
   const handleRemoveRow = (idx) => () => {
     const updatedRows = rows.filter((_, index) => index !== idx);
     setRows(updatedRows);
@@ -386,18 +373,21 @@ export const QuotationOrderCreateForm = (props) => {
     setTotalAmount(calculatedTotalAmount);
   };
 
+  //toggle show/hide add parts popup
   const toggleForm = () => {
     setShowForm((prevState) => !prevState);
     setEditIndex(null);
     clearFormFields();
   };
 
+  //toggle above function
   const handleModalClick = (event) => {
     if (event.target.classList.contains("modal")) {
       toggleForm();
     }
   };
 
+  //this will send parts popup input to rows state and recalculate total every time new row is added
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -423,11 +413,13 @@ export const QuotationOrderCreateForm = (props) => {
       let updatedRows;
 
       if (editIndex !== null) {
-        updatedRows = [...rows];
+        // Editing an existing row: replace the row at 'editIndex' with 'newRow'
+        const updatedRows = [...rows];
         updatedRows[editIndex] = newRow;
         setRows(updatedRows);
       } else {
-        updatedRows = [...rows, newRow];
+        // Adding a new row: append 'newRow' to the end of 'rows'
+        const updatedRows = [...rows, newRow];
         setRows(updatedRows);
       }
 
@@ -435,6 +427,7 @@ export const QuotationOrderCreateForm = (props) => {
       setShowForm(false);
       setEditIndex(null);
 
+      //calculate total
       const calculatedTotalAmount = updatedRows.reduce(
         (total, row) =>
           total +
@@ -448,6 +441,8 @@ export const QuotationOrderCreateForm = (props) => {
       setTotalAmount(calculatedTotalAmount);
     }
   };
+
+  //handle row edit input field data population
   const handleEditRow = (idx, row) => {
     setProductName(row.productName);
     setWeight(row.weight);
@@ -462,6 +457,7 @@ export const QuotationOrderCreateForm = (props) => {
     setShowForm(true);
   };
 
+  //clears popup form input fields whenever called
   const clearFormFields = () => {
     setProductName("");
     setWeight("");
@@ -474,7 +470,7 @@ export const QuotationOrderCreateForm = (props) => {
     setDescription("");
   };
 
-  //
+  //get all parts/products
   useEffect(() => {
     axios
       .get(apiUrl + `getAllItem/${userId}`)
@@ -486,10 +482,9 @@ export const QuotationOrderCreateForm = (props) => {
       });
   }, []);
 
-  console.log(currentDate, deliveryIST);
-
+  //remove unnecessary objects before sending updatedRows to API post request
   const updatedRows = rows.map(({ productName, comments, ...rest }) => rest);
-  //post request
+  //post request submission
   const handleClick = async (event) => {
     let finalAmount = totalAmount.toFixed(2);
 
@@ -538,7 +533,7 @@ export const QuotationOrderCreateForm = (props) => {
         });
 
         if (response.ok) {
-          // Redirect to home page upon successful submission
+          // Redirect to diffrent page upon successful submission
 
           response.json().then((data) => {
             navigate("/dashboard/quotation/viewDetail", { state: data });

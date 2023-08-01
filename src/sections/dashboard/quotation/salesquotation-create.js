@@ -44,10 +44,11 @@ import {
   fetchIndianStates,
 } from "src/utils/api-service";
 
+//current userId
 const userId = parseInt(
   sessionStorage.getItem("user") || localStorage.getItem("user")
 );
-
+//default status
 const userOptions = [
   {
     label: "Draft",
@@ -70,7 +71,7 @@ const userOptions = [
     value: "Delivered",
   },
 ];
-
+//defining parts table title and width for each column
 const tableHeader = [
   {
     id: "product_name",
@@ -136,6 +137,7 @@ const tableHeader = [
 ];
 
 export const QuotationOrderCreateForm = (props) => {
+  //stores customer details fetched from API
   const [userData, setUserData] = useState([]);
   const navigate = useNavigate();
   //form state handeling
@@ -151,7 +153,6 @@ export const QuotationOrderCreateForm = (props) => {
   const [terms, setTerms] = useState("");
   const [comment, setComment] = useState("");
   const [category, setCategory] = useState("");
-
   const [currentDate, setCurrentDate] = useState("");
 
   //add product state
@@ -388,10 +389,9 @@ export const QuotationOrderCreateForm = (props) => {
 
   const deliveryIST = deliveryDateJS;
 
-  //////////////
   //add product//
-  /////////////
 
+  //this removes created parts row and recalculates total amount
   const handleRemoveRow = (idx) => () => {
     const updatedRows = rows.filter((_, index) => index !== idx);
     setRows(updatedRows);
@@ -408,19 +408,19 @@ export const QuotationOrderCreateForm = (props) => {
 
     setTotalAmount(calculatedTotalAmount);
   };
-
+  //toggle show/hide add parts popup
   const toggleForm = () => {
     setShowForm((prevState) => !prevState);
     setEditIndex(null);
     clearFormFields();
   };
-
+  //toggle above function
   const handleModalClick = (event) => {
     if (event.target.classList.contains("modal")) {
       toggleForm();
     }
   };
-
+  //this will send parts popup input to rows state and recalculate total every time new row is added
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -514,7 +514,7 @@ export const QuotationOrderCreateForm = (props) => {
     setDescription("");
   };
 
-  //
+  //get inventory details
   useEffect(() => {
     axios
       .get(apiUrl + `getInventoryByUserId/${userId}`)
@@ -527,6 +527,7 @@ export const QuotationOrderCreateForm = (props) => {
       });
   }, []);
 
+  //remove unnecessary objects before sending updatedRows to API post request
   const updatedRows = rows.map(
     ({ productName, productDescription, productId, hsn, ...rest }) => rest
   );

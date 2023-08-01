@@ -38,7 +38,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 
 
-
+//pdf font
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 pdfMake.fonts = {
   Helvetica: {
@@ -47,9 +47,10 @@ pdfMake.fonts = {
   }
 };
 
-
+//user id
 const userId = sessionStorage.getItem('user') || localStorage.getItem('user');
 
+//default category
 const categoryBuySell = [
 
   {
@@ -67,19 +68,26 @@ const categoryBuySell = [
 ];
 
 const QuotationViewTable = () => {
+  //data for pdf fetched from Context API
   const { logo } = useContext(LogoContext);
+  //API data stored in userData
   const [userData, setUserData] = useState([])
+  //default selected category for dropdown
   const [selectedCategory, setSelectedCategory] = useState('Purchase Quotation');
+  //search filter 
   const [isSearching, setIsSearching] = useState(false);
   const [searchText, setSearchText] = useState('');
+//popup 
   const [open, setOpen] = useState(false);
+  //loading
   const [loading, setLoading] = useState(true);
+  // quotation id
   const [selectedProductId, setSelectedProductId] = useState(null);
 
 
   const navigate = useNavigate();
 
-
+//get all quotations
   useEffect(() => {
     axios.get(apiUrl + `getAllQuotations/${userId}`)
       .then(response => {
@@ -94,6 +102,7 @@ const QuotationViewTable = () => {
       });
   }, []);
 
+  //formats date string to yyyy/mm/dd
   function formatDate(dateString) {
     const parsedDate = new Date(dateString);
     const year = parsedDate.getFullYear();
@@ -102,6 +111,7 @@ const QuotationViewTable = () => {
     return `${year}/${month}/${day}`;
   }
 
+  //format the existing dates and create new object pairs
   const formattedArray = userData?.map((item) => {
     const formattedItem = { ...item };
 
@@ -133,10 +143,11 @@ const QuotationViewTable = () => {
     key: item.id
   }));
 
+  //filter data based on selected category in dropdown
   const filteredData = selectedCategory
     ? dataWithKeys.filter((item) => item.category === selectedCategory)
     : dataWithKeys;
-
+//handle dropdown change
   const handleCategoryChange = (event) => {
     setSelectedCategory(event.target.value);
   };
@@ -169,16 +180,16 @@ const QuotationViewTable = () => {
     }
     setOpen(false);
   };
-
+//close delete popup
   const handleClose = () => {
     setOpen(false);
   };
-
+//delete confirmation popup
   const handleConfirmDelete = (productId) => {
     setSelectedProductId(productId);
     setOpen(true);
   };
-
+//navigate to diffrent edit pages based on category type
   const handleNavigation = record => {
     if (record.category === 'Purchase Quotation') {
       navigate('/dashboard/quotation/edit', { state: record });
@@ -202,7 +213,7 @@ const QuotationViewTable = () => {
     setSearchText('');
   };
 
-
+//filter data based on dynamic search
   const filteredList = filteredData.filter(product => {
     const companyMatch = product.companyName?.toLowerCase().includes(searchText.toLowerCase());
 
@@ -950,6 +961,7 @@ const QuotationViewTable = () => {
       console.error(error)
     }
   }
+  //render table and table data
   const columns = [
     {
       title: (
@@ -1086,7 +1098,7 @@ const QuotationViewTable = () => {
       ),
     },
   ];
-
+//check if columns have below properties
   const orderDateIndex = columns.findIndex(column => column.key === 'createdDate');
   const insertIndex = orderDateIndex + 1;
   const deliveryDateIndex = columns.findIndex(column => column.key === 'deliveryDate');
@@ -1096,7 +1108,7 @@ const QuotationViewTable = () => {
     // Remove the "Delivery Date" column from the columns array
     columns.splice(deliveryDateIndex, 1);
   }
-
+//push this to columns if category === service quotation
   if (filteredList.some(item => item.category === "Service Quotation")) {
     columns.splice(insertIndex, 0,
       {

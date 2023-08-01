@@ -38,24 +38,11 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Logo from '../logo/logo';
 
-
+//current userId
 const userId = parseInt(sessionStorage.getItem('user')|| localStorage.getItem('user'))
-const dateFormat = 'M/D/YYYY, h:mm:ss A';
 
 
-const customerType = [
-  {
-    label: 'Customer',
-    value: 'Customer'
-  },
-  {
-    label: 'Vendor',
-    value: 'Vendor'
-  }
-];
-
-
-
+//default status
 const userOptions = [
   {
     label: 'Draft',
@@ -79,7 +66,7 @@ const userOptions = [
   },
  
 ];
-
+//defining parts table title and width for each column
 const tableHeader=[
   {
       id:'product_name',
