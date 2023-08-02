@@ -51,7 +51,7 @@ export const useSections = () => {
           // },
           {
             title: tab.tabname,
-            path: paths.dashboard.products.index,
+            path: paths.dashboard.create,
             icon: (
               <SvgIcon fontSize="small">
                 {iconMappings[tab.logo]}
@@ -60,11 +60,11 @@ export const useSections = () => {
             items: [
               {
                 title: "View",
-                path: paths.dashboard.products.view,
+                path: paths.dashboard.view,
               },
               {
                 title: "Create",
-                path: paths.dashboard.products.create,
+                path: paths.dashboard.create,
               },
             ],
           },

@@ -5,8 +5,7 @@ import { LogoContext } from "src/utils/logoContext";
 import axios from "axios";
 import { apiUrl } from "src/config";
 import useAuthStore from "src/store/store";
-import filetype from "./sampleData"
-import data from "./sampleData";
+
 
 const Logo = () => {
 
@@ -23,10 +22,8 @@ const Logo = () => {
       .then((response) => {
 
         setLogo({
-          // file: response.data.documents[0].logotype,
-          file: data,
-          // fileType: response.data.documents[0].logo,
-          filetype: filetype,
+          file: response.data[0].company.logo,
+          fileType: response.data[0].company.logotype,
           company: response.data[0].company.name,
           gstn: response.data[0].gstnumber,
           firstName: response.data[0].profile.name,
@@ -41,6 +38,7 @@ const Logo = () => {
           country: response.data[0].country,
         });
         setLogin(response.data[0]);
+        console.log("response", response.data[0]);
       })
       .catch((error) => {
         console.error("company logo is not uploaded");
