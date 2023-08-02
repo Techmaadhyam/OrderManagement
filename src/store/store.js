@@ -2,9 +2,10 @@ import { create } from "zustand";
 
 const useAuthStore = create((set) => ({
   user: null,
-  setState: (userData) => set({ user: userData }),
+  setState: (data) => set({ user: data }),
 }));
 
+export default useAuthStore;
 //to use zustand global state managment as import,
 //import this file to your component where you want to send data to this store.
 //then use "useAuthStore.setState({ user: *your data* });" this will store data in user object.
@@ -15,4 +16,3 @@ const useAuthStore = create((set) => ({
 //this will fetch your above user object
 
 
-export default useAuthStore;
