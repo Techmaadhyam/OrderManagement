@@ -93,6 +93,10 @@ const Accounts = lazy(() => import("src/pages/dashboard/accounts/accounts"));
 // Other
 const BlankPage = lazy(() => import('src/pages/dashboard/blank'));
 
+//dynamic
+const DynamicCreate = lazy(() => import('src/pages/dashboard/dynamic/create'));
+const DynamicView = lazy(() => import('src/pages/dashboard/dynamic/view'));
+
 export const dashboardRoutes = [
   {
     path: "dashboard",
@@ -107,6 +111,14 @@ export const dashboardRoutes = [
       {
         index: true,
         element: <IndexPage />,
+      },
+      {
+        path: "create",
+        element: <DynamicCreate />,
+      },
+      {
+        path: "view",
+        element: <DynamicView />,
       },
       {
         path: "quotation",
