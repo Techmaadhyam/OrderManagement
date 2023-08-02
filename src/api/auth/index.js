@@ -4,29 +4,41 @@ import axios from "axios";
 import { apiUrl } from "src/config";
 import useAuthStore from "src/store/store";
 
+
+
 let users = {};
+
+
 
 const signIn = async (request) => {
   const { email, password } = request;
-
   try {
-    const response = await axios.get(apiUrl + `getUserByUsername/${email}`);
-    users = response.data.loggedIUser[0];
+
+    // const response = await axios.get(apiUrl + `getUserByUsername/${email}`);
+    const response = await axios.get(apiUrl + `getAppUser/${email}/${password}`);
+    users = response.data[0];
+    // console.log("response", response.data[0].password);
 
     if (
       response &&
       response.data &&
-      response.data.loggedIUser.length > 0 &&
-      password === response.data.loggedIUser[0].password
+      // response.data.loggedIUser.length > 0 &&
+      password === response.data[0].password
     ) {
-      window.sessionStorage.setItem("user", response.data.loggedIUser[0].id);
+      window.sessionStorage.setItem("user", response.data[0].id);
       window.sessionStorage.setItem(
         "mail",
-        response.data.loggedIUser[0].userName
+        response.data[0].username
       );
-      localStorage.setItem("user", response.data.loggedIUser[0].id);
-      //useAuthStore.setState({ user: response.data.loggedIUser[0] });
+      window.sessionStorage.setItem(
+        "password",
+        response.data[0].password
+      );
+      localStorage.setItem("user", response.data[0].id);
     }
+    const tabs = await axios.get(apiUrl + `getSchemaTabs/${response.data[0].company.id}/${response.data[0].profile.id}`);
+
+    console.log(response.data[0]);
   } catch (error) {
     console.error("[Auth Api]: ", error);
   }
@@ -79,3 +91,5 @@ export const authApi = {
   signIn,
   me,
 };
+
+
