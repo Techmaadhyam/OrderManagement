@@ -50,8 +50,8 @@ export const paths = {
   dashboard: {
     index: "/dashboard",
     accounts: "/dashboard/accounts",
-    create: "/dashboard/create",
-    view: "/dashboard/view",
+    create: "/dashboard/create/:id",
+    view: "/dashboard/view/:id",
     quotation: {
       index: "dashboard/quotation",
       buy: "/dashboard/quotation/buy",

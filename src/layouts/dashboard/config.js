@@ -52,19 +52,15 @@ export const useSections = () => {
           {
             title: tab.tabname,
             path: paths.dashboard.create,
-            icon: (
-              <SvgIcon fontSize="small">
-                {iconMappings[tab.logo]}
-              </SvgIcon>
-            ),
+            icon: <SvgIcon fontSize="small">{iconMappings[tab.logo]}</SvgIcon>,
             items: [
               {
                 title: "View",
-                path: paths.dashboard.view,
+                path: paths.dashboard.view.replace(":id", tab.tabid),
               },
               {
                 title: "Create",
-                path: paths.dashboard.create,
+                path: paths.dashboard.create.replace(":id", tab.tabid),
               },
             ],
           },
