@@ -7,9 +7,18 @@ import IndexPage from  "src/pages/dashboard/index";
 import DynamicCreate from "src/pages/dashboard/dynamic/create";
 import DynamicView from "src/pages/dashboard/dynamic/view";
 
+//other imports
+// Social (do not delete)
+const SocialProfilePage = lazy(() =>
+  import("src/pages/dashboard/social/profile")
+);
+const SocialPasswordPage = lazy(() =>
+  import("src/pages/dashboard/social/changePassword")
+);
+
 const DynamicRender = ({ pageType }) => {
   const { id } = useParams(); // Get the id parameter from the URL
-
+console.log(id)
   // Determine which component to render based on the id and pageType
   let ComponentToRender;
 
@@ -54,6 +63,19 @@ export const dashboardRoutes = [
       {
         path: "view/:id",
         element: <DynamicRender pageType="view" />,
+      },
+      {
+        path: "social",
+        children: [
+          {
+            path: "profile",
+            element: <SocialProfilePage />,
+          },
+          {
+            path: "password",
+            element: <SocialPasswordPage />,
+          },
+        ],
       },
     ],
   },
