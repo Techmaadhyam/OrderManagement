@@ -1,8 +1,11 @@
 import { create } from "zustand";
 
 const useAuthStore = create((set) => ({
+  tabs: null,
+  setTabState: (data) => set({ tabs: data }),
   user: null,
-  setState: (data) => set({ user: data }),
+  setUserState: (data) => set({ user: data }),
+
 }));
 
 export default useAuthStore;

@@ -38,7 +38,8 @@ const Logo = () => {
           country: response.data[0].country,
         });
         setLogin(response.data[0]);
-        console.log("response", response.data[0]);
+        useAuthStore.setState({ user: response.data[0] });
+        // console.log("response", response.data[0]);
       })
       .catch((error) => {
         console.error("company logo is not uploaded");
@@ -55,7 +56,7 @@ const Logo = () => {
     axios
       .get(apiUrl + `getSchemaTabs/${login.company.id}/${login.profile.id}`)
       .then((response) => {
-        useAuthStore.setState({ user: response.data });
+        useAuthStore.setState({ tabs: response.data });
       })
       .catch((error) => {
         console.error("tabs is not working");

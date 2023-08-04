@@ -17,7 +17,7 @@ import AddTwoToneIcon from "@mui/icons-material/AddTwoTone";
 import ProductionQuantityLimitsTwoToneIcon from "@mui/icons-material/ProductionQuantityLimitsTwoTone";
 export const useSections = () => {
   const { t } = useTranslation();
-  const tabsData = useAuthStore((state) => state.user);
+  const tabsData = useAuthStore((state) => state.tabs);
   console.log("tabData", tabsData);
 
   // Add icon options to the mapping here
