@@ -91,11 +91,9 @@ const Create = () => {
         <Card>
           <CardHeader title="have to set" />
           <CardContent sx={{ pt: 0 }}>
-            <Grid container
-            >
+            <Grid container spacing={2}>
               {formFields.map((field) => (
-                <Grid xs={12} md={6}
-                  key={field.id}>
+                <Grid item xs={12} md={6} key={field.id}>
                   {renderFormField(field, formValues, handleInputChange)}
                 </Grid>
               ))}
