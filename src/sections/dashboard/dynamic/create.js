@@ -123,6 +123,7 @@ const Create = () => {
 const renderFormField = (field, formValues, handleInputChange) => {
   switch (field.fieldtype) {
     case 'Dropdown':
+      const dropdownOptions = field.dropdownlovs.split(',').map((option) => option.trim());
       return (
         <TextField
           fullWidth
@@ -130,16 +131,17 @@ const renderFormField = (field, formValues, handleInputChange) => {
           required={field.isrequired}
           name={field.fieldname}
           select
-        // Assuming you have a state to handle the form field values
-        // value={formValues[field.fieldname]}
-        // onChange={handleInputChange}
+          // Assuming you have a state to handle the form field values
+          value={formValues[field.fieldname]}
+          onChange={handleInputChange}
         >
           {/* Assuming you have an array of options for dropdown */}
-          {field.dropdownlovs.map((option) => (
-            <MenuItem key={option.id} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
+          {
+            dropdownOptions.map((option) => (
+              <MenuItem key={option} value={option}>
+                {option}
+              </MenuItem>
+            ))}
         </TextField>
       );
 
