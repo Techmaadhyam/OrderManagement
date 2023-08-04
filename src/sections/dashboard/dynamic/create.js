@@ -12,8 +12,10 @@ const Create = () => {
   const currentUrl = window.location.href;
   const urlParts = currentUrl.split("/");
   const id = urlParts[urlParts.length - 1];
-  // console.log(id);
+  // console.log("id", id);
   const user = useAuthStore((state) => state.user);
+
+
   // console.log(user);
 
   // State data
@@ -64,7 +66,18 @@ const Create = () => {
   //sample submit
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(formValues);
+    // console.log(formValues);
+    const formData = {
+      formValues: {
+        ...formValues,
+      },
+      companyId: user.company.id,
+      profileId: user.profile.id,
+      id: id,
+    };
+
+    // Log the final JSON object
+    console.log(formData);
   }
   return (
     <div style={{ minWidth: "100%", marginBottom: "1rem" }}>
@@ -78,7 +91,7 @@ const Create = () => {
         }}
       >
         <div style={{ flex: 1 }}>
-          <h2 style={{ margin: 0 }}> Have to set</h2>
+          <h2 style={{ margin: 0 }}>Add</h2>
         </div>
         <div style={{ flex: 1, textAlign: "center" }}>
           <Logo />
@@ -131,7 +144,13 @@ const renderFormField = (field, formValues, handleInputChange) => {
           required={field.isrequired}
           name={field.fieldname}
           select
-          // Assuming you have a state to handle the form field values
+          SelectProps={{
+            MenuProps: {
+              style: {
+                maxHeight: 300,
+              },
+            },
+          }}
           value={formValues[field.fieldname]}
           onChange={handleInputChange}
         >
