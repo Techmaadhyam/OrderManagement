@@ -96,7 +96,7 @@ const Create = () => {
               {formFields.map((field) => (
                 <Grid xs={12} md={6}
                   key={field.id}>
-                  {renderFormField(field, formFields, handleInputChange)}
+                  {renderFormField(field, formValues, handleInputChange)}
                 </Grid>
               ))}
             </Grid>
@@ -129,6 +129,7 @@ const renderFormField = (field, formValues, handleInputChange) => {
         <TextField
           fullWidth
           label={field.fieldlabel}
+          required={field.isrequired}
           name={field.fieldname}
           select
         // Assuming you have a state to handle the form field values
@@ -149,6 +150,7 @@ const renderFormField = (field, formValues, handleInputChange) => {
         <TextField
           margin='normal'
           fullWidth
+          required={field.isrequired}
           label={field.fieldlabel}
           name={field.fieldname}
           value={formValues[field.fieldname]}
