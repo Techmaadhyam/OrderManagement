@@ -13,7 +13,7 @@ import {
 import { Box } from "@mui/system";
 import IconWithPopup from "../user/user-icon";
 import { useState } from "react";
-import { useEffect , useContext} from "react";
+import { useEffect, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { apiUrl } from "src/config";
@@ -25,9 +25,6 @@ import { LogoContext } from "src/utils/logoContext";
 const userId = sessionStorage.getItem("user") || localStorage.getItem("user");
 
 export const CreateProduct = (props) => {
-
-
-  
   const [showAdditionalFields, setShowAdditionalFields] = useState(false);
   const [product, setProduct] = useState("");
   const [category, setCategory] = useState("");
@@ -43,8 +40,8 @@ export const CreateProduct = (props) => {
   const [cgst, setCgst] = useState("");
 
   //change label based on company name
-    const { logo } = useContext(LogoContext);
-    const modifyLabel = logo?.company === "Alumentica";
+  const { logo } = useContext(LogoContext);
+  const modifyLabel = logo?.company === "Alumentica";
 
   //handle category change
   const handleCategoryChange = (event) => {
@@ -64,19 +61,19 @@ export const CreateProduct = (props) => {
     }
   };
 
-    const notify = (type, message) => {
-      toast[type](message, {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+  const notify = (type, message) => {
+    toast[type](message, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
   };
-  
+
   //  get date
   useEffect(() => {
     const today = new Date();
@@ -103,7 +100,7 @@ export const CreateProduct = (props) => {
       value: "none",
     },
     {
-      label: "Add New Model",
+      label: modifyLabel ? "Add New Model Cutting Length" : "Add New Model",
       value: "Add New Model",
     },
     // {
@@ -208,8 +205,8 @@ export const CreateProduct = (props) => {
       product &&
       desc2 &&
       userId &&
-      category && 
-      ((sgst && cgst) || igst) && 
+      category &&
+      ((sgst && cgst) || igst) &&
       partNumber
     ) {
       requestBody = {
@@ -231,7 +228,7 @@ export const CreateProduct = (props) => {
         },
       };
     } else {
-         notify("error", "Please fill all the fields marked with *.");
+      notify("error", "Please fill all the fields marked with *.");
     }
 
     const config = {
