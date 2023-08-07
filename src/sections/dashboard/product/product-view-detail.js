@@ -24,32 +24,39 @@ import ArrowCircleLeftOutlinedIcon from '@mui/icons-material/ArrowCircleLeftOutl
 import IconWithPopup from '../user/user-icon';
 import { useLocation } from 'react-router-dom';
 import EditIcon from '@mui/icons-material/Edit';
-import { useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiUrl } from 'src/config';
 import Logo from '../logo/logo';
+import { LogoContext } from "src/utils/logoContext";
 
 
 export const ViewProductDetail = (props) => {
   const location = useLocation();
   const state = location.state;
 
-
-  const [currentDate, setCurrentDate] = useState('');
-  
+  const [currentDate, setCurrentDate] = useState("");
 
   const [editOpen, setEditOpen] = useState(false);
   const [editedData, setEditedData] = useState({
-  name: state?.productName || state?.name,
-  category: state?.category?.name,
-  type: state?.type,
-  description: state?.category?.description
+    name: state?.productName || state?.name,
+    category: state?.category?.name,
+    type: state?.type,
+    description: state?.category?.description,
   });
-  const [editedCategory, setEditedCategory] = useState(editedData.category || state?.category || '');
-  const [editedDescription, setEditedDescription] = useState(editedData.description || state?.description ||"");
+  const [editedCategory, setEditedCategory] = useState(
+    editedData.category || state?.category || ""
+  );
+  const [editedDescription, setEditedDescription] = useState(
+    editedData.description || state?.description || ""
+  );
 
-    //for sending response body via route
-    const navigate = useNavigate();
+  //change label based on company name
+  const { logo } = useContext(LogoContext);
+  const modifyLabel = logo?.company === "Alumentica";
+
+  //for sending response body via route
+  const navigate = useNavigate();
 
   const handleEditOpen = () => {
     setEditOpen(true);
@@ -62,62 +69,52 @@ export const ViewProductDetail = (props) => {
   const handleEditFieldChange = (field, value) => {
     setEditedData((prevData) => ({
       ...prevData,
-      [field]: value
+      [field]: value,
     }));
   };
-  
 
-  console.log(editedData)
-   //  get date
- useEffect(() => {
-  const today = new Date();
-  const options = { day: 'numeric', month: 'numeric', year: 'numeric' };
-  const formattedDate = today.toLocaleDateString('IN', options);
-  setCurrentDate(formattedDate);
-}, []);
-
-
+  console.log(editedData);
+  //  get date
+  useEffect(() => {
+    const today = new Date();
+    const options = { day: "numeric", month: "numeric", year: "numeric" };
+    const formattedDate = today.toLocaleDateString("IN", options);
+    setCurrentDate(formattedDate);
+  }, []);
 
   const handleSave = () => {
+    const responseBody = {
+      name: editedCategory,
+      id: state?.category.id,
+      description: editedDescription,
+      lastModifiedDate: new Date(),
+    };
+    console.log(JSON.stringify(responseBody));
 
-    const responseBody ={
-        name: editedCategory,
-        id: state?.category.id,
-        description: editedDescription,
-        lastModifiedDate: new Date()
-      }
-      console.log(JSON.stringify(responseBody))
-    
     if (editedData?.category && editedData?.description) {
-        try {
-  
-          const response = fetch(apiUrl +`addCategory`, {
-            method: 'POST',
-            headers: {
-    
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(responseBody)
-          });
-   
-          if (response.ok || response === 200) {
-         
-           response.json().then(data => {
-           
-           });
-     
-           window.location.reload()
-          } 
-        } catch (error) {
-          console.error('API call failed:', error);
+      try {
+        const response = fetch(apiUrl + `addCategory`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(responseBody),
+        });
+
+        if (response.ok || response === 200) {
+          response.json().then((data) => {});
+
+          window.location.reload();
         }
-      } 
-    
+      } catch (error) {
+        console.error("API call failed:", error);
+      }
+    }
+
     handleEditClose();
   };
- 
-  const align = 'horizontal' 
 
+  const align = "horizontal";
 
   return (
     <div style={{ minWidth: "100%", marginTop: "1rem" }}>
@@ -169,7 +166,10 @@ export const ViewProductDetail = (props) => {
       <Card style={{ marginBottom: "12px" }}>
         <CardHeader title="Part Detail" />
         <PropertyList>
-          <PropertyListItem align={align} label="Part Name">
+          <PropertyListItem
+            align={align}
+            label={modifyLabel ? "Model Weight Range" : "Part Name"}
+          >
             <Typography variant="subtitle2">
               <div style={{ gap: "30px", display: "flex" }}>
                 {state?.productName || state?.name}
@@ -215,7 +215,7 @@ export const ViewProductDetail = (props) => {
           <Divider />
           <PropertyListItem
             align={align}
-            label="Part Number"
+            label={modifyLabel ? "Finish Model" : "Part Number"}
             value={state?.partnumber}
           />
           <Divider />
@@ -223,7 +223,7 @@ export const ViewProductDetail = (props) => {
             <div style={{ marginRight: "8px" }}>
               <PropertyListItem
                 align={align}
-                label="Model"
+                label={modifyLabel ? "Model cutting length" : "Model"}
                 value={state?.category?.name || state?.category}
               />
             </div>
@@ -234,23 +234,11 @@ export const ViewProductDetail = (props) => {
             </IconButton>
           </div>
           <Divider />
-          <PropertyListItem
-            align={align}
-            label="CGST"
-            value={state?.cgst}
-          />
+          <PropertyListItem align={align} label="CGST" value={state?.cgst} />
           <Divider />
-          <PropertyListItem
-            align={align}
-            label="IGST"
-            value={state?.igst}
-          />
+          <PropertyListItem align={align} label="IGST" value={state?.igst} />
           <Divider />
-          <PropertyListItem
-            align={align}
-            label="SGST"
-            value={state?.sgst}
-          />
+          <PropertyListItem align={align} label="SGST" value={state?.sgst} />
           <Divider />
 
           <PropertyListItem

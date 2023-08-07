@@ -13,17 +13,21 @@ import {
 import { Box } from "@mui/system";
 import IconWithPopup from "../user/user-icon";
 import { useState } from "react";
-import { useEffect } from "react";
+import { useEffect , useContext} from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { apiUrl } from "src/config";
 import Logo from "../logo/logo";
-  import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
+import { LogoContext } from "src/utils/logoContext";
 
 //get userid
 const userId = sessionStorage.getItem("user") || localStorage.getItem("user");
 
 export const CreateProduct = (props) => {
+
+
+  
   const [showAdditionalFields, setShowAdditionalFields] = useState(false);
   const [product, setProduct] = useState("");
   const [category, setCategory] = useState("");
@@ -37,6 +41,10 @@ export const CreateProduct = (props) => {
   const [sgst, setSgst] = useState("");
   const [igst, setIgst] = useState("");
   const [cgst, setCgst] = useState("");
+
+  //change label based on company name
+    const { logo } = useContext(LogoContext);
+    const modifyLabel = logo?.company === "Alumentica";
 
   //handle category change
   const handleCategoryChange = (event) => {
@@ -317,11 +325,10 @@ export const CreateProduct = (props) => {
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
-                  label="Model"
+                  label={modifyLabel ? "Model cutting length" : "Model"}
                   name="category"
                   required
                   select
-              
                   SelectProps={{
                     MenuProps: {
                       style: {
@@ -370,7 +377,7 @@ export const CreateProduct = (props) => {
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
-                  label="Part Name"
+                  label={modifyLabel ? "Model Weight Range" : "Part Name"}
                   name="name"
                   required
                   value={product}
@@ -380,7 +387,7 @@ export const CreateProduct = (props) => {
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
-                  label="Part Number"
+                  label={modifyLabel ? "Finish Model" : "Part Number"}
                   name="partNumber"
                   required
                   value={partNumber}

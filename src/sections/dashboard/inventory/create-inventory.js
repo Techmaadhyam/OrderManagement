@@ -12,14 +12,14 @@ import {
 } from "@mui/material";
 import "./inventory.css";
 import { Box } from "@mui/system";
-
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiUrl } from "src/config";
 import Logo from "../logo/logo";
 import IconWithPopup from "../user/user-icon";
 import { ToastContainer, toast } from "react-toastify";
+import { LogoContext } from "src/utils/logoContext";
 
 const userId = sessionStorage.getItem("user") || localStorage.getItem("user");
 
@@ -68,7 +68,9 @@ export const CreateInventory = (props) => {
 
   const navigate = useNavigate();
 
-  console.log(selectedName, createdDate);
+  //change label based on company name
+  const { logo } = useContext(LogoContext);
+  const modifyLabel = logo?.company === "Alumentica";
 
   //get warehouse data
   useEffect(() => {
@@ -121,19 +123,19 @@ export const CreateInventory = (props) => {
       });
   }, []);
 
-    const notify = (type, message) => {
-      toast[type](message, {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+  const notify = (type, message) => {
+    toast[type](message, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
   };
-  
+
   //  get date
   useEffect(() => {
     const today = new Date();
@@ -220,14 +222,12 @@ export const CreateInventory = (props) => {
     setRackDesc(event.target.value);
   };
 
-const filteredUserData = userData.filter(({ rack }) => rack !== null);
+  const filteredUserData = userData.filter(({ rack }) => rack !== null);
 
-const mappedOptions = filteredUserData.map(({ rack }) => ({
-  label: rack?.name,
-  value: rack?.id,
-}));
-
-
+  const mappedOptions = filteredUserData.map(({ rack }) => ({
+    label: rack?.name,
+    value: rack?.id,
+  }));
 
   const rackIdSet = new Set();
   const updatedUserOptions = userOptions.concat(
@@ -369,7 +369,6 @@ const mappedOptions = filteredUserData.map(({ rack }) => ({
       cost &&
       description &&
       selectedId &&
-      
       categoryId &&
       ((sgst && cgst) || igst) &&
       userId
@@ -564,9 +563,9 @@ const mappedOptions = filteredUserData.map(({ rack }) => ({
                     if (selectedOption) {
                       setSelectedId(selectedOption.id);
                       setSelectedName(selectedOption.productName);
-                      setCgst(selectedOption.cgst)
+                      setCgst(selectedOption.cgst);
                       setIgst(selectedOption.igst);
-                      setSgst(selectedOption.sgst)
+                      setSgst(selectedOption.sgst);
                     } else {
                       setSelectedId(null);
                       setSelectedName("");
@@ -648,7 +647,7 @@ const mappedOptions = filteredUserData.map(({ rack }) => ({
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
-                  label="Size"
+                  label={modifyLabel ? "Model cutting length" : "Size"}
                   name="size"
                   value={size}
                   onChange={handleInputChange}
