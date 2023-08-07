@@ -20,7 +20,7 @@ import { Scrollbar } from 'src/components/scrollbar';
 import EditIcon from '@mui/icons-material/Edit';
 import {  Delete } from '@mui/icons-material';
 import IconWithPopup from '../user/user-icon';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
@@ -31,6 +31,7 @@ import './inventory.css'
 import { apiUrl } from 'src/config';
 import Logo from '../logo/logo';
 import CircularProgress from "@mui/material/CircularProgress";
+import { LogoContext } from "src/utils/logoContext";
 
   //get userid 
   const userId = sessionStorage.getItem('user') || localStorage.getItem('user');
@@ -48,82 +49,81 @@ import CircularProgress from "@mui/material/CircularProgress";
   // ];
 
 const ViewInventory = () => {
-
-  const [userData, setUserData]= useState([])
+  const [userData, setUserData] = useState([]);
   //product
   const [isSearching, setIsSearching] = useState(false);
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState("");
   //warehouse
   const [isSearchingWarehouse, setIsSearchingWarehouse] = useState(false);
-  const [warehouseText, setWarehouseText] = useState('');
+  const [warehouseText, setWarehouseText] = useState("");
   //category
   const [isSearchingCategory, setIsSearchingCategory] = useState(false);
-  const [categoryText, setCategoryText] = useState('');
+  const [categoryText, setCategoryText] = useState("");
 
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [open, setOpen] = useState(false);
-      const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [selectedProductId, setSelectedProductId] = useState(null);
 
-
-
+  //change label based on company name
+  const { logo } = useContext(LogoContext);
+  const modifyLabel = logo?.company === "Alumentica";
 
   const navigate = useNavigate();
-  
- 
-  useEffect(() => {
-    axios.get(apiUrl +`getInventoryByUserId/${userId}`)
-      .then(response => {
-        setUserData(response.data)
-        setLoading(false)
 
+  useEffect(() => {
+    axios
+      .get(apiUrl + `getInventoryByUserId/${userId}`)
+      .then((response) => {
+        setUserData(response.data);
+        setLoading(false);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
-          setLoading(false);
+        setLoading(false);
       });
   }, []);
-  console.log(userData)
+  console.log(userData);
 
   const dataWithKeys = userData.map((item) => ({ ...item, key: item.id }));
 
   const filteredData = selectedCategory
-  ? dataWithKeys.filter((item) => item.productType === selectedCategory)
-  : dataWithKeys;
+    ? dataWithKeys.filter((item) => item.productType === selectedCategory)
+    : dataWithKeys;
 
   const handleCategoryChange = (event) => {
     setSelectedCategory(event.target.value);
   };
-  
 
-    //toast notification from toastify library
-const notify = (type, message) => {
-  toast[type](message, {
-    position: "top-right",
-    autoClose: 2000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "light",
-  });
-};
+  //toast notification from toastify library
+  const notify = (type, message) => {
+    toast[type](message, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  };
 
-  
   const handleRemoveRow = async () => {
-   try {
-     await axios.delete(apiUrl + `deleteInventoryById/${selectedProductId}`);
-     const updatedRows = userData.filter((item) => item.id !== selectedProductId);
-     setUserData(updatedRows);
-     notify("success", `Sucessfully deleted inventory row.`);
-   } catch (error) {
-     console.error("Error deleting row:", error.message);
-     notify(
-       "error",
-       `This record is linked with a Sales Quotation or Sales Order.`
-     );
-   }
+    try {
+      await axios.delete(apiUrl + `deleteInventoryById/${selectedProductId}`);
+      const updatedRows = userData.filter(
+        (item) => item.id !== selectedProductId
+      );
+      setUserData(updatedRows);
+      notify("success", `Sucessfully deleted inventory row.`);
+    } catch (error) {
+      console.error("Error deleting row:", error.message);
+      notify(
+        "error",
+        `This record is linked with a Sales Quotation or Sales Order.`
+      );
+    }
     setOpen(false);
   };
 
@@ -136,65 +136,70 @@ const notify = (type, message) => {
     setOpen(true);
   };
 
-const handleNavigation = record => {
-  navigate('/dashboard/inventory/edit', { state: record });
-};
+  const handleNavigation = (record) => {
+    navigate("/dashboard/inventory/edit", { state: record });
+  };
 
-//product search
-const handleProductClick = () => {
-  setIsSearching(true);
-};
+  //product search
+  const handleProductClick = () => {
+    setIsSearching(true);
+  };
 
-const handleProductInputChange = event => {
-  setSearchText(event.target.value);
-};
+  const handleProductInputChange = (event) => {
+    setSearchText(event.target.value);
+  };
 
-const handleProductCancel = () => {
-  setIsSearching(false);
-  setSearchText('');
-};
-//warehouse search
-const handleWarehouseClick = () => {
-  setIsSearchingWarehouse(true);
-};
+  const handleProductCancel = () => {
+    setIsSearching(false);
+    setSearchText("");
+  };
+  //warehouse search
+  const handleWarehouseClick = () => {
+    setIsSearchingWarehouse(true);
+  };
 
-const handleWarehouseInputChange = event => {
-  setWarehouseText(event.target.value);
-};
+  const handleWarehouseInputChange = (event) => {
+    setWarehouseText(event.target.value);
+  };
 
-const handleWarehouseCancel = () => {
-  setIsSearchingWarehouse(false);
-  setWarehouseText('');
-};
+  const handleWarehouseCancel = () => {
+    setIsSearchingWarehouse(false);
+    setWarehouseText("");
+  };
 
-//category search
-const handleCategoryClick = () => {
-  setIsSearchingCategory(true);
-};
+  //category search
+  const handleCategoryClick = () => {
+    setIsSearchingCategory(true);
+  };
 
-const handleCategoryInputChange = event => {
-  setCategoryText(event.target.value);
-};
+  const handleCategoryInputChange = (event) => {
+    setCategoryText(event.target.value);
+  };
 
-const handleCategoryCancel = () => {
-  setIsSearchingCategory(false);
-  setCategoryText('');
-};
+  const handleCategoryCancel = () => {
+    setIsSearchingCategory(false);
+    setCategoryText("");
+  };
 
-const filteredProducts = filteredData.filter(product => {
-  const productNameMatch = product?.product?.productName?.toLowerCase().includes(searchText.toLowerCase());
-  const warehouseNameMatch = product?.warehouse?.name?.toLowerCase().includes(warehouseText.toLowerCase());
-  const categoryNameMatch = product?.category?.name?.toLowerCase().includes(categoryText.toLowerCase());
+  const filteredProducts = filteredData.filter((product) => {
+    const productNameMatch = product?.product?.productName
+      ?.toLowerCase()
+      .includes(searchText.toLowerCase());
+    const warehouseNameMatch = product?.warehouse?.name
+      ?.toLowerCase()
+      .includes(warehouseText.toLowerCase());
+    const categoryNameMatch = product?.category?.name
+      ?.toLowerCase()
+      .includes(categoryText.toLowerCase());
 
-  return (
-    (searchText === '' || productNameMatch) &&
-    (warehouseText === '' || warehouseNameMatch) &&
-    (categoryText === '' || categoryNameMatch)
-  );
-});
-  
-  console.log(filteredProducts)
- 
+    return (
+      (searchText === "" || productNameMatch) &&
+      (warehouseText === "" || warehouseNameMatch) &&
+      (categoryText === "" || categoryNameMatch)
+    );
+  });
+
+  console.log(filteredProducts);
 
   const columns = [
     {
@@ -203,7 +208,6 @@ const filteredProducts = filteredData.filter(product => {
           style={{
             display: "flex",
             alignItems: "center",
-          
           }}
         >
           {!isSearching ? (
@@ -245,7 +249,6 @@ const filteredProducts = filteredData.filter(product => {
             onClick={handleNavigation}
             sx={{
               alignItems: "center",
-        
             }}
             underline="hover"
           >
@@ -399,7 +402,6 @@ const filteredProducts = filteredData.filter(product => {
               sx={{ minWidth: 800, overflowX: "auto" }}
               columns={columns}
               dataSource={filteredProducts}
-            
               rowClassName={() => "table-data-row"}
             ></Table>
           </Scrollbar>
@@ -446,6 +448,6 @@ const filteredProducts = filteredData.filter(product => {
       )}
     </div>
   );
-    };
+};
     
     export default ViewInventory;

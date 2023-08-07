@@ -535,7 +535,7 @@ export const EditInventory = (props) => {
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
-                  label="Part Name"
+                  label={modifyLabel ? "Model Weight Range" : "Part Name"}
                   name="product"
                   required
                   select

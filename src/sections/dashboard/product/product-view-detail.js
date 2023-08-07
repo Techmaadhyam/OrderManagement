@@ -180,7 +180,7 @@ export const ViewProductDetail = (props) => {
                     <Grid container spacing={0}>
                       <Grid item xs={12} md={12}>
                         <TextField
-                          label="Model Name"
+                          label={modifyLabel ? "Model Cutting Length" : "Model"}
                           name="model"
                           value={editedCategory}
                           onChange={(e) => setEditedCategory(e.target.value)}
@@ -190,7 +190,11 @@ export const ViewProductDetail = (props) => {
                       </Grid>
 
                       <TextField
-                        label="Model Description"
+                        label={
+                          modifyLabel
+                            ? "Cutting Length Description"
+                            : "Model Description"
+                        }
                         name="desc"
                         value={editedDescription}
                         onChange={(e) => setEditedDescription(e.target.value)}
@@ -223,7 +227,7 @@ export const ViewProductDetail = (props) => {
             <div style={{ marginRight: "8px" }}>
               <PropertyListItem
                 align={align}
-                label={modifyLabel ? "Model cutting length" : "Model"}
+                label={modifyLabel ? "Model Cutting Length" : "Model"}
                 value={state?.category?.name || state?.category}
               />
             </div>
@@ -243,7 +247,9 @@ export const ViewProductDetail = (props) => {
 
           <PropertyListItem
             align={align}
-            label="Model Description"
+            label={
+              modifyLabel ? "Cutting Length Description" : "Model Description"
+            }
             value={state?.category?.description || state?.description}
           />
         </PropertyList>

@@ -372,7 +372,7 @@ const ViewProduct = () => {
       render: (category) => category?.name,
     },
     {
-      title: "Model Description",
+      title: modifyLabel ? "Cutting Length Description" : "Model Description",
       key: "category",
       dataIndex: "category",
       render: (category) => category?.description,
@@ -454,7 +454,7 @@ const ViewProduct = () => {
             </Grid>
             <Grid xs={12} md={6}>
               <TextField
-                label={modifyLabel ? "Model cutting length" : "Model"}
+                label={modifyLabel ? "Model Cutting Length" : "Model"}
                 name="category"
                 value={editedRecord.category.name}
                 fullWidth
@@ -484,7 +484,11 @@ const ViewProduct = () => {
           </Grid> */}
             <Grid xs={12} md={12}>
               <TextField
-                label="Model Description"
+                label={
+                  modifyLabel
+                    ? "Cutting Length Description"
+                    : "Model Description"
+                }
                 name="description"
                 value={editedRecord.category.description}
                 fullWidth

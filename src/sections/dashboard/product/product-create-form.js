@@ -325,7 +325,7 @@ export const CreateProduct = (props) => {
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
-                  label={modifyLabel ? "Model cutting length" : "Model"}
+                  label={modifyLabel ? "Model Cutting Length" : "Model"}
                   name="category"
                   required
                   select
@@ -354,7 +354,11 @@ export const CreateProduct = (props) => {
                   <Grid xs={12} md={6}>
                     <TextField
                       fullWidth
-                      label="Add New Model"
+                      label={
+                        modifyLabel
+                          ? "Add New Model Cutting Length"
+                          : "Add New Model"
+                      }
                       name="new category"
                       required
                       value={newCategory}
@@ -364,7 +368,11 @@ export const CreateProduct = (props) => {
                   <Grid xs={12} md={6}>
                     <TextField
                       fullWidth
-                      label="Model Description"
+                      label={
+                        modifyLabel
+                          ? "Model Cutting Length Description"
+                          : "Model Description"
+                      }
                       name="description"
                       required
                       value={desc1}

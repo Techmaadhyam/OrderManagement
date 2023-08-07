@@ -15,7 +15,7 @@ export const PropertyListItem = (props) => {
         disableTypography
         primary={(
           <Typography
-            sx={{ minWidth: align === 'vertical' ? 'inherit' : 180 }}
+            sx={{ minWidth: align === 'vertical' ? 'inherit' : 200 }}
             variant="subtitle2"
           >
             {label}
