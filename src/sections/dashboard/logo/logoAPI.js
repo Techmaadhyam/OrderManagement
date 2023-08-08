@@ -14,6 +14,7 @@ const Logo = () => {
   const password = sessionStorage.getItem("password");
   const { setLogo } = useContext(LogoContext);
   const [login, setLogin] = useState([]);
+  const [breakpoint, setBreakpoint] = useState(0);
 
   useEffect(() => {
     console.log("useEffect is running");
@@ -51,12 +52,16 @@ const Logo = () => {
     && login.company
     && login.profile
     && login.company.id
-    && login.profile.id) {
+    && login.profile.id
+    && breakpoint === 0
+  ) {
 
     axios
       .get(apiUrl + `getSchemaTabs/${login.company.id}/${login.profile.id}`)
       .then((response) => {
         useAuthStore.setState({ tabs: response.data });
+        setBreakpoint(1);
+        console.log("its last")
       })
       .catch((error) => {
         console.error("tabs is not working");
