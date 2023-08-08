@@ -10,10 +10,10 @@ import com.tech.madhyam.entity.SchemaRecord;
 
 public interface SchemaRecordRepository extends JpaRepository<SchemaRecord, Long>{
 
-    @Query("FROM SchemaRecord"
-    +" WHERE schema.company.id = :companyid AND schema.profile.id = :profileid AND schema.appobject.id = :tabid")
-    List<SchemaRecord> getSchemaObjFieldValue(@Param("companyid") long companyid, 
+    @Query("select recordid FROM SchemaRecord"
+    +" WHERE company.id = :companyid AND profile.id = :profileid AND appobject.id = :tabid  ORDER BY recordid DESC")
+    List<SchemaRecord> getSchemaRecordIdBasedonTabId(@Param("companyid") long companyid, 
                                                     @Param("profileid") long profileid,
-                                                    @Param("tabid") long tabid);    
+                                                    @Param("tabid") long tabid);
     
 }

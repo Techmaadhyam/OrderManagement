@@ -10,22 +10,19 @@ import lombok.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="SchemaRecord")
-public class SchemaRecord {
+@Table(name="SchemaRecordFieldValue")
+public class SchemaRecordFieldValue {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
-    public String recordid;
     @ManyToOne
-    public Company company;
-    @ManyToOne
-    public Profile profile;
-    @ManyToOne
-    public AppObject appobject;
+    private SchemaRecord schemarecord;
+    @Column(columnDefinition = "JSON")
+    private String allfieldvalue;
     @ManyToOne
     public AppUser createdby;
     @ManyToOne
     public AppUser lastmodifiedby;
     public Date createddate;
-    public Date lastmodifieddate;
+    public Date lastmodifieddate;  
 }

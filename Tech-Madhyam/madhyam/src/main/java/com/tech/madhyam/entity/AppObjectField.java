@@ -19,8 +19,8 @@ public class AppObjectField {
     public String fieldlabel;
     public String fieldtype;
     public String dropdownlovs;
-    public String tabid;
+    public long tabid;
     public String description;
     public Date createddate;
-    public Date lastmodifieddate;  
+    public Date lastmodifieddate; 
 }

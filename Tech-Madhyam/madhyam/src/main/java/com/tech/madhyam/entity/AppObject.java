@@ -15,11 +15,12 @@ public class AppObject {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
+    public String tabidaliasname;
     public String tablename;
     public String tablelabel;
-    public String parenttabname;
-    @ManyToOne
-    public Document iconimage;
+    public String tablekey;
+    public String parenttabname; 
+    private String logo;
     public boolean isvisible;
     public String description;
     public Date createddate;

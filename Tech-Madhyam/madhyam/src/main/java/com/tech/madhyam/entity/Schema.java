@@ -25,6 +25,7 @@ public class Schema {
     public AppObjectField objectfield;
     public boolean isrequired;
     public boolean isvisible;
+    public String placeholder;
     public String description;
     public Date createddate;
     public Date lastmodifieddate;        

@@ -25,6 +25,7 @@ import com.tech.madhyam.entity.SalesOrder;
 import com.tech.madhyam.entity.SalesOrderDetails;
 import com.tech.madhyam.entity.Schema;
 import com.tech.madhyam.entity.SchemaRecord;
+import com.tech.madhyam.entity.SchemaRecordFieldValue;
 import com.tech.madhyam.entity.User;
 import com.tech.madhyam.entity.Warehouse;
 import com.tech.madhyam.entity.WorkOrder;
@@ -47,6 +48,7 @@ import com.tech.madhyam.repository.QuotationRepository;
 import com.tech.madhyam.repository.RackRepository;
 import com.tech.madhyam.repository.SalesOrderDetailsRepository;
 import com.tech.madhyam.repository.SalesOrderRepository;
+import com.tech.madhyam.repository.SchemaRecordFieldValueRepository;
 import com.tech.madhyam.repository.SchemaRecordRepository;
 import com.tech.madhyam.repository.SchemaRepository;
 import com.tech.madhyam.repository.WarehouseRepository;
@@ -59,6 +61,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jackson.JsonComponentModule;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -123,6 +126,8 @@ public class ApiController {
     SchemaRepository schemaRepository;
     @Autowired
     SchemaRecordRepository schemaRecordRepository;
+    @Autowired
+    SchemaRecordFieldValueRepository schemaRecordFieldValueRepository;
 
     @GetMapping("/hello")
     public String hello(){
@@ -1072,15 +1077,30 @@ public class ApiController {
     }
 
    @PostMapping("/createUpdateCompany")
-    public Company createUpdateCompany(@RequestBody Company company){
+    public Company createUpdateCompany(@RequestPart("logo") MultipartFile logo, 
+                                      @RequestPart("companywrapper") String companywrapper) throws IOException {
+        byte[] companylogo = logo.getBytes();
+        ObjectMapper mapper = new ObjectMapper().registerModule(new JsonComponentModule());
+        Company company = mapper.readValue(companywrapper,  Company.class);
+        company.setLogo(companylogo);
         return companyRepository.save(company);
+    }
+
+    @DeleteMapping("/deleteCompanyById/{id}")
+    public void deleteCompanyById(@PathVariable long id){
+        companyRepository.deleteById(id);
     }
 
     
     @PostMapping("/createUpdateProfile")
     public Profile createUpdateProfile(@RequestBody Profile profile){
         return profileRepository.save(profile);
-    }   
+    }
+    
+    @DeleteMapping("/deleteProfileById/{id}")
+    public void deleteProfileById(@PathVariable long id){
+        profileRepository.deleteById(id);
+    }    
 
     @PostMapping("/createUpdateAppUser")
     public AppUser createUpdateAppUser(@RequestBody AppUser appUser){
@@ -1093,16 +1113,36 @@ public class ApiController {
         
     }
 
+    @DeleteMapping("/deleteAppUserById/{id}")
+    public void deleteAppUserById(@PathVariable long id){
+        appUserRespository.deleteById(id);
+    }      
+
     @PostMapping("/createUpdateAppObject")
-    public AppObject createUpdateAppObject(@RequestBody AppObject appObject){
+    public AppObject createUpdateAppObject(@RequestBody AppObject appObject) throws IOException{
+        /*byte[] fileData = file.getBytes();
+        ObjectMapper mapper = new ObjectMapper().registerModule(new JsonComponentModule());
+        AppObject wrap = mapper.readValue(appObjectWrapper, AppObject.class);
+        wrap.setLogo(fileData);*/
         return appObjectRepository.save(appObject);
     } 
+
+    @DeleteMapping("/deleteAppObjectById/{id}")
+    public void deleteAppObjectById(@PathVariable long id){
+        appObjectRepository.deleteById(id);
+    }      
     
 
     @PostMapping("/createUpdateAppObjField")
     public AppObjectField createUpdateAppObjField(@RequestBody AppObjectField appObjField){
         return appObjectFieldRespository.save(appObjField);
-    }  
+    }
+
+
+    @DeleteMapping("/deleteAppObjFieldById/{id}")
+    public void deleteAppObjFieldById(@PathVariable long id){
+        appObjectFieldRespository.deleteById(id);
+    }      
 
     @PostMapping("/createUpdateSchema")
     public Schema createUpdateSchema(@RequestBody Schema schema){
@@ -1113,11 +1153,16 @@ public class ApiController {
         schemaRecord.objectfield = appObjectFieldRespository.findById(schemaRecord.objectfield.id).get();
         return schemaRecord;
     } 
-    
-    @PostMapping("/createUpdateSchemaRecord")
-    public SchemaRecord createUpdateSchemaRecord(@RequestBody SchemaRecord schemaRecord){
-        return schemaRecordRepository.save(schemaRecord);
+
+    @DeleteMapping("/deleteSchemaById/{id}")
+    public void deleteSchemaById(@PathVariable long id){
+        schemaRepository.deleteById(id);
     }
+
+    @DeleteMapping("/deleteSchemaRecordById/{id}")
+    public void deleteSchemaRecordById(@PathVariable long id){
+        schemaRecordRepository.deleteById(id);
+    }       
 
     @GetMapping("/getAllAppUser") 
     public List<AppUser> getAllAppUser(){
@@ -1150,30 +1195,63 @@ public class ApiController {
         return schemaRepository.findAll();
     }
 
+    @GetMapping("/getAppUser/{username}/{password}") 
+    public List<AppUser> getAppUserInfo(@PathVariable String username,@PathVariable String password){
+        return appUserRespository.getAppUserByUserName(username, password); 
+    }   
 
-    @GetMapping("/getAppUser/{username}") 
-    public List<AppUser> getAppUser(@PathVariable String username){
-        return appUserRespository.getAppUserByUserName(username);
+    @GetMapping("/getAppUserInfo") 
+    public List<AppUser> getAppUserInfo(@RequestParam MultiValueMap<String, String> requestParams){
+        System.out.println("requestParams---"+requestParams);
+        System.out.println("check---"+requestParams.getFirst("username"));
+        return appUserRespository.getAppUserByUserName(requestParams.getFirst("username"), 
+                                                       requestParams.getFirst("password"));
     }
 
-    @GetMapping("/getAppUser/{companyid}/{profileid}") 
+    @GetMapping("/getSchemaTabs/{companyid}/{profileid}") 
     public List<SchemaTabWrapper> getSchemaTabs(@PathVariable long companyid,@PathVariable long profileid){
         return schemaRepository.getSchemaTabs(companyid, profileid);
     }  
     
     @GetMapping("/getSchemaObjFields/{companyid}/{profileid}/{tabid}") 
-    public List<Schema> getSchemaObjFields(@PathVariable long companyid, 
+    public List<SchemaFieldWrapper> getSchemaObjFields(@PathVariable long companyid, 
                                            @PathVariable long profileid, 
                                            @PathVariable long tabid){
         return schemaRepository.getSchemaObjFields(companyid, profileid, tabid);
     }
+
+    @PostMapping("/createUpdateSchemaRecord")
+    public SchemaRecord createUpdateSchemaRecord(@RequestBody SchemaRecord schemaRecord){
+        return schemaRecordRepository.save(schemaRecord);
+    }
+
  
-    @GetMapping("/getSchemaObjFieldValues/{companyid}/{profileid}/{tabid}")
-    public List<SchemaRecord> getSchemaObjFieldValues(@PathVariable long companyid, 
+    @GetMapping("/getSchemaRecordIdBasedonTabId/{companyid}/{profileid}/{tabid}")
+    public SchemaRecord getSchemaRecordIdBasedonTabId(@PathVariable long companyid, 
                                                       @PathVariable long profileid, 
                                                       @PathVariable long tabid){
-        return schemaRecordRepository.getSchemaObjFieldValue(companyid, profileid, tabid);
-    }    
+        List<SchemaRecord> schemaRecordList =  schemaRecordRepository.getSchemaRecordIdBasedonTabId(companyid, profileid, tabid);
+        return schemaRecordList.get(0);
+    }
+ /* */   
+    @PostMapping("/createUpdateSchemaRecordFieldValue")
+    public SchemaRecordFieldValue createUpdateSchemaRecordFieldValue(@RequestBody SchemaRecordWrapper schemaRecordWrapper){
+        SchemaRecord schemaRecord = schemaRecordWrapper.schemaRecord;
+        schemaRecord = schemaRecordRepository.save(schemaRecord);
 
+        SchemaRecordFieldValue schemaRecordFieldValue = new SchemaRecordFieldValue();
+        schemaRecordFieldValue.setSchemarecord(schemaRecord);
+        schemaRecordFieldValue.setAllfieldvalue(schemaRecordWrapper.fieldsvalues);
+        schemaRecordFieldValue.setCreatedby(schemaRecord.createdby);
+        schemaRecordFieldValue.setCreateddate(schemaRecord.createddate);
+        schemaRecordFieldValue.setLastmodifiedby(schemaRecord.lastmodifiedby);
+        schemaRecordFieldValue.setLastmodifieddate(schemaRecord.lastmodifieddate);
 
+        return schemaRecordFieldValueRepository.save(schemaRecordFieldValue);
+    }
+
+    public class SchemaRecordWrapper{
+        public SchemaRecord schemaRecord;
+        public String fieldsvalues;
+    }
 }

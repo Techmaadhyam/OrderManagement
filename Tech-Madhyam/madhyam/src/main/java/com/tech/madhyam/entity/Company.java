@@ -18,8 +18,9 @@ public class Company {
     @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
     public String name;
-    @ManyToOne
-    public Document logo;
+    @Lob
+    private byte[] logo;
+    private String logotype;
     public String address;
     public String country;
     public String state;
