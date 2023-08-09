@@ -26,12 +26,13 @@ import ArrowCircleLeftOutlinedIcon from "@mui/icons-material/ArrowCircleLeftOutl
 import IconWithPopup from "../user/user-icon";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useContext} from "react";
 import { apiUrl } from "src/config";
 import { useNavigate } from "react-router-dom";
 import Logo from "../logo/logo";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
+  import { LogoContext } from "src/utils/logoContext";
 
 const userId = sessionStorage.getItem("user") || localStorage.getItem("user");
 
@@ -49,6 +50,9 @@ export const ViewPurchaseOrder = (props) => {
   const [updatedRows, setUpdatedRows] = useState([]);
   const [tempuser, setTempuser] = useState([]);
   const [rowData, setRowData] = useState();
+  //change label based on company name
+  const { logo } = useContext(LogoContext);
+  const modifyLabel = logo?.company === "Alumentica";
 
   const performaInvoice = location.state.performaInvoice?.file;
   const approvedInvoice = location.state.approvedInvoice?.file;
@@ -66,7 +70,7 @@ export const ViewPurchaseOrder = (props) => {
       igst: obj.sgst,
       cgst: obj.cgst,
       weight: obj.weight,
-    
+
       price: obj.price,
       description: obj.description,
       comments: state?.comments,
@@ -164,7 +168,7 @@ export const ViewPurchaseOrder = (props) => {
       },
     },
     {
-      title: "Quantity",
+      title: modifyLabel ? "Piece" : "Quantity",
       dataIndex: "quantity",
       key: "quantity",
     },
@@ -174,7 +178,7 @@ export const ViewPurchaseOrder = (props) => {
       key: "weight",
     },
     {
-      title: "Size",
+      title: modifyLabel ? "Unit" : "Size",
       dataIndex: "size",
       key: "size",
     },
@@ -239,8 +243,7 @@ export const ViewPurchaseOrder = (props) => {
           }`
       )
       .then((response) => {
-
-        console.log(response.data)
+        console.log(response.data);
         const modifiedData = response.data.map((item) => {
           const { quantity, price, cgst, igst, sgst } = item;
           const netAmount = (
@@ -258,11 +261,7 @@ export const ViewPurchaseOrder = (props) => {
           try {
             parsedProduct = obj.product;
           } catch (error) {
-            console.error(
-              "Error parsing product JSON for object:",
-              obj,
-              error
-            );
+            console.error("Error parsing product JSON for object:", obj, error);
           }
 
           return {

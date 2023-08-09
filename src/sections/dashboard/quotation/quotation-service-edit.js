@@ -20,7 +20,7 @@ import {
 import { DatePicker } from 'antd';
 import './purchase-order.css'
 import IconWithPopup from '../user/user-icon';
-import { useState, useEffect } from 'react';
+import { useState, useEffect , useContext} from 'react';
 import axios from 'axios';
 import moment from 'moment/moment';
 import { primaryColor } from 'src/primaryColor';
@@ -36,6 +36,7 @@ import './customTable.css'
 import 'moment-timezone';
 import { apiUrl } from 'src/config';
 import Logo from '../logo/logo';
+import { LogoContext } from "src/utils/logoContext";
 
 const userId = parseInt(sessionStorage.getItem('user')|| localStorage.getItem('user'))
 const dateFormat = 'M/D/YYYY, h:mm:ss A';
@@ -69,265 +70,270 @@ const userOptions = [
  
 ];
 
-const tableHeader=[
-  {
-      id:'product_name',
-      name:'Part Description',
-      width: 200,
-      
-  },
-  {
-    id:'cost',
-    name:'Unit Price',
-    width: 150,
-},
-  {
-      id:'workstation',
-      name:'No. Of workstations',
-      width: 200,
-  },
-  {
-    id:'igst',
-    name:'IGST',
-    width: 150,
-},
 
-  {
-    id:'amount',
-    name:'Net Amount',
-    width: 150,
-},
-  {
-      id:'add',
-      name:'',
-      width: 50,
-  },
-  {
-      id:'delete',
-      name:'',
-      width: 50,
-  }
-];
 
 
 export const QuotationServiceEditForm = (props) => {
-
   const location = useLocation();
   const state = location.state;
-console.log(state)
+  console.log(state);
 
-
-
-  const [userData, setUserData]= useState([])
+  const [userData, setUserData] = useState([]);
   const navigate = useNavigate();
-//form state handeling
+  //form state handeling
 
-const [type, setType] = useState(state?.type||"");
+  const [type, setType] = useState(state?.type || "");
 
-const [deliveryDate, setDeliveryDate] = useState(dayjs(state?.startdate|| ''));
-const [assignmentEnd, setAssignmentEnd]= useState(dayjs(state?.enddate|| ''))
-const [status, setStatus] = useState(state?.status || "");
-const [contactName,setContactName] = useState(state?.contactPersonName ||'')
-const [adminName,setAdminName] = useState(state?.adminPersonName ||'')
-const [adminEmail, setAdminEmail] = useState(state?.adminEmail ||'');
-const [adminPhone, setAdminPhone] = useState(state?.adminPhoneNumber ||'');
-const [inchargeEmail, setInchargeEmail] = useState(state?.contactEmail ||'');
-const [phone, setPhone] = useState(state?.contactPhoneNumber ||'');
-const [address, setAddress] = useState(state?.deliveryAddress || "");
-const [tempId, setTempId] = useState(state?.tempUser?.id);
-const [userState, setUserState] = useState(state?.companyuser?.id);
-const [user, setUser] = useState(state?.tempUser?.id ||state?.companyuser?.id ||'')
-const [terms, setTerms] = useState(state?.termsAndCondition || '');
-const [comment, setComment] = useState(state?.comments||'');
-const [category, setCategory] = useState('Service Quotation');
+  const [deliveryDate, setDeliveryDate] = useState(
+    dayjs(state?.startdate || "")
+  );
+  const [assignmentEnd, setAssignmentEnd] = useState(
+    dayjs(state?.enddate || "")
+  );
+  const [status, setStatus] = useState(state?.status || "");
+  const [contactName, setContactName] = useState(
+    state?.contactPersonName || ""
+  );
+  const [adminName, setAdminName] = useState(state?.adminPersonName || "");
+  const [adminEmail, setAdminEmail] = useState(state?.adminEmail || "");
+  const [adminPhone, setAdminPhone] = useState(state?.adminPhoneNumber || "");
+  const [inchargeEmail, setInchargeEmail] = useState(state?.contactEmail || "");
+  const [phone, setPhone] = useState(state?.contactPhoneNumber || "");
+  const [address, setAddress] = useState(state?.deliveryAddress || "");
+  const [tempId, setTempId] = useState(state?.tempUser?.id);
+  const [userState, setUserState] = useState(state?.companyuser?.id);
+  const [user, setUser] = useState(
+    state?.tempUser?.id || state?.companyuser?.id || ""
+  );
+  const [terms, setTerms] = useState(state?.termsAndCondition || "");
+  const [comment, setComment] = useState(state?.comments || "");
+  const [category, setCategory] = useState("Service Quotation");
 
+  const [currentDate, setCurrentDate] = useState("");
 
-const [currentDate, setCurrentDate] = useState('');
-
-//add product state
-const [productName, setProductName] = useState('');
-  const [weight, setWeight] = useState('');
+  //add product state
+  const [productName, setProductName] = useState("");
+  const [weight, setWeight] = useState("");
   const [sgst, setSgst] = useState();
   const [igst, setIgst] = useState();
   const [quantity, setQuantity] = useState();
   const [price, setPrice] = useState();
   const [cgst, setCgst] = useState();
   const [size, setSize] = useState();
-  const [description, setDescription] = useState('');
+  const [description, setDescription] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
   const [workstation, setWorkstation] = useState();
 
-  const [userData2, setUserData2] = useState([])
-  const [productId, setProductId] = useState()
+  const [userData2, setUserData2] = useState([]);
+  const [productId, setProductId] = useState();
 
   const [totalAmount, setTotalAmount] = useState(0);
 
-  const [rowData, setRowData] =useState()
-  const [dDate, setDDate] =useState(state?.deliveryDate)
+  const [rowData, setRowData] = useState();
+  const [dDate, setDDate] = useState(state?.deliveryDate);
 
-  const [Id, setId] = useState()
+  const [Id, setId] = useState();
   const [touched, setTouched] = useState(false);
 
-
-      //deleted row
+  //deleted row
   const [deletedRows, setDeletedRows] = useState([]);
+  //change label based on company name
+  const { logo } = useContext(LogoContext);
+  const modifyLabel = logo?.company === "Alumentica";
+
+  const tableHeader = [
+    {
+      id: "product_name",
+      name: "Part Description",
+      width: 200,
+    },
+    {
+      id: "cost",
+      name: "Unit Price",
+      width: 150,
+    },
+    {
+      id: "workstation",
+      name: "No. Of workstations",
+      width: 200,
+    },
+    {
+      id: "igst",
+      name: "IGST",
+      width: 150,
+    },
+
+    {
+      id: "amount",
+      name: "Net Amount",
+      width: 150,
+    },
+    {
+      id: "add",
+      name: "",
+      width: 50,
+    },
+    {
+      id: "delete",
+      name: "",
+      width: 50,
+    },
+  ];
 
   useEffect(() => {
-    axios.get(apiUrl +`getAllQuotationDetails/${state?.id || state?.quotation?.id}`)
-      .then(response => {
-        const updatedData = response.data.map(obj => {
+    axios
+      .get(
+        apiUrl + `getAllQuotationDetails/${state?.id || state?.quotation?.id}`
+      )
+      .then((response) => {
+        const updatedData = response.data.map((obj) => {
           let parsedProductId;
           let parsedProductName;
           try {
             const parsedProduct = obj.product;
             parsedProductId = parsedProduct.id;
-            parsedProductName = parsedProduct.productName
+            parsedProductName = parsedProduct.productName;
           } catch (error) {
             console.error("Error parsing product JSON for object:", obj, error);
             parsedProductId = null;
-            parsedProductName= null
+            parsedProductName = null;
           }
-  
+
           return {
             ...obj,
             productName: parsedProductName,
-            productId: parsedProductId ,
-            product:{id: parsedProductId}
+            productId: parsedProductId,
+            product: { id: parsedProductId },
           };
         });
 
-       setRowData(updatedData)
-       setTotalAmount(state?.totalAmount)
-      
+        setRowData(updatedData);
+        setTotalAmount(state?.totalAmount);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
-  }, [state?.id, state?.quotation?.id , state?.totalAmount]);
+  }, [state?.id, state?.quotation?.id, state?.totalAmount]);
 
   //currentdate
   useEffect(() => {
     const today = new Date();
     const year = today.getFullYear().toString();
-    const month = (today.getMonth() + 1).toString().padStart(2, '0');
-    const day = today.getDate().toString().padStart(2, '0');
+    const month = (today.getMonth() + 1).toString().padStart(2, "0");
+    const day = today.getDate().toString().padStart(2, "0");
     const formattedDate = `${year}/${month}/${day}`;
     setCurrentDate(formattedDate);
   }, []);
 
   const handleInputChange = (event) => {
-  const { name, value } = event.target;
+    const { name, value } = event.target;
 
-  switch (name) {
-  
-      case 'user':
+    switch (name) {
+      case "user":
         setUser(value);
-          break;
-      case 'contactName':
+        break;
+      case "contactName":
         setContactName(value);
         break;
-      case 'adminname':
+      case "adminname":
         setAdminName(value);
         break;
-      case 'adminemail':
+      case "adminemail":
         setAdminEmail(value);
         break;
-      case 'adminphone':
+      case "adminphone":
         setAdminPhone(value);
         break;
-      case 'inchargeemail':
+      case "inchargeemail":
         setInchargeEmail(value);
         break;
-      case 'mobileno':
+      case "mobileno":
         setPhone(value);
         break;
-      case 'type':
+      case "type":
         setType(value);
         break;
-      case 'status':
+      case "status":
         setStatus(value);
         break;
-    case 'address':
-      setAddress(value);
+      case "address":
+        setAddress(value);
         break;
-    default:
-      break;
-  }
-};
+      default:
+        break;
+    }
+  };
 
-const handleBlur = () => {
-  setTouched(true);
-};
+  const handleBlur = () => {
+    setTouched(true);
+  };
 
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const hasError = touched && !emailRegex.test(adminEmail);
-const hasError2 = touched && !emailRegex.test(inchargeEmail);
-   //get temp user
-   useEffect(() => {
-    const request1 = axios.get(apiUrl +`getAllTempUsers/${userId}`);
-    const request2 = axios.get(apiUrl +`getAllUsersBasedOnType/${userId}`);
-  
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const hasError = touched && !emailRegex.test(adminEmail);
+  const hasError2 = touched && !emailRegex.test(inchargeEmail);
+  //get temp user
+  useEffect(() => {
+    const request1 = axios.get(apiUrl + `getAllTempUsers/${userId}`);
+    const request2 = axios.get(apiUrl + `getAllUsersBasedOnType/${userId}`);
+
     Promise.all([request1, request2])
       .then(([response1, response2]) => {
         const tempUsersData = response1.data;
         const usersData = response2.data;
         const combinedData = [...tempUsersData, ...usersData];
         setUserData(combinedData);
-  
-        const selecteduserId = combinedData.find((option) => (option.id !== 0 && option.id === state?.tempUserId) || option.id === state?.userId);
-        const selecteduser = selecteduserId ? selecteduserId.companyName : '';
 
+        const selecteduserId = combinedData.find(
+          (option) =>
+            (option.id !== 0 && option.id === state?.tempUserId) ||
+            option.id === state?.userId
+        );
+        const selecteduser = selecteduserId ? selecteduserId.companyName : "";
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
   }, [state?.tempUserId, state?.userId]);
 
- 
   const deliveryDateAntd = deliveryDate;
   const deliveryDateJS = deliveryDateAntd ? deliveryDateAntd.toDate() : null;
   const deliveryIST = deliveryDateJS;
 
- 
   const deliveryDateAntd2 = assignmentEnd;
   const deliveryDateJS2 = deliveryDateAntd2 ? deliveryDateAntd2.toDate() : null;
   const deliveryIST2 = deliveryDateJS2;
 
+  //assignment start and end
+  const handleDateChange = (date) => {
+    setDeliveryDate(date);
+  };
 
- //assignment start and end
- const handleDateChange = (date) => {
-  setDeliveryDate(date);
-};
-
-const handleDateEnd = (date) => {
-  setAssignmentEnd(date)
-};
+  const handleDateEnd = (date) => {
+    setAssignmentEnd(date);
+  };
 
   //////////////
   //add product//
   /////////////
 
-
-
   const handleRemoveRow = (idx, row) => () => {
-
-    const deletedRow = { ...row }; 
+    const deletedRow = { ...row };
     setDeletedRows((prevDeletedRows) => [...prevDeletedRows, deletedRow]);
-  
-      const updatedRows = rowData?.filter((_, index) => index !== idx);
-      setRowData(updatedRows);
-    
-      const calculatedTotalAmount = updatedRows.reduce(
-        (total, row) =>
+
+    const updatedRows = rowData?.filter((_, index) => index !== idx);
+    setRowData(updatedRows);
+
+    const calculatedTotalAmount = updatedRows.reduce(
+      (total, row) =>
         total +
         row.workstationCount * row.price +
-          (row.workstationCount * row.price * row.igst) / 100,
+        (row.workstationCount * row.price * row.igst) / 100,
       0
-      );
-    
-      setTotalAmount(calculatedTotalAmount);
-    };
+    );
+
+    setTotalAmount(calculatedTotalAmount);
+  };
 
   const toggleForm = () => {
     setShowForm((prevState) => !prevState);
@@ -336,25 +342,18 @@ const handleDateEnd = (date) => {
   };
 
   const handleModalClick = (event) => {
-    if (event.target.classList.contains('modal')) {
+    if (event.target.classList.contains("modal")) {
       toggleForm();
     }
   };
 
   const handleSubmit = (e) => {
-
     e.preventDefault();
-  
-    if (
-     
-      productName &&
-      workstation &&
-      igst &&
-      description
-    ) {
+
+    if (productName && workstation && igst && description) {
       const newRow = {
         id: Id,
-        product: {id : productId},
+        product: { id: productId },
         productName,
         price: parseFloat(price),
         description,
@@ -363,12 +362,11 @@ const handleDateEnd = (date) => {
         igst: parseFloat(igst),
         comments: comment,
         createdDate: new Date(),
-        lastModifiedDate: new Date()
-   
+        lastModifiedDate: new Date(),
       };
-  
+
       let updatedRows;
-  
+
       if (editIndex !== null) {
         updatedRows = [...rowData];
         updatedRows[editIndex] = newRow;
@@ -377,138 +375,142 @@ const handleDateEnd = (date) => {
         updatedRows = [...rowData, newRow];
         setRowData(updatedRows);
       }
-  
+
       clearFormFields();
       setShowForm(false);
       setEditIndex(null);
-  
+
       const calculatedTotalAmount = updatedRows.reduce(
         (total, row) =>
-        total +
-        row.workstationCount * row.price +
+          total +
+          row.workstationCount * row.price +
           (row.workstationCount * row.price * row.igst) / 100,
-      0
+        0
       );
-  
+
       setTotalAmount(calculatedTotalAmount);
     }
   };
 
-  
-
-
   const handleEditRow = (idx, row) => {
+    console.log(idx, row);
 
-console.log(idx, row)
+    const selectedOption = userData2.find(
+      (option) => option.productName === row.productName
+    );
+    const selectedProductId = selectedOption ? selectedOption.id : "";
 
-    const selectedOption = userData2.find((option) => option.productName === row.productName);
-    const selectedProductId = selectedOption ? selectedOption.id : '';
-
-  setId(row.id)
-  setProductId(selectedProductId);
-  setProductName(row.productName);
-  setWeight(row.weight);
-  setQuantity(row.quantity);
-  setWorkstation(row.workstationCount)
-  setPrice(row.price);
-  setCgst(row.cgst);
-  setIgst(row.igst)
-  setSgst(row.sgst)
-  setSize(row.size)
-  setDescription(row.description);
-  setEditIndex(idx);
-  setShowForm(true);
-};
-  
+    setId(row.id);
+    setProductId(selectedProductId);
+    setProductName(row.productName);
+    setWeight(row.weight);
+    setQuantity(row.quantity);
+    setWorkstation(row.workstationCount);
+    setPrice(row.price);
+    setCgst(row.cgst);
+    setIgst(row.igst);
+    setSgst(row.sgst);
+    setSize(row.size);
+    setDescription(row.description);
+    setEditIndex(idx);
+    setShowForm(true);
+  };
 
   const clearFormFields = () => {
-    setProductName('');
-    setWeight('');
-    setQuantity('');
-    setPrice('');
-    setCgst('');
-    setSize('')
-    setIgst('')
-    setSgst('')
-    setDescription('');
-    setWorkstation('')
+    setProductName("");
+    setWeight("");
+    setQuantity("");
+    setPrice("");
+    setCgst("");
+    setSize("");
+    setIgst("");
+    setSgst("");
+    setDescription("");
+    setWorkstation("");
   };
 
   //
   useEffect(() => {
-    axios.get(apiUrl +`getAllItem/${userId}`)
-      .then(response => {
+    axios
+      .get(apiUrl + `getAllItem/${userId}`)
+      .then((response) => {
         setUserData2(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
   }, []);
 
-
-  
-  const updatedRows = rowData?.map(({ productName, inventory, productId,  ...rest }) => rest);
-  const deleteRows= deletedRows?.map(({ productName, inventory, productId, ...rest }) => rest);
+  const updatedRows = rowData?.map(
+    ({ productName, inventory, productId, ...rest }) => rest
+  );
+  const deleteRows = deletedRows?.map(
+    ({ productName, inventory, productId, ...rest }) => rest
+  );
 
   //post request
   const handleClick = async (event) => {
-    let finalAmount = parseFloat(totalAmount.toFixed(2))
+    let finalAmount = parseFloat(totalAmount.toFixed(2));
 
     event.preventDefault();
 
-      if (contactName && userId && phone && status && comment && terms && updatedRows) {
-        try {
-          const response = await fetch(apiUrl +'addQuoatation', {
-            method: 'POST',
-            headers: {
-    
-              'Content-Type': 'application/json'
+    if (
+      contactName &&
+      userId &&
+      phone &&
+      status &&
+      comment &&
+      terms &&
+      updatedRows
+    ) {
+      try {
+        const response = await fetch(apiUrl + "addQuoatation", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            quotation: {
+              id: state?.id,
+              createdBy: userId,
+              ...(tempId && { tempUser: { id: tempId } }),
+              ...(userState && { companyuser: { id: userState } }),
+              contactPersonName: contactName,
+              contactPhoneNumber: phone,
+              contactEmail: inchargeEmail,
+              adminPersonName: adminName,
+              adminPhoneNumber: adminPhone,
+              adminEmail: adminEmail,
+              status: status,
+              category: state?.category,
+              type: type,
+              startdate: deliveryIST,
+              enddate: deliveryIST2,
+              lastModifiedDate: new Date(),
+              lastModifiedByUser: { id: userId },
+              createdDate: state?.originalcreatedDate,
+              comments: comment,
+              termsAndCondition: terms,
+              totalAmount: finalAmount,
             },
-            body: JSON.stringify({
-              quotation:{
-                  id: state?.id,
-                  createdBy: userId,
-                  ...(tempId && { tempUser: { id: tempId } }),
-                  ...(userState && { companyuser: { id: userState } }),
-                  contactPersonName: contactName,
-                  contactPhoneNumber: phone,    
-                  contactEmail: inchargeEmail,
-                  adminPersonName: adminName,
-                  adminPhoneNumber: adminPhone,
-                  adminEmail: adminEmail,   
-                  status: status,
-                  category: state?.category ,
-                  type: type,
-                  startdate: deliveryIST,
-                  enddate: deliveryIST2,
-                  lastModifiedDate: new Date(),
-                  lastModifiedByUser: {id: userId},
-                  createdDate: state?.originalcreatedDate,
-                  comments : comment,
-                  termsAndCondition: terms,
-                  totalAmount: finalAmount,
-              },
-                  quotationDetails: updatedRows,
-                  deletedQuotationDetails: deleteRows
-          })
-          });
-          
-          if (response.ok) {
-            // Redirect to home page upon successful submission
-        
-           response.json().then(data => {
-            navigate('/dashboard/quotation/viewDetail', { state: data });
-            console.log(data)
-      
-    });
-          } 
-        } catch (error) {
-          console.error('API call failed:', error);
-        }
-      } 
-    
-    };
+            quotationDetails: updatedRows,
+            deletedQuotationDetails: deleteRows,
+          }),
+        });
 
+        if (response.ok) {
+          // Redirect to home page upon successful submission
+
+          response.json().then((data) => {
+            navigate("/dashboard/quotation/viewDetail", { state: data });
+            console.log(data);
+          });
+        }
+      } catch (error) {
+        console.error("API call failed:", error);
+      }
+    }
+  };
 
   return (
     <div style={{ minWidth: "100%" }}>
@@ -742,7 +744,9 @@ console.log(idx, row)
                         <Grid xs={12} md={6}>
                           <TextField
                             fullWidth
-                            label="Part Name"
+                            label={
+                              modifyLabel ? "Model Weight Range" : "Part Name"
+                            }
                             name="name"
                             select
                             SelectProps={{

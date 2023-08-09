@@ -20,7 +20,7 @@ import {
 import { DatePicker } from 'antd';
 import './purchase-order.css'
 import IconWithPopup from '../user/user-icon';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import moment from 'moment/moment';
 import { primaryColor } from 'src/primaryColor';
@@ -33,6 +33,7 @@ import { useNavigate } from 'react-router-dom';
 import 'moment-timezone';
 import { apiUrl } from 'src/config';
 import Logo from '../logo/logo';
+import { LogoContext } from "src/utils/logoContext";
 const userId = parseInt(sessionStorage.getItem('user')|| localStorage.getItem('user'))
 
 
@@ -61,201 +62,200 @@ const userOptions = [
  
 ];
 
-const tableHeader=[
-  {
-      id:'product_name',
-      name:'Part Description',
-      width: 200,
-      
-  },
-  {
-    id:'cost',
-    name:'Unit Price',
-    width: 150,
-},
-  {
-      id:'workstation',
-      name:'No. Of workstations',
-      width: 200,
-  },
-  {
-    id:'igst',
-    name:'IGST',
-    width: 150,
-},
 
-  {
-    id:'amount',
-    name:'Net Amount',
-    width: 150,
-},
-  {
-      id:'add',
-      name:'',
-      width: 50,
-  },
-  {
-      id:'delete',
-      name:'',
-      width: 50,
-  }
-];
 
 export const QuotationServiceCreateForm = (props) => {
-
-
-  const [userData, setUserData]= useState([])
+  const [userData, setUserData] = useState([]);
   const navigate = useNavigate();
-//form state handeling
-const [userName, setUserName] = useState('');
-const [type, setType] = useState("Customer");
-const [assignmentStart, setAssignmentStart] = useState('');
-const [assignmentEnd, setAssignmentEnd]= useState('')
-const [status, setStatus] = useState("");
-const [contactName,setContactName] = useState('')
-const [adminName,setAdminName] = useState('')
-const [adminEmail, setAdminEmail] = useState('');
-const [adminPhone, setAdminPhone] = useState('');
-const [inchargeEmail, setInchargeEmail] = useState('');
-const [phone, setPhone] = useState('');
-const [address, setAddress] = useState("");
-const [tempId, setTempId] = useState();
-const [userState, setUserState] = useState();
-const [terms, setTerms] = useState('');
-const [comment, setComment] = useState('');
-const [category, setCategory] = useState('Service Quotation');
+  //form state handeling
+  const [userName, setUserName] = useState("");
+  const [type, setType] = useState("Customer");
+  const [assignmentStart, setAssignmentStart] = useState("");
+  const [assignmentEnd, setAssignmentEnd] = useState("");
+  const [status, setStatus] = useState("");
+  const [contactName, setContactName] = useState("");
+  const [adminName, setAdminName] = useState("");
+  const [adminEmail, setAdminEmail] = useState("");
+  const [adminPhone, setAdminPhone] = useState("");
+  const [inchargeEmail, setInchargeEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
+  const [tempId, setTempId] = useState();
+  const [userState, setUserState] = useState();
+  const [terms, setTerms] = useState("");
+  const [comment, setComment] = useState("");
+  const [category, setCategory] = useState("Service Quotation");
 
-const [currentDate, setCurrentDate] = useState('');
+  const [currentDate, setCurrentDate] = useState("");
 
-//add product state
-const [productName, setProductName] = useState('');
-  const [weight, setWeight] = useState('');
+  //add product state
+  const [productName, setProductName] = useState("");
+  const [weight, setWeight] = useState("");
   const [workstation, setWorkstation] = useState();
   const [igst, setIgst] = useState();
   const [quantity, setQuantity] = useState();
   const [price, setPrice] = useState();
   const [cgst, setCgst] = useState();
   const [size, setSize] = useState();
-  const [description, setDescription] = useState('');
+  const [description, setDescription] = useState("");
   const [rows, setRows] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
 
-  const [userData2, setUserData2] = useState([])
-  const [productId, setProductId] = useState()
+  const [userData2, setUserData2] = useState([]);
+  const [productId, setProductId] = useState();
 
   const [totalAmount, setTotalAmount] = useState(0);
   const [touched, setTouched] = useState(false);
- 
+  //change label based on company name
+  const { logo } = useContext(LogoContext);
+  const modifyLabel = logo?.company === "Alumentica";
+
+  const tableHeader = [
+    {
+      id: "product_name",
+      name: "Part Description",
+      width: 200,
+    },
+    {
+      id: "cost",
+      name: "Unit Price",
+      width: 150,
+    },
+    {
+      id: "workstation",
+      name: "No. Of workstations",
+      width: 200,
+    },
+    {
+      id: "igst",
+      name: "IGST",
+      width: 150,
+    },
+
+    {
+      id: "amount",
+      name: "Net Amount",
+      width: 150,
+    },
+    {
+      id: "add",
+      name: "",
+      width: 50,
+    },
+    {
+      id: "delete",
+      name: "",
+      width: 50,
+    },
+  ];
 
   //currentdate
   useEffect(() => {
     const today = new Date();
     const year = today.getFullYear().toString();
-    const month = (today.getMonth() + 1).toString().padStart(2, '0');
-    const day = today.getDate().toString().padStart(2, '0');
+    const month = (today.getMonth() + 1).toString().padStart(2, "0");
+    const day = today.getDate().toString().padStart(2, "0");
     const formattedDate = `${year}/${month}/${day}`;
     setCurrentDate(formattedDate);
   }, []);
 
-//assignment start and end
-const handleDateStart = (date) => {
-  setAssignmentStart(date);
+  //assignment start and end
+  const handleDateStart = (date) => {
+    setAssignmentStart(date);
+  };
+  const handleDateEnd = (date) => {
+    setAssignmentEnd(date);
+  };
 
-};
-const handleDateEnd = (date) => {
-  setAssignmentEnd(date)
-};
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
 
- const handleInputChange = (event) => {
-  const { name, value } = event.target;
-
-  switch (name) {
-  
-      case 'user':
+    switch (name) {
+      case "user":
         setUserName(value);
-          break;
-      case 'contactName':
+        break;
+      case "contactName":
         setContactName(value);
         break;
-      case 'adminname':
+      case "adminname":
         setAdminName(value);
         break;
-      case 'adminemail':
+      case "adminemail":
         setAdminEmail(value);
         break;
-      case 'adminphone':
+      case "adminphone":
         setAdminPhone(value);
         break;
-      case 'inchargeemail':
+      case "inchargeemail":
         setInchargeEmail(value);
         break;
-      case 'mobileno':
+      case "mobileno":
         setPhone(value);
         break;
-      case 'type':
+      case "type":
         setType(value);
         break;
-      case 'status':
+      case "status":
         setStatus(value);
         break;
-    case 'address':
-      setAddress(value);
+      case "address":
+        setAddress(value);
         break;
-    default:
-      break;
-  }
-};
+      default:
+        break;
+    }
+  };
 
-const handleBlur = () => {
-  setTouched(true);
-};
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const hasError = touched && !emailRegex.test(adminEmail);
-const hasError2 = touched && !emailRegex.test(inchargeEmail);
+  const handleBlur = () => {
+    setTouched(true);
+  };
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const hasError = touched && !emailRegex.test(adminEmail);
+  const hasError2 = touched && !emailRegex.test(inchargeEmail);
 
-   //get temp user
-   useEffect(() => {
-    axios.get(apiUrl +`getAllTempUsers/${userId}`)
-      .then(response => {
-        setUserData(prevData => [...prevData, ...response.data]);
-     
+  //get temp user
+  useEffect(() => {
+    axios
+      .get(apiUrl + `getAllTempUsers/${userId}`)
+      .then((response) => {
+        setUserData((prevData) => [...prevData, ...response.data]);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
-  
-    axios.get(apiUrl +`getAllUsersBasedOnType/${userId}`)
-      .then(response => {
-        setUserData(prevData => [...prevData, ...response.data]);
 
+    axios
+      .get(apiUrl + `getAllUsersBasedOnType/${userId}`)
+      .then((response) => {
+        setUserData((prevData) => [...prevData, ...response.data]);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
   }, []);
 
   //convert assignment start date to iso string
-const deliveryDateAntd = assignmentStart;
-const deliveryDateJS = deliveryDateAntd ? deliveryDateAntd.toDate() : null;
-const deliveryIST = deliveryDateJS;
-//convert assignment  end date to iso string
-const deliveryDateAntd2 = assignmentEnd;
-const deliveryDateJS2 = deliveryDateAntd2 ? deliveryDateAntd2.toDate() : null;
-const deliveryIST2 = deliveryDateJS2
+  const deliveryDateAntd = assignmentStart;
+  const deliveryDateJS = deliveryDateAntd ? deliveryDateAntd.toDate() : null;
+  const deliveryIST = deliveryDateJS;
+  //convert assignment  end date to iso string
+  const deliveryDateAntd2 = assignmentEnd;
+  const deliveryDateJS2 = deliveryDateAntd2 ? deliveryDateAntd2.toDate() : null;
+  const deliveryIST2 = deliveryDateJS2;
 
   const handleRemoveRow = (idx) => () => {
     const updatedRows = rows.filter((_, index) => index !== idx);
     setRows(updatedRows);
-  
+
     const calculatedTotalAmount = updatedRows.reduce(
       (total, row) =>
-      total +
+        total +
         row.workstationCount * row.price +
-          (row.workstationCount * row.price * row.igst) / 100,
+        (row.workstationCount * row.price * row.igst) / 100,
       0
     );
-  
+
     setTotalAmount(calculatedTotalAmount);
   };
 
@@ -266,23 +266,17 @@ const deliveryIST2 = deliveryDateJS2
   };
 
   const handleModalClick = (event) => {
-    if (event.target.classList.contains('modal')) {
+    if (event.target.classList.contains("modal")) {
       toggleForm();
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  
-    if (
-      price &&
-      productName &&
-      workstation &&
-      igst &&
-      description
-    ) {
+
+    if (price && productName && workstation && igst && description) {
       const newRow = {
-        product: {id : productId},
+        product: { id: productId },
         productName,
         quotationId: null,
         price: parseFloat(price),
@@ -294,9 +288,9 @@ const deliveryIST2 = deliveryDateJS2
         createdDate: new Date(),
         lastModifiedDate: new Date(),
       };
-  
+
       let updatedRows;
-  
+
       if (editIndex !== null) {
         updatedRows = [...rows];
         updatedRows[editIndex] = newRow;
@@ -305,122 +299,122 @@ const deliveryIST2 = deliveryDateJS2
         updatedRows = [...rows, newRow];
         setRows(updatedRows);
       }
-  
+
       clearFormFields();
       setShowForm(false);
       setEditIndex(null);
-  
+
       const calculatedTotalAmount = updatedRows.reduce(
         (total, row) =>
-        total +
-        row.workstationCount * row.price +
+          total +
+          row.workstationCount * row.price +
           (row.workstationCount * row.price * row.igst) / 100,
-      0
+        0
       );
-  
+
       setTotalAmount(calculatedTotalAmount);
     }
   };
   const handleEditRow = (idx, row) => {
-  setProductName(row.productName);
-  setWeight(row.weight);
-  setQuantity(row.quantity);
-  setPrice(row.price);
-  setCgst(row.cgst);
-  setIgst(row.igst)
-  setWorkstation(row.workstationCount)
-  setSize(row.size)
-  setDescription(row.description);
-  setEditIndex(idx);
-  setShowForm(true);
-};
-  
+    setProductName(row.productName);
+    setWeight(row.weight);
+    setQuantity(row.quantity);
+    setPrice(row.price);
+    setCgst(row.cgst);
+    setIgst(row.igst);
+    setWorkstation(row.workstationCount);
+    setSize(row.size);
+    setDescription(row.description);
+    setEditIndex(idx);
+    setShowForm(true);
+  };
 
   const clearFormFields = () => {
-    setProductName('');
-    setWeight('');
-    setQuantity('');
-    setPrice('');
-    setCgst('');
-    setSize('')
-    setIgst('')
-    setWorkstation('')
-    setDescription('');
+    setProductName("");
+    setWeight("");
+    setQuantity("");
+    setPrice("");
+    setCgst("");
+    setSize("");
+    setIgst("");
+    setWorkstation("");
+    setDescription("");
   };
 
   //
   useEffect(() => {
-    axios.get(apiUrl +`getAllItem/${userId}`)
-      .then(response => {
+    axios
+      .get(apiUrl + `getAllItem/${userId}`)
+      .then((response) => {
         setUserData2(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
   }, []);
 
-
   const updatedRows = rows.map(({ productName, comments, ...rest }) => rest);
   //post request
   const handleClick = async (event) => {
-
-    let finalAmount = totalAmount.toFixed(2)
+    let finalAmount = totalAmount.toFixed(2);
 
     event.preventDefault();
-    
-      if (contactName && userId && phone && status && comment && terms && updatedRows) {
-        try {
-          const response = await fetch(apiUrl +'addQuoatation', {
-            method: 'POST',
-            headers: {
-    
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              quotation:{
-                  ...(tempId && { tempUser: { id: tempId } }),
-                  ...(userState && { companyuser: { id: userState } }),
-                  contactPersonName: contactName,
-                  contactPhoneNumber: phone,
-                  contactEmail: inchargeEmail,
-                  adminPersonName: adminName,
-                  adminPhoneNumber: adminPhone,
-                  adminEmail: adminEmail,   
-                  status: status,
-                  type: type,
-                  startdate: deliveryIST,
-                  enddate: deliveryIST2,
-                  createdBy: userId,
-                  createdDate: new Date(),
-                  lastModifiedDate: new Date(),
-                  comments : comment,
-                  category: category,
-                  lastModifiedByUser: {id: userId},
-                  termsAndCondition: terms,
-                  totalAmount: finalAmount,
-        
-              },
-                  quotationDetails: updatedRows
-          })
-          });
-          
-          if (response.ok) {
-            // Redirect to home page upon successful submission
-        
-           response.json().then(data => {
-    
-      
-          navigate('/dashboard/quotation/viewDetail', { state: data });
-          console.log(data)
-    });
-          } 
-        } catch (error) {
-          console.error('API call failed:', error);
-        }
-      } 
-    
-    };
 
+    if (
+      contactName &&
+      userId &&
+      phone &&
+      status &&
+      comment &&
+      terms &&
+      updatedRows
+    ) {
+      try {
+        const response = await fetch(apiUrl + "addQuoatation", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            quotation: {
+              ...(tempId && { tempUser: { id: tempId } }),
+              ...(userState && { companyuser: { id: userState } }),
+              contactPersonName: contactName,
+              contactPhoneNumber: phone,
+              contactEmail: inchargeEmail,
+              adminPersonName: adminName,
+              adminPhoneNumber: adminPhone,
+              adminEmail: adminEmail,
+              status: status,
+              type: type,
+              startdate: deliveryIST,
+              enddate: deliveryIST2,
+              createdBy: userId,
+              createdDate: new Date(),
+              lastModifiedDate: new Date(),
+              comments: comment,
+              category: category,
+              lastModifiedByUser: { id: userId },
+              termsAndCondition: terms,
+              totalAmount: finalAmount,
+            },
+            quotationDetails: updatedRows,
+          }),
+        });
+
+        if (response.ok) {
+          // Redirect to home page upon successful submission
+
+          response.json().then((data) => {
+            navigate("/dashboard/quotation/viewDetail", { state: data });
+            console.log(data);
+          });
+        }
+      } catch (error) {
+        console.error("API call failed:", error);
+      }
+    }
+  };
 
   return (
     <div style={{ minWidth: "100%" }}>
@@ -658,7 +652,9 @@ const deliveryIST2 = deliveryDateJS2
                         <Grid xs={12} md={6}>
                           <TextField
                             fullWidth
-                            label="Part Name"
+                            label={
+                              modifyLabel ? "Model Weight Range" : "Part Name"
+                            }
                             name="name"
                             required
                             select

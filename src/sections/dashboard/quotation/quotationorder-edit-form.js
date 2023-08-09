@@ -20,7 +20,7 @@ import {
 import { DatePicker } from 'antd';
 import './purchase-order.css'
 import IconWithPopup from '../user/user-icon';
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useContext } from 'react';
 import axios from 'axios';
 import moment from 'moment/moment';
 import { primaryColor } from 'src/primaryColor';
@@ -35,6 +35,7 @@ import dayjs from 'dayjs';
 import 'moment-timezone';
 import { apiUrl } from 'src/config';
 import Logo from '../logo/logo';
+import { LogoContext } from "src/utils/logoContext";
 
 
 const userId = parseInt(sessionStorage.getItem('user')|| localStorage.getItem('user'))
@@ -78,218 +79,225 @@ const userOptions = [
  
 ];
 
-const tableHeader=[
-  {
-      id:'product_name',
-      name:'Part Description',
-      width: 200,
-      
-  },
-  {
-      id:'quantity',
-      name:'Quantity',
-      width: 200,
-  },
-  {
-      id:'weight',
-      name:'Weight',
-      width: 150,
-  },
-  {
-    id:'size',
-    name:'Size',
-    width: 150,
-},
-  {
-      id:'cost',
-      name:'Cost',
-      width: 150,
-  },
-  {
-      id:'cgst',
-      name:'CGST',
-      width: 150,
-  },
-  {
-    id:'sgst',
-    name:'SCGST',
-    width: 150,
-},
-  {
-    id:'igst',
-    name:'IGST',
-    width: 150,
-},
 
-  {
-    id:'amount',
-    name:'Net Amount',
-    width: 150,
-},
-  {
-      id:'add',
-      name:'',
-      width: 50,
-  },
-  {
-      id:'delete',
-      name:'',
-      width: 50,
-  }
-];
 
 export const QuotationOrderEditForm = (props) => {
-
   const location = useLocation();
   const state = location.state;
-console.log(state)
+  console.log(state);
 
-
-
-  const [userData, setUserData]= useState([])
+  const [userData, setUserData] = useState([]);
   const navigate = useNavigate();
-//form state handeling
+  //form state handeling
 
-const [type, setType] = useState(state?.type||"");
-const [deliveryDate, setDeliveryDate] = useState(dayjs(state?.originalDeliveryDate|| ''));
-const [status, setStatus] = useState(state?.status || "");
-const [contactName,setContactName] = useState(state?.contactPersonName ||'')
-const [phone, setPhone] = useState(state?.contactPhoneNumber ||'');
-const [address, setAddress] = useState(state?.deliveryAddress || "");
-const [tempId, setTempId] = useState(state?.tempUser?.id);
-const [userState, setUserState] = useState(state?.companyuser?.id);
-const [user, setUser] = useState(state?.tempUser?.id ||state?.companyuser?.id||'')
-const [terms, setTerms] = useState(state?.termsAndCondition || '');
-const [comment, setComment] = useState(state?.comments||'');
+  const [type, setType] = useState(state?.type || "");
+  const [deliveryDate, setDeliveryDate] = useState(
+    dayjs(state?.originalDeliveryDate || "")
+  );
+  const [status, setStatus] = useState(state?.status || "");
+  const [contactName, setContactName] = useState(
+    state?.contactPersonName || ""
+  );
+  const [phone, setPhone] = useState(state?.contactPhoneNumber || "");
+  const [address, setAddress] = useState(state?.deliveryAddress || "");
+  const [tempId, setTempId] = useState(state?.tempUser?.id);
+  const [userState, setUserState] = useState(state?.companyuser?.id);
+  const [user, setUser] = useState(
+    state?.tempUser?.id || state?.companyuser?.id || ""
+  );
+  const [terms, setTerms] = useState(state?.termsAndCondition || "");
+  const [comment, setComment] = useState(state?.comments || "");
 
+  const [currentDate, setCurrentDate] = useState("");
 
-
-const [currentDate, setCurrentDate] = useState('');
-
-//add product state
-const [productName, setProductName] = useState('');
-  const [weight, setWeight] = useState('');
+  //add product state
+  const [productName, setProductName] = useState("");
+  const [weight, setWeight] = useState("");
   const [sgst, setSgst] = useState();
   const [igst, setIgst] = useState();
   const [quantity, setQuantity] = useState();
   const [price, setPrice] = useState();
   const [cgst, setCgst] = useState();
   const [size, setSize] = useState();
-  const [description, setDescription] = useState('');
+  const [description, setDescription] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
 
-  const [userData2, setUserData2] = useState([])
-  const [productId, setProductId] = useState()
+  const [userData2, setUserData2] = useState([]);
+  const [productId, setProductId] = useState();
 
   const [totalAmount, setTotalAmount] = useState(0);
 
-  const [rowData, setRowData] =useState()
-  const [dDate, setDDate] =useState()
+  const [rowData, setRowData] = useState();
+  const [dDate, setDDate] = useState();
 
-  const [Id, setId] = useState()
+  const [Id, setId] = useState();
 
-      // country, state, city API access token
-      const [accessToken, setAccessToken] = useState(null);
+  // country, state, city API access token
+  const [accessToken, setAccessToken] = useState(null);
 
+  //state management for countries,states and cities
+  const [countries, setCountries] = useState([]);
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [currentCountry, setCurrentCountry] = useState(state?.country || "");
+  const [currentState, setCurrentState] = useState(state?.state || "");
+  const [currentCity, setCurrentCity] = useState(state?.city || "");
+  const [zipcode, setZipcode] = useState(state?.pinCode || "");
 
-
-      //state management for countries,states and cities
-      const [countries, setCountries] = useState([]);
-      const [states, setStates]= useState([])
-      const [cities, setCities]= useState([])
-      const [currentCountry, setCurrentCountry]= useState(state?.country ||'')
-      const [currentState, setCurrentState]= useState(state?.state ||'')
-      const [currentCity, setCurrentCity] =useState(state?.city ||'')
-      const [zipcode, setZipcode]= useState(state?.pinCode ||'')
-
-
-      //deleted row
+  //deleted row
   const [deletedRows, setDeletedRows] = useState([]);
+  //change label based on company name
+  const { logo } = useContext(LogoContext);
+  const modifyLabel = logo?.company === "Alumentica";
+
+  const tableHeader = [
+    {
+      id: "product_name",
+      name: "Part Description",
+      width: 200,
+    },
+    {
+      id: "quantity",
+      name: modifyLabel ? "Piece" : "Quantity",
+      width: 200,
+    },
+    {
+      id: "weight",
+      name: "Weight",
+      width: 150,
+    },
+    {
+      id: "size",
+      name: modifyLabel ? "Unit" : "Size",
+      width: 150,
+    },
+    {
+      id: "cost",
+      name: "Cost",
+      width: 150,
+    },
+    {
+      id: "cgst",
+      name: "CGST",
+      width: 150,
+    },
+    {
+      id: "sgst",
+      name: "SGST",
+      width: 150,
+    },
+    {
+      id: "igst",
+      name: "IGST",
+      width: 150,
+    },
+
+    {
+      id: "amount",
+      name: "Net Amount",
+      width: 150,
+    },
+    {
+      id: "add",
+      name: "",
+      width: 50,
+    },
+    {
+      id: "delete",
+      name: "",
+      width: 50,
+    },
+  ];
 
   useEffect(() => {
-    axios.get(apiUrl +`getAllQuotationDetails/${state?.id || state?.quotation?.id}`)
-      .then(response => {
-
-        const updatedData = response.data.map(obj => {
+    axios
+      .get(
+        apiUrl + `getAllQuotationDetails/${state?.id || state?.quotation?.id}`
+      )
+      .then((response) => {
+        const updatedData = response.data.map((obj) => {
           let parsedProductId;
           let parsedProductName;
           try {
             const parsedProduct = obj.product;
             parsedProductId = parsedProduct.id;
-            parsedProductName = parsedProduct.productName
+            parsedProductName = parsedProduct.productName;
           } catch (error) {
             console.error("Error parsing product JSON for object:", obj, error);
             parsedProductId = null;
-            parsedProductName= null
+            parsedProductName = null;
           }
-  
+
           return {
             ...obj,
             productName: parsedProductName,
-            productId: parsedProductId ,
-            product:{id: parsedProductId}
+            productId: parsedProductId,
+            product: { id: parsedProductId },
           };
         });
 
-       setRowData(updatedData)
-       setTotalAmount(state?.totalAmount)
-      
+        setRowData(updatedData);
+        setTotalAmount(state?.totalAmount);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
-  }, [state?.id, state?.quotation?.id , state?.totalAmount]);
-
+  }, [state?.id, state?.quotation?.id, state?.totalAmount]);
 
   //currentdate
   useEffect(() => {
     const today = new Date();
     const year = today.getFullYear().toString();
-    const month = (today.getMonth() + 1).toString().padStart(2, '0');
-    const day = today.getDate().toString().padStart(2, '0');
+    const month = (today.getMonth() + 1).toString().padStart(2, "0");
+    const day = today.getDate().toString().padStart(2, "0");
     const formattedDate = `${year}/${month}/${day}`;
     setCurrentDate(formattedDate);
   }, []);
 
-console.log(rowData)
+  console.log(rowData);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('https://www.universal-tutorial.com/api/getaccesstoken', {
-          headers: {
-            'Accept': 'application/json',
-            'api-token': '8HWETQvEFegKi6tGPUkSWDiQKfW8UdZxPqbzHX6JdShA3YShkrgKuHUbnTMkd11QGkE',
-            'user-email': 'mithesh.dev.work@gmail.com'
+        const response = await fetch(
+          "https://www.universal-tutorial.com/api/getaccesstoken",
+          {
+            headers: {
+              Accept: "application/json",
+              "api-token":
+                "8HWETQvEFegKi6tGPUkSWDiQKfW8UdZxPqbzHX6JdShA3YShkrgKuHUbnTMkd11QGkE",
+              "user-email": "mithesh.dev.work@gmail.com",
+            },
           }
-        });
-  
+        );
+
         if (!response.ok) {
-          throw new Error('Failed to fetch access token');
+          throw new Error("Failed to fetch access token");
         }
-  
+
         const data = await response.json();
-  
+
         setAccessToken(data.auth_token);
-  
       } catch (error) {
         console.error(error);
-  
       }
     };
-  
+
     fetchData();
   }, []);
-  //fetches country list for dropdown and pushesh it to state which is later mapped 
+  //fetches country list for dropdown and pushesh it to state which is later mapped
   const fetchCountries = useCallback(async () => {
     try {
-      const response = await fetch("https://www.universal-tutorial.com/api/countries/", {
-        headers: {
-          "Authorization": "Bearer " + accessToken,
-          "Accept": "application/json"
+      const response = await fetch(
+        "https://www.universal-tutorial.com/api/countries/",
+        {
+          headers: {
+            Authorization: "Bearer " + accessToken,
+            Accept: "application/json",
+          },
         }
-      });
-  
+      );
+
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -299,47 +307,50 @@ console.log(rowData)
       console.error("Error fetching countries:", error);
     }
   }, [accessToken]);
-  
+
   //using useeffect to prevent fetch request being called on render
-  useEffect(()=>{
-    fetchCountries()
-  },[fetchCountries])
-  
+  useEffect(() => {
+    fetchCountries();
+  }, [fetchCountries]);
+
   //mapping countries to MUI select input field
   const userOptionsCountry = useMemo(() => {
-    return countries.map(country => ({
+    return countries.map((country) => ({
       label: country.country_name,
-      value: country.country_name
+      value: country.country_name,
     }));
   }, [countries]);
-  
+
   //mapping states to MUI select input field
   const userOptionsState = useMemo(() => {
-    return states.map(state => ({
+    return states.map((state) => ({
       label: state.state_name,
-      value: state.state_name
+      value: state.state_name,
     }));
   }, [states]);
-  
+
   //mapping cities to MUI select input field
   const userOptionsCities = useMemo(() => {
-    return cities.map(city => ({
+    return cities.map((city) => ({
       label: city.city_name,
-      value: city.city_name
+      value: city.city_name,
     }));
   }, [cities]);
-  
-  //fetches states list for dropdown and pushesh it to setStates which is later mapped 
+
+  //fetches states list for dropdown and pushesh it to setStates which is later mapped
   const handleCountry = async (event) => {
     try {
       setCurrentCountry(event.target.value);
-      const response = await fetch(`https://www.universal-tutorial.com/api/states/${event.target.value}`, {
-        headers: {
-          "Authorization": "Bearer " + accessToken,
-          "Accept": "application/json"
+      const response = await fetch(
+        `https://www.universal-tutorial.com/api/states/${event.target.value}`,
+        {
+          headers: {
+            Authorization: "Bearer " + accessToken,
+            Accept: "application/json",
+          },
         }
-      });
-  
+      );
+
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -349,18 +360,21 @@ console.log(rowData)
       console.error("Error fetching states:", error);
     }
   };
-  
-  //fetches cities list for dropdown and pushesh it to setCities which is later mapped 
+
+  //fetches cities list for dropdown and pushesh it to setCities which is later mapped
   const handleState = async (event) => {
     try {
       setCurrentState(event.target.value);
-      const response = await fetch(`https://www.universal-tutorial.com/api/cities/${event.target.value}`, {
-        headers: {
-          "Authorization": "Bearer " + accessToken,
-          "Accept": "application/json"
+      const response = await fetch(
+        `https://www.universal-tutorial.com/api/cities/${event.target.value}`,
+        {
+          headers: {
+            Authorization: "Bearer " + accessToken,
+            Accept: "application/json",
+          },
         }
-      });
-  
+      );
+
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -374,21 +388,24 @@ console.log(rowData)
   useEffect(() => {
     const fetchStates = async () => {
       try {
-        const response = await axios.get(`https://www.universal-tutorial.com/api/states/${currentCountry}`, {
-          headers: {
-            'Authorization': 'Bearer ' + accessToken,
-            'Accept': 'application/json'
+        const response = await axios.get(
+          `https://www.universal-tutorial.com/api/states/${currentCountry}`,
+          {
+            headers: {
+              Authorization: "Bearer " + accessToken,
+              Accept: "application/json",
+            },
           }
-        });
+        );
 
         if (response.status === 200) {
           const data = response.data;
           setStates(data);
         } else {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
       } catch (error) {
-        console.error('Error fetching states:', error);
+        console.error("Error fetching states:", error);
       }
     };
 
@@ -400,21 +417,24 @@ console.log(rowData)
   useEffect(() => {
     const fetchCities = async () => {
       try {
-        const response = await axios.get(`https://www.universal-tutorial.com/api/cities/${currentState}`, {
-          headers: {
-            'Authorization': 'Bearer ' + accessToken,
-            'Accept': 'application/json'
+        const response = await axios.get(
+          `https://www.universal-tutorial.com/api/cities/${currentState}`,
+          {
+            headers: {
+              Authorization: "Bearer " + accessToken,
+              Accept: "application/json",
+            },
           }
-        });
+        );
 
         if (response.status === 200) {
           const data = response.data;
           setCities(data);
         } else {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
       } catch (error) {
-        console.error('Error fetching states:', error);
+        console.error("Error fetching states:", error);
       }
     };
 
@@ -422,91 +442,94 @@ console.log(rowData)
       fetchCities();
     }
   }, [currentState, accessToken]);
-  
+
   //sets default country to India and fetches state list for India and is pushed to setStates
   const handleDefaultState = async () => {
-  try {;
-  if (currentCountry === 'India') {
-    const response = await fetch('https://www.universal-tutorial.com/api/states/India', {
-      headers: {
-        "Authorization": "Bearer " + accessToken,
-        "Accept": "application/json"
+    try {
+      if (currentCountry === "India") {
+        const response = await fetch(
+          "https://www.universal-tutorial.com/api/states/India",
+          {
+            headers: {
+              Authorization: "Bearer " + accessToken,
+              Accept: "application/json",
+            },
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        setStates(data);
       }
-    });
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
+    } catch (error) {
+      console.error("Error fetching states:", error);
     }
-    const data = await response.json();
-    setStates(data);
-  }
-  } catch (error) {
-  console.error("Error fetching states:", error);
-  }
   };
-  
+
   //sets current city value in MUI select field onchange event
   const handleCities = async (event) => {
-  setCurrentCity(event.target.value);
-  }
+    setCurrentCity(event.target.value);
+  };
 
- const handleInputChange = (event) => {
-  const { name, value } = event.target;
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
 
-  switch (name) {
-  
-      case 'user':
+    switch (name) {
+      case "user":
         setUser(value);
-          break;
-      case 'contactName':
+        break;
+      case "contactName":
         setContactName(value);
         break;
-      case 'mobileno':
+      case "mobileno":
         setPhone(value);
         break;
-      case 'type':
+      case "type":
         setType(value);
         break;
-      case 'status':
+      case "status":
         setStatus(value);
         break;
-        case 'zipcode':
-          setZipcode(value);
-          break;
-    case 'address':
-      setAddress(value);
+      case "zipcode":
+        setZipcode(value);
         break;
-    default:
-      break;
-  }
-};
+      case "address":
+        setAddress(value);
+        break;
+      default:
+        break;
+    }
+  };
 
-   //get temp user
-   useEffect(() => {
-    const request1 = axios.get(apiUrl +`getAllTempUsers/${userId}`);
-    const request2 = axios.get(apiUrl +`getAllUsersBasedOnType/${userId}`);
-  
+  //get temp user
+  useEffect(() => {
+    const request1 = axios.get(apiUrl + `getAllTempUsers/${userId}`);
+    const request2 = axios.get(apiUrl + `getAllUsersBasedOnType/${userId}`);
+
     Promise.all([request1, request2])
       .then(([response1, response2]) => {
         const tempUsersData = response1.data;
         const usersData = response2.data;
         const combinedData = [...tempUsersData, ...usersData];
         setUserData(combinedData);
-  
-        const selecteduserId = combinedData.find((option) => (option.id !== 0 && option.id === state?.tempUserId) || option.id === state?.userId);
-        const selecteduser = selecteduserId ? selecteduserId.companyName : '';
 
+        const selecteduserId = combinedData.find(
+          (option) =>
+            (option.id !== 0 && option.id === state?.tempUserId) ||
+            option.id === state?.userId
+        );
+        const selecteduser = selecteduserId ? selecteduserId.companyName : "";
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
   }, [state?.tempUserId, state?.userId]);
 
- 
   const deliveryDateAntd = deliveryDate;
   const deliveryDateJS = deliveryDateAntd ? deliveryDateAntd.toDate() : null;
-  
-  const deliveryIST = deliveryDateJS;
 
+  const deliveryIST = deliveryDateJS;
 
   const handleDateChange = (date) => {
     setDeliveryDate(date);
@@ -516,28 +539,25 @@ console.log(rowData)
   //add product//
   /////////////
 
-
-
   const handleRemoveRow = (idx, row) => () => {
-
-    const deletedRow = { ...row }; 
+    const deletedRow = { ...row };
     setDeletedRows((prevDeletedRows) => [...prevDeletedRows, deletedRow]);
-  
-      const updatedRows = rowData?.filter((_, index) => index !== idx);
-      setRowData(updatedRows);
-    
-      const calculatedTotalAmount = updatedRows.reduce(
-        (total, row) =>
-          total +
-          row.quantity * row.price +
-          (row.quantity * row.price * row.cgst) / 100 +
-          (row.quantity * row.price * row.igst) / 100 +
-          (row.quantity * row.price * row.sgst) / 100,
-        0
-      );
-    
-      setTotalAmount(calculatedTotalAmount);
-    };
+
+    const updatedRows = rowData?.filter((_, index) => index !== idx);
+    setRowData(updatedRows);
+
+    const calculatedTotalAmount = updatedRows.reduce(
+      (total, row) =>
+        total +
+        row.quantity * row.price +
+        (row.quantity * row.price * row.cgst) / 100 +
+        (row.quantity * row.price * row.igst) / 100 +
+        (row.quantity * row.price * row.sgst) / 100,
+      0
+    );
+
+    setTotalAmount(calculatedTotalAmount);
+  };
 
   const toggleForm = () => {
     setShowForm((prevState) => !prevState);
@@ -546,23 +566,15 @@ console.log(rowData)
   };
 
   const handleModalClick = (event) => {
-    if (event.target.classList.contains('modal')) {
+    if (event.target.classList.contains("modal")) {
       toggleForm();
     }
   };
 
   const handleSubmit = (e) => {
-
     e.preventDefault();
-  
-    if (
-      quantity &&
-      price &&
-      productName &&
-      description &&
-      weight &&
-      size
-    ) {
+
+    if (quantity && price && productName && description && weight && size) {
       const newRow = {
         id: Id,
         product: { id: productId },
@@ -580,9 +592,9 @@ console.log(rowData)
         createdDate: new Date(),
         lastModifiedDate: new Date(),
       };
-  
+
       let updatedRows;
-  
+
       if (editIndex !== null) {
         updatedRows = [...rowData];
         updatedRows[editIndex] = newRow;
@@ -591,11 +603,11 @@ console.log(rowData)
         updatedRows = [...rowData, newRow];
         setRowData(updatedRows);
       }
-  
+
       clearFormFields();
       setShowForm(false);
       setEditIndex(null);
-  
+
       const calculatedTotalAmount = updatedRows.reduce(
         (total, row) =>
           total +
@@ -605,124 +617,118 @@ console.log(rowData)
           (row.quantity * row.price * row.sgst) / 100,
         0
       );
-  
+
       setTotalAmount(calculatedTotalAmount);
     }
   };
 
-  
-
-
   const handleEditRow = (idx, row) => {
+    const selectedOption = userData2.find(
+      (option) => option.productName === row.productName
+    );
+    const selectedProductId = selectedOption ? selectedOption.id : "";
 
-
-
-    const selectedOption = userData2.find((option) => option.productName === row.productName);
-    const selectedProductId = selectedOption ? selectedOption.id : '';
-
-  setId(row.id)
-  setProductId(selectedProductId);
-  setProductName(row.productName);
-  setWeight(row.weight);
-  setQuantity(row.quantity);
-  setPrice(row.price);
-  setCgst(row.cgst);
-  setIgst(row.igst)
-  setSgst(row.sgst)
-  setSize(row.size)
-  setDescription(row.description);
-  setEditIndex(idx);
-  setShowForm(true);
-};
-  
+    setId(row.id);
+    setProductId(selectedProductId);
+    setProductName(row.productName);
+    setWeight(row.weight);
+    setQuantity(row.quantity);
+    setPrice(row.price);
+    setCgst(row.cgst);
+    setIgst(row.igst);
+    setSgst(row.sgst);
+    setSize(row.size);
+    setDescription(row.description);
+    setEditIndex(idx);
+    setShowForm(true);
+  };
 
   const clearFormFields = () => {
-    setProductName('');
-    setWeight('');
-    setQuantity('');
-    setPrice('');
-    setCgst('');
-    setSize('')
-    setIgst('')
-    setSgst('')
-    setDescription('');
+    setProductName("");
+    setWeight("");
+    setQuantity("");
+    setPrice("");
+    setCgst("");
+    setSize("");
+    setIgst("");
+    setSgst("");
+    setDescription("");
   };
 
   //
   useEffect(() => {
-    axios.get(apiUrl +`getAllItem/${userId}`)
-      .then(response => {
+    axios
+      .get(apiUrl + `getAllItem/${userId}`)
+      .then((response) => {
         setUserData2(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
   }, []);
 
-
-  
-  const updatedRows = rowData?.map(({ productName, inventory, productId,  ...rest }) => rest);
-  const deleteRows= deletedRows?.map(({ productName, inventory, productId,  ...rest }) => rest);
+  const updatedRows = rowData?.map(
+    ({ productName, inventory, productId, ...rest }) => rest
+  );
+  const deleteRows = deletedRows?.map(
+    ({ productName, inventory, productId, ...rest }) => rest
+  );
 
   //post request
   const handleClick = async (event) => {
-    let finalAmount = parseFloat(totalAmount.toFixed(2))
+    let finalAmount = parseFloat(totalAmount.toFixed(2));
 
     event.preventDefault();
 
-      if (contactName) {
-        try {
-          const response = await fetch(apiUrl +'addQuoatation', {
-            method: 'POST',
-            headers: {
-    
-              'Content-Type': 'application/json'
+    if (contactName) {
+      try {
+        const response = await fetch(apiUrl + "addQuoatation", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            quotation: {
+              id: state?.id,
+              createdBy: userId,
+              ...(tempId && { tempUser: { id: tempId } }),
+              ...(userState && { companyuser: { id: userState } }),
+              contactPersonName: contactName,
+              contactPhoneNumber: phone,
+              status: status,
+              category: state?.category,
+              type: type,
+              deliveryAddress: address,
+              city: currentCity,
+              state: currentState,
+              country: currentCountry,
+              pinCode: zipcode,
+              deliveryDate: deliveryIST,
+              lastModifiedDate: new Date(),
+              lastModifiedByUser: { id: userId },
+              createdDate: state?.originalcreatedDate,
+              comments: comment,
+              termsAndCondition: terms,
+              totalAmount: finalAmount,
             },
-            body: JSON.stringify({
-              quotation:{
-                  id: state?.id,
-                  createdBy: userId,
-                  ...(tempId && { tempUser: { id: tempId } }),
-                  ...(userState && { companyuser: { id: userState } }),
-                  contactPersonName: contactName,
-                  contactPhoneNumber: phone,    
-                  status: status,
-                  category: state?.category ,
-                  type: type,
-                  deliveryAddress: address,
-                  city: currentCity,
-                  state: currentState,
-                  country: currentCountry,
-                  pinCode: zipcode,
-                  deliveryDate: deliveryIST,
-                  lastModifiedDate: new Date(),
-                  lastModifiedByUser: {id: userId},
-                  createdDate: state?.originalcreatedDate,
-                  comments : comment,
-                  termsAndCondition: terms,
-                  totalAmount: finalAmount,
-              },
-                  quotationDetails: updatedRows,
-                  deletedQuotationDetails: deleteRows
-          })
-          });
-          
-          if (response.ok) {
-            // Redirect to home page upon successful submission
-        
-           response.json().then(data => {
-            navigate('/dashboard/quotation/viewDetail', { state: data });
-            console.log(data)
-      
-    });
-          } 
-        } catch (error) {
-          console.error('API call failed:', error);
-        }
-      } 
-    
-    };
+            quotationDetails: updatedRows,
+            deletedQuotationDetails: deleteRows,
+          }),
+        });
 
+        if (response.ok) {
+          // Redirect to home page upon successful submission
+
+          response.json().then((data) => {
+            navigate("/dashboard/quotation/viewDetail", { state: data });
+            console.log(data);
+          });
+        }
+      } catch (error) {
+        console.error("API call failed:", error);
+      }
+    }
+  };
 
   return (
     <div style={{ minWidth: "100%" }}>
@@ -992,7 +998,9 @@ console.log(rowData)
                         <Grid xs={12} md={6}>
                           <TextField
                             fullWidth
-                            label="Part Name"
+                            label={
+                              modifyLabel ? "Model Weight Range" : "Part Name"
+                            }
                             name="name"
                             select
                             SelectProps={{
@@ -1073,7 +1081,7 @@ console.log(rowData)
                         <Grid xs={12} md={6}>
                           <TextField
                             fullWidth
-                            label="Quantity"
+                            label={modifyLabel ? "Piece" : "Quantity"}
                             name="quantity"
                             type="number"
                             value={quantity}
@@ -1095,7 +1103,7 @@ console.log(rowData)
                         <Grid xs={12} md={6}>
                           <TextField
                             fullWidth
-                            label="Size"
+                            label={modifyLabel ? "Unit" : "Size"}
                             name="size"
                             value={size}
                             onChange={(e) => setSize(e.target.value)}

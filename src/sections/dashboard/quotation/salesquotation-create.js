@@ -20,7 +20,7 @@ import {
 import { DatePicker } from "antd";
 import "./purchase-order.css";
 import IconWithPopup from "../user/user-icon";
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useContext } from "react";
 import axios from "axios";
 import moment from "moment/moment";
 import { primaryColor } from "src/primaryColor";
@@ -36,6 +36,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "moment-timezone";
 import { apiUrl } from "src/config";
 import Logo from "../logo/logo";
+import { LogoContext } from "src/utils/logoContext";
 import {
   fetchAccessToken,
   fetchCountries,
@@ -71,69 +72,7 @@ const userOptions = [
   },
 ];
 
-const tableHeader = [
-  {
-    id: "product_name",
-    name: "Part Description",
-    width: 200,
-  },
-  {
-    id: "hsn",
-    name: "HSN",
-    width: 100,
-  },
-  {
-    id: "quantity",
-    name: "Quantity",
-    width: 200,
-  },
-  {
-    id: "weight",
-    name: "Weight",
-    width: 150,
-  },
-  {
-    id: "size",
-    name: "Size",
-    width: 150,
-  },
-  {
-    id: "cost",
-    name: "Cost",
-    width: 150,
-  },
-  {
-    id: "cgst",
-    name: "CGST",
-    width: 150,
-  },
-  {
-    id: "sgst",
-    name: "SCGST",
-    width: 150,
-  },
-  {
-    id: "igst",
-    name: "IGST",
-    width: 150,
-  },
 
-  {
-    id: "amount",
-    name: "Net Amount",
-    width: 150,
-  },
-  {
-    id: "add",
-    name: "",
-    width: 50,
-  },
-  {
-    id: "delete",
-    name: "",
-    width: 50,
-  },
-];
 
 export const QuotationOrderCreateForm = (props) => {
   const [userData, setUserData] = useState([]);
@@ -187,6 +126,73 @@ export const QuotationOrderCreateForm = (props) => {
   const [currentState, setCurrentState] = useState("");
   const [currentCity, setCurrentCity] = useState("");
   const [zipcode, setZipcode] = useState("");
+
+  //change label based on company name
+  const { logo } = useContext(LogoContext);
+  const modifyLabel = logo?.company === "Alumentica";
+  const tableHeader = [
+    {
+      id: "product_name",
+      name: "Part Description",
+      width: 200,
+    },
+    {
+      id: "hsn",
+      name: "HSN",
+      width: 100,
+    },
+    {
+      id: "quantity",
+      name: modifyLabel ? "Piece" : "Quantity",
+      width: 200,
+    },
+    {
+      id: "weight",
+      name: "Weight",
+      width: 150,
+    },
+    {
+      id: "size",
+      name: modifyLabel ? "Unit" : "Size",
+      width: 150,
+    },
+    {
+      id: "cost",
+      name: "Cost",
+      width: 150,
+    },
+    {
+      id: "cgst",
+      name: "CGST",
+      width: 150,
+    },
+    {
+      id: "sgst",
+      name: "SGST",
+      width: 150,
+    },
+    {
+      id: "igst",
+      name: "IGST",
+      width: 150,
+    },
+
+    {
+      id: "amount",
+      name: "Net Amount",
+      width: 150,
+    },
+    {
+      id: "add",
+      name: "",
+      width: 50,
+    },
+    {
+      id: "delete",
+      name: "",
+      width: 50,
+    },
+  ];
 
   const location = useLocation();
 
@@ -882,7 +888,9 @@ export const QuotationOrderCreateForm = (props) => {
                         <Grid xs={12} md={6}>
                           <TextField
                             fullWidth
-                            label="Part Name"
+                            label={
+                              modifyLabel ? "Model Weight Range" : "Part Name"
+                            }
                             name="name"
                             select
                             SelectProps={{
@@ -965,7 +973,7 @@ export const QuotationOrderCreateForm = (props) => {
                         <Grid xs={12} md={6}>
                           <TextField
                             fullWidth
-                            label="Quantity"
+                            label={modifyLabel ? "Piece" : "Quantity"}
                             name="quantity"
                             required
                             type="number"
@@ -994,7 +1002,7 @@ export const QuotationOrderCreateForm = (props) => {
                         <Grid xs={12} md={6}>
                           <TextField
                             fullWidth
-                            label="Size"
+                            label={modifyLabel ? "Unit" : "Size"}
                             name="size"
                             required
                             value={size}

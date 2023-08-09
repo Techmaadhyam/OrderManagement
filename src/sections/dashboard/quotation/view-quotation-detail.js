@@ -21,11 +21,11 @@ import ArrowCircleLeftOutlinedIcon from '@mui/icons-material/ArrowCircleLeftOutl
 import IconWithPopup from '../user/user-icon';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
-import { useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 import { apiUrl } from 'src/config';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../logo/logo';
-
+  import { LogoContext } from "src/utils/logoContext";
 
 
 
@@ -37,22 +37,24 @@ export const ViewQuotationDetail = (props) => {
   const location = useLocation();
   const navigate = useNavigate();
   const state = location.state;
-console.log(state)
+  console.log(state);
 
-  const [tempuser, setTempuser] =useState([])
-  const [rowData, setRowData] =useState()
+  const [tempuser, setTempuser] = useState([]);
+  const [rowData, setRowData] = useState();
+  //change label based on company name
+  const { logo } = useContext(LogoContext);
+  const modifyLabel = logo?.company === "Alumentica";
 
-
-  const align = 'horizontal' 
+  const align = "horizontal";
 
   const columns = [
     {
-      title: 'Part Description',
-      dataIndex: 'description',
-      key: 'description',
+      title: "Part Description",
+      dataIndex: "description",
+      key: "description",
       render: (name, record) => {
         let handleNavigation;
-  
+
         if (
           state?.category === "Purchase Quotation" ||
           state?.quotation?.category === "Purchase Quotation"
@@ -64,20 +66,18 @@ console.log(state)
           };
         } else {
           handleNavigation = () => {
-            navigate(
-              `/dashboard/inventory/viewDetail/${record?.inventoryId}`,
-              { state: record }
-            );
+            navigate(`/dashboard/inventory/viewDetail/${record?.inventoryId}`, {
+              state: record,
+            });
           };
         }
-  
+
         return (
           <Link
             color="primary"
             onClick={handleNavigation}
             sx={{
-              alignItems: 'center',
-      
+              alignItems: "center",
             }}
             underline="hover"
           >
@@ -87,67 +87,66 @@ console.log(state)
       },
     },
     {
-        title: 'Quantity',
-        dataIndex: 'quantity',
-        key: 'quantity',
-      },
-    {
-      title: 'Weight',
-      dataIndex: 'weight',
-      key: 'weight',
+      title: modifyLabel ? "Piece" : "Quantity",
+      dataIndex: "quantity",
+      key: "quantity",
     },
     {
-      title: 'Size',
-      dataIndex: 'size',
-      key: 'size',
+      title: "Weight",
+      dataIndex: "weight",
+      key: "weight",
     },
-    
     {
-      title: 'Cost',
-      key: 'price',
-      dataIndex: 'price',
+      title: modifyLabel ? "Unit" : "Size",
+      dataIndex: "size",
+      key: "size",
     },
-      {
-        title: 'CGST',
-        key: 'cgst',
-        dataIndex: 'cgst',
-      },
-      {
-        title: 'SGST',
-        key: 'sgst',
-        dataIndex: 'sgst',
-      },
-      {
-        title: 'IGST',
-        key: 'igst',
-        dataIndex: 'igst',
-      },
-      {
-        title: 'Net Amount',
-        key: 'netAmount',
-        dataIndex: 'netAmount',
-      },
-   
+
+    {
+      title: "Cost",
+      key: "price",
+      dataIndex: "price",
+    },
+    {
+      title: "CGST",
+      key: "cgst",
+      dataIndex: "cgst",
+    },
+    {
+      title: "SGST",
+      key: "sgst",
+      dataIndex: "sgst",
+    },
+    {
+      title: "IGST",
+      key: "igst",
+      dataIndex: "igst",
+    },
+    {
+      title: "Net Amount",
+      key: "netAmount",
+      dataIndex: "netAmount",
+    },
   ];
-  
-  
-  const columns2=[
+
+  const columns2 = [
     {
-      title: 'Part Description',
-      dataIndex: 'description',
-      key: 'description',
+      title: "Part Description",
+      dataIndex: "description",
+      key: "description",
       render: (name, record) => {
         const handleNavigation = () => {
-          navigate(`/dashboard/products/viewDetail/${record.productId}`, { state: record } );
+          navigate(`/dashboard/products/viewDetail/${record.productId}`, {
+            state: record,
+          });
         };
-        
+
         return (
           <Link
             color="primary"
             onClick={handleNavigation}
             sx={{
-              alignItems: 'center',
-       
+              alignItems: "center",
             }}
             underline="hover"
           >
@@ -157,73 +156,79 @@ console.log(state)
       },
     },
     {
-      title:'No. Of Workstations',
-      dataIndex:'workstationCount',
-      key: 'workstationCount',
-  },
-    {
-      title: 'Cost',
-      dataIndex: 'price',
-      key: 'price',
+      title: "No. Of Workstations",
+      dataIndex: "workstationCount",
+      key: "workstationCount",
     },
     {
-      dataIndex:'igst',
-      title:'IGST',
-     key: 'igst',
-  },
-  {
-    title: 'Net Amount',
-    key: 'netAmount2',
-    dataIndex: 'netAmount2',
-  },
-  
+      title: "Cost",
+      dataIndex: "price",
+      key: "price",
+    },
+    {
+      dataIndex: "igst",
+      title: "IGST",
+      key: "igst",
+    },
+    {
+      title: "Net Amount",
+      key: "netAmount2",
+      dataIndex: "netAmount2",
+    },
   ];
-  
 
   useEffect(() => {
-
-    axios.get(apiUrl +`getTempUserById/${state?.tempUserId || state?.quotation?.tempUserId}`)
-      .then(response => {
-       setTempuser(response.data)
+    axios
+      .get(
+        apiUrl +
+          `getTempUserById/${state?.tempUserId || state?.quotation?.tempUserId}`
+      )
+      .then((response) => {
+        setTempuser(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
   }, [state?.quotation?.tempUserId, state?.tempUserId]);
 
   useEffect(() => {
-    axios.get(apiUrl +`getAllQuotationDetails/${state?.id || state?.quotation?.id}`)
-      .then(response => {
-        const modifiedData = response.data.map(item => {
-          const { quantity, price, cgst, igst, sgst, workstationCount  } = item;
+    axios
+      .get(
+        apiUrl + `getAllQuotationDetails/${state?.id || state?.quotation?.id}`
+      )
+      .then((response) => {
+        const modifiedData = response.data.map((item) => {
+          const { quantity, price, cgst, igst, sgst, workstationCount } = item;
           const netAmount = (
-            (quantity * price) +
-            ((quantity * price) * cgst / 100) +
-            ((quantity * price) * igst / 100) +
-            ((quantity * price) * sgst / 100)
+            quantity * price +
+            (quantity * price * cgst) / 100 +
+            (quantity * price * igst) / 100 +
+            (quantity * price * sgst) / 100
           ).toFixed(2);
 
           const netAmount2 = (
-            ((workstationCount * price) +
-            ((workstationCount * price) * igst/ 100)).toFixed(2)
-              )
-  
-          return { ...item, netAmount , netAmount2 };
+            workstationCount * price +
+            (workstationCount * price * igst) / 100
+          ).toFixed(2);
+
+          return { ...item, netAmount, netAmount2 };
         });
 
-        const updatedData = modifiedData.map(obj => {
+        const updatedData = modifiedData.map((obj) => {
           let parsedProduct;
           let parsedInventory;
           try {
             parsedProduct = obj.product;
             parsedInventory = obj.inventory;
-          console.log(parsedInventory);
-            
+            console.log(parsedInventory);
           } catch (error) {
-            console.error("Error parsing inventory JSON for object:", obj, error);
-           
+            console.error(
+              "Error parsing inventory JSON for object:",
+              obj,
+              error
+            );
           }
-  
+
           return {
             ...obj,
             productName: parsedProduct?.productName,
@@ -232,33 +237,30 @@ console.log(state)
             inventoryId: parsedInventory?.id,
             warehouseId: parsedInventory?.warehouseId,
             productId: parsedProduct?.id || parsedInventory?.product?.id,
-
-
           };
         });
-  
+
         setRowData(updatedData);
-      
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
   }, [state?.id, state?.quotation?.id]);
 
-   console.log(rowData);
+  console.log(rowData);
 
   function formatDate(dateString) {
     const parsedDate = new Date(dateString);
     const year = parsedDate.getFullYear();
-    const month = String(parsedDate.getMonth() + 1).padStart(2, '0');
-    const day = String(parsedDate.getDate()).padStart(2, '0');
+    const month = String(parsedDate.getMonth() + 1).padStart(2, "0");
+    const day = String(parsedDate.getDate()).padStart(2, "0");
     return `${year}/${month}/${day}`;
   }
   const formattedDate = formatDate(state?.quotation?.deliveryDate);
   const startdate = formatDate(state?.quotation?.startdate);
   const enddate = formatDate(state?.quotation?.enddate);
 
-  console.log(rowData)
+  console.log(rowData);
 
   return (
     <div style={{ minWidth: "100%", marginTop: "1rem" }}>

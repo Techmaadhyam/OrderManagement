@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import {
   Card,
   Divider,
@@ -8,34 +8,29 @@ import {
   Grid,
   Icon,
   IconButton,
-  TextField
-} from '@mui/material';
-import './sales-order.css'
-import {  Box } from '@mui/system';
-import { PropertyList } from 'src/components/property-list';
-import { PropertyListItem } from 'src/components/property-list-item';
-import { useState } from 'react';
-import { RouterLink } from 'src/components/router-link';
-import { paths } from 'src/paths';
-import { Scrollbar } from 'src/components/scrollbar';
-import { Table } from 'antd';
-import { primaryColor } from 'src/primaryColor';
-import ArrowCircleLeftOutlinedIcon from '@mui/icons-material/ArrowCircleLeftOutlined';
-import IconWithPopup from '../user/user-icon';
-import { useLocation } from 'react-router-dom';
-import axios from 'axios';
-import { useEffect } from 'react';
-import { apiUrl } from 'src/config';
-import { useNavigate } from 'react-router-dom';
-import Logo from '../logo/logo';
+  TextField,
+} from "@mui/material";
+import "./sales-order.css";
+import { Box } from "@mui/system";
+import { PropertyList } from "src/components/property-list";
+import { PropertyListItem } from "src/components/property-list-item";
+import { useState } from "react";
+import { RouterLink } from "src/components/router-link";
+import { paths } from "src/paths";
+import { Scrollbar } from "src/components/scrollbar";
+import { Table } from "antd";
+import { primaryColor } from "src/primaryColor";
+import ArrowCircleLeftOutlinedIcon from "@mui/icons-material/ArrowCircleLeftOutlined";
+import IconWithPopup from "../user/user-icon";
+import { useLocation } from "react-router-dom";
+import axios from "axios";
+import { useEffect, useContext } from "react";
+import { apiUrl } from "src/config";
+import { useNavigate } from "react-router-dom";
+import Logo from "../logo/logo";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
-
-
-
-
-
-
+import { LogoContext } from "src/utils/logoContext";
 
 const userId = sessionStorage.getItem("user") || localStorage.getItem("user");
 
@@ -43,55 +38,53 @@ export const ViewSalesOrder = (props) => {
   const location = useLocation();
   const state = location.state;
 
-  console.log(state)
+  console.log(state);
 
-
-
-
-  const [tempuser, setTempuser] =useState([])
-  const [rowData, setRowData] = useState()
-     const [isEditable, setIsEditable] = useState(false);
+  const [tempuser, setTempuser] = useState([]);
+  const [rowData, setRowData] = useState();
+  const [isEditable, setIsEditable] = useState(false);
   const [paidAmount, setPaidAmount] = useState(
     state?.paidamount || state?.soRecord?.paidamount || 0
   );
-      const [tempId, setTempId] = useState(state?.tempUser?.id);
-      const [userState, setUserState] = useState(state?.companyuser?.id);
-      const [updatedRows, setUpdatedRows] = useState([]);
+  const [tempId, setTempId] = useState(state?.tempUser?.id);
+  const [userState, setUserState] = useState(state?.companyuser?.id);
+  const [updatedRows, setUpdatedRows] = useState([]);
 
   const navigate = useNavigate();
 
-  const align = 'horizontal'
+  //change label based on company name
+  const { logo } = useContext(LogoContext);
+  const modifyLabel = logo?.company === "Alumentica";
 
-   const handleEditClick = () => {
-     setIsEditable(true);
+  const align = "horizontal";
+
+  const handleEditClick = () => {
+    setIsEditable(true);
   };
-  
-
 
   const convertedArray = updatedRows.map((obj) => {
-
-  return {
-    inventory: { id: obj.inventoryId },
-    sgst: obj.sgst,
-    igst: obj.sgst,
-    cgst: obj.cgst,
-    discountpercent: obj.discountpercent,
-    weight: obj.weight,
-    price: obj.price,
-    description: obj.description,
-    comments: state?.comments,
-    size: obj.size,
-    salesOrderId: obj.salesOrderId,
-    quantity: obj.quantity,
-    createdDate: obj.createdDate,
-    createdBy: userId,
-    lastModifiedDate: obj.lastModifiedDate,
-    id: obj.id,
-  };
-});
-   const handleSaveClick = async() => {
-     setIsEditable(false);
-   if (paidAmount) {
+    return {
+      inventory: { id: obj.inventoryId },
+      sgst: obj.sgst,
+      igst: obj.sgst,
+      cgst: obj.cgst,
+      discountpercent: obj.discountpercent,
+      weight: obj.weight,
+      price: obj.price,
+      description: obj.description,
+      comments: state?.comments,
+      size: obj.size,
+      salesOrderId: obj.salesOrderId,
+      quantity: obj.quantity,
+      createdDate: obj.createdDate,
+      createdBy: userId,
+      lastModifiedDate: obj.lastModifiedDate,
+      id: obj.id,
+    };
+  });
+  const handleSaveClick = async () => {
+    setIsEditable(false);
+    if (paidAmount) {
       try {
         const response = await fetch(apiUrl + "createSalesOrder", {
           method: "POST",
@@ -140,150 +133,154 @@ export const ViewSalesOrder = (props) => {
       } catch (error) {
         console.error("API call failed:", error);
       }
-    };
-   };
-
+    }
+  };
 
   useEffect(() => {
-    axios.get(apiUrl +`getTempUserById/${state?.tempUserId || state?.soRecord?.tempUserId || state?.userId}`)
-      .then(response => {
-       setTempuser(response.data)
+    axios
+      .get(
+        apiUrl +
+          `getTempUserById/${
+            state?.tempUserId || state?.soRecord?.tempUserId || state?.userId
+          }`
+      )
+      .then((response) => {
+        setTempuser(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
   }, [state?.tempUserId, state?.soRecord?.tempUserId, state?.userId]);
 
   useEffect(() => {
-    axios.get(apiUrl +`getAllSalesOrderDetails/${state?.id || state?.soRecord?.id}`)
-      .then(response => {
-        const modifiedData = response.data.map(item => {
+    axios
+      .get(
+        apiUrl + `getAllSalesOrderDetails/${state?.id || state?.soRecord?.id}`
+      )
+      .then((response) => {
+        const modifiedData = response.data.map((item) => {
           const { quantity, price, cgst, igst, sgst, discountpercent } = item;
-          const netAmount = (
-            (quantity * price) +
-            ((quantity * price) * cgst / 100) +
-            ((quantity * price) * igst / 100) +
-            ((quantity * price) * sgst / 100)
-          )
+          const netAmount =
+            quantity * price +
+            (quantity * price * cgst) / 100 +
+            (quantity * price * igst) / 100 +
+            (quantity * price * sgst) / 100;
 
-             const discountedAmount =
-               netAmount - (netAmount * discountpercent) / 100;
-  
+          const discountedAmount =
+            netAmount - (netAmount * discountpercent) / 100;
+
           return {
             ...item,
             netAmount: parseFloat(discountedAmount.toFixed(2)),
           };
         });
 
-        const updatedData = modifiedData.map(obj => {
+        const updatedData = modifiedData.map((obj) => {
           let parsedInventory;
           try {
             parsedInventory = obj.inventory;
-   
-            
           } catch (error) {
-            console.error("Error parsing inventory JSON for object:", obj, error);
-           
+            console.error(
+              "Error parsing inventory JSON for object:",
+              obj,
+              error
+            );
           }
-  
+
           return {
             ...obj,
             inventoryId: parsedInventory.id,
             productId: parsedInventory?.product?.id,
           };
         });
-  
+
         setRowData(updatedData);
-         setUpdatedRows(updatedData);
-      
+        setUpdatedRows(updatedData);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
   }, [state?.id, state?.soRecord?.id]);
 
-  console.log(rowData)
+  console.log(rowData);
 
   function formatDate(dateString) {
     const parsedDate = new Date(dateString);
     const year = parsedDate.getFullYear();
-    const month = String(parsedDate.getMonth() + 1).padStart(2, '0');
-    const day = String(parsedDate.getDate()).padStart(2, '0');
+    const month = String(parsedDate.getMonth() + 1).padStart(2, "0");
+    const day = String(parsedDate.getDate()).padStart(2, "0");
     return `${year}/${month}/${day}`;
   }
   const formattedDate = formatDate(state?.soRecord?.deliveryDate);
 
-  
-const columns = [
-  {
-    title: 'Part Description',
-    dataIndex: 'description',
-    key: 'description',
-    render: (name, record) => {
-      const handleNavigation = () => {
-        navigate(`/dashboard/inventory/viewDetail/${record.inventoryId}`, { state: record } );
-      };
-      
-      return (
-        <Link
-          color="primary"
-          onClick={handleNavigation}
-          sx={{
-            alignItems: 'center',
-       
-          }}
-          underline="hover"
-        >
-          <Typography variant="subtitle2">{name}</Typography>
-        </Link>
-      );
-    },
-  },
-  {
-      title: 'Quantity',
-      dataIndex: 'quantity',
-      key: 'quantity',
-    },
-  {
-    title: 'Weight',
-    dataIndex: 'weight',
-    key: 'weight',
-  },
-  {
-    title: 'Size',
-    dataIndex: 'size',
-    key: 'size',
-  },
-  
-  {
-    title: 'Cost',
-    key: 'price',
-    dataIndex: 'price',
-  },
+  const columns = [
     {
-      title: 'CGST',
-      key: 'cgst',
-      dataIndex: 'cgst',
-    },
-    {
-      title: 'SGST',
-      key: 'sgst',
-      dataIndex: 'sgst',
-    },
-    {
-      title: 'IGST',
-      key: 'igst',
-      dataIndex: 'igst',
-    },
-    {
-      title: 'Net Amount',
-      key: 'netAmount',
-      dataIndex: 'netAmount',
-    },
-  
-];
+      title: "Part Description",
+      dataIndex: "description",
+      key: "description",
+      render: (name, record) => {
+        const handleNavigation = () => {
+          navigate(`/dashboard/inventory/viewDetail/${record.inventoryId}`, {
+            state: record,
+          });
+        };
 
+        return (
+          <Link
+            color="primary"
+            onClick={handleNavigation}
+            sx={{
+              alignItems: "center",
+            }}
+            underline="hover"
+          >
+            <Typography variant="subtitle2">{name}</Typography>
+          </Link>
+        );
+      },
+    },
+    {
+      title: modifyLabel ? "Piece" : "Quantity",
+      dataIndex: "quantity",
+      key: "quantity",
+    },
+    {
+      title: "Weight",
+      dataIndex: "weight",
+      key: "weight",
+    },
+    {
+      title: modifyLabel ? "Unit" : "Size",
+      dataIndex: "size",
+      key: "size",
+    },
 
+    {
+      title: "Cost",
+      key: "price",
+      dataIndex: "price",
+    },
+    {
+      title: "CGST",
+      key: "cgst",
+      dataIndex: "cgst",
+    },
+    {
+      title: "SGST",
+      key: "sgst",
+      dataIndex: "sgst",
+    },
+    {
+      title: "IGST",
+      key: "igst",
+      dataIndex: "igst",
+    },
+    {
+      title: "Net Amount",
+      key: "netAmount",
+      dataIndex: "netAmount",
+    },
+  ];
 
   return (
     <div style={{ minWidth: "100%", marginTop: "1rem" }}>
@@ -353,9 +350,7 @@ const columns = [
           <PropertyListItem
             align={align}
             label="Quotation"
-            value={String(
-              state?.quotid || state?.soRecord?.quotid || "Empty"
-            )}
+            value={String(state?.quotid || state?.soRecord?.quotid || "Empty")}
           />
           <Divider />
           <PropertyListItem
@@ -458,7 +453,8 @@ const columns = [
                 </IconButton>
               )}
             </Typography>
-          </Grid>)}
+          </Grid>
+        )}
         <Grid style={{ marginTop: "20px" }}>
           <Typography
             style={{
@@ -493,5 +489,5 @@ const columns = [
 };
 
 ViewSalesOrder.propTypes = {
-  customer: PropTypes.object.isRequired
+  customer: PropTypes.object.isRequired,
 };

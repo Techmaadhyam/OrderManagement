@@ -55,6 +55,7 @@ export const CreateInventory = (props) => {
   const [weight, setWeight] = useState("");
   const [createdDate, setCreatedDate] = useState("");
   const [quantity, setQuantity] = useState("");
+  const [bundle, setBundle]=useState("")
   const [cost, setCost] = useState("");
   const [sgst, setSgst] = useState("");
   const [igst, setIgst] = useState("");
@@ -174,6 +175,9 @@ export const CreateInventory = (props) => {
       case "weight":
         setWeight(value);
         break;
+      case "bundle":
+        setBundle(value);
+        break;
       case "quantity":
         setQuantity(value);
         break;
@@ -271,6 +275,7 @@ export const CreateInventory = (props) => {
         description: description,
         createdBy: parseFloat(userId),
         product: { id: selectedId },
+        //bundleno: bundle,
         purchaseOrderId: purchaseId,
 
         sgst: parseFloat(sgst) || 0,
@@ -302,7 +307,7 @@ export const CreateInventory = (props) => {
         price: parseFloat(cost),
         description: description,
         createdBy: parseFloat(userId),
-        //productId: selectedId,
+        //bundleno: bundle,
         product: { id: selectedId },
         purchaseOrderId: purchaseId,
 
@@ -507,7 +512,7 @@ export const CreateInventory = (props) => {
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
-                  label="Model"
+                  label={modifyLabel ? "Model Cutting Length" : "Model"}
                   name="category"
                   required
                   select
@@ -647,8 +652,9 @@ export const CreateInventory = (props) => {
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
-                  label={modifyLabel ? "Model cutting length" : "Size"}
+                  label={modifyLabel ? "Unit" : "Size"}
                   name="size"
+              
                   value={size}
                   onChange={handleInputChange}
                 />
@@ -666,7 +672,7 @@ export const CreateInventory = (props) => {
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
-                  label="Quantity"
+                  label={modifyLabel ? "Peice" : "Quantity"}
                   name="quantity"
                   type="number"
                   required
@@ -674,6 +680,18 @@ export const CreateInventory = (props) => {
                   onChange={handleInputChange}
                 />
               </Grid>
+              {modifyLabel && (
+                <Grid xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label="Bundle No"
+                    name="bundle"
+                    required
+                    value={bundle}
+                    onChange={handleInputChange}
+                  />
+                </Grid>
+              )}
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth

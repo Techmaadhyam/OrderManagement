@@ -20,7 +20,7 @@ import {
 import { DatePicker } from "antd";
 import "./sales-order.css";
 import IconWithPopup from "../user/user-icon";
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useContext } from "react";
 import axios from "axios";
 import { primaryColor } from "src/primaryColor";
 import EditIcon from "@mui/icons-material/Edit";
@@ -34,6 +34,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "moment-timezone";
 import { apiUrl } from "src/config";
 import Logo from "../logo/logo";
+import { LogoContext } from "src/utils/logoContext";
 import {
   fetchAccessToken,
   fetchCountries,
@@ -69,64 +70,6 @@ const userOptions = [
   },
 ];
 
-const tableHeader = [
-  {
-    id: "product_name",
-    name: "Part Description",
-    width: 200,
-  },
-  {
-    id: "quantity",
-    name: "Quantity",
-    width: 200,
-  },
-  {
-    id: "weight",
-    name: "Weight",
-    width: 150,
-  },
-  {
-    id: "size",
-    name: "Size",
-    width: 150,
-  },
-  {
-    id: "cost",
-    name: "Cost",
-    width: 150,
-  },
-  {
-    id: "cgst",
-    name: "CGST",
-    width: 150,
-  },
-  {
-    id: "sgst",
-    name: "SCGST",
-    width: 150,
-  },
-  {
-    id: "igst",
-    name: "IGST",
-    width: 150,
-  },
-
-  {
-    id: "amount",
-    name: "Net Amount",
-    width: 150,
-  },
-  {
-    id: "add",
-    name: "",
-    width: 50,
-  },
-  {
-    id: "delete",
-    name: "",
-    width: 50,
-  },
-];
 
 export const SalesOrderCreateForm = (props) => {
   const [userData, setUserData] = useState([]);
@@ -163,7 +106,7 @@ export const SalesOrderCreateForm = (props) => {
   const [totalCgst, setTotalCgst] = useState(0);
   const [totalIgst, setTotalIgst] = useState(0);
   const [totalSgst, setTotalSgst] = useState(0);
-   const [totalCost, setTotalCost] = useState(0);
+  const [totalCost, setTotalCost] = useState(0);
 
   const [rows, setRows] = useState([]);
   const [showForm, setShowForm] = useState(false);
@@ -189,6 +132,69 @@ export const SalesOrderCreateForm = (props) => {
   const [currentCity, setCurrentCity] = useState("");
   const [zipcode, setZipcode] = useState("");
 
+  //change label based on company name
+  const { logo } = useContext(LogoContext);
+  const modifyLabel = logo?.company === "Alumentica";
+
+  const tableHeader = [
+    {
+      id: "product_name",
+      name: "Part Description",
+      width: 200,
+    },
+    {
+      id: "quantity",
+      name: modifyLabel ? "Piece" : "Quantity",
+      width: 200,
+    },
+    {
+      id: "weight",
+      name: "Weight",
+      width: 150,
+    },
+    {
+      id: "size",
+      name: modifyLabel ? "Unit" : "Size",
+      width: 150,
+    },
+    {
+      id: "cost",
+      name: "Cost",
+      width: 150,
+    },
+    {
+      id: "cgst",
+      name: "CGST",
+      width: 150,
+    },
+    {
+      id: "sgst",
+      name: "SCGST",
+      width: 150,
+    },
+    {
+      id: "igst",
+      name: "IGST",
+      width: 150,
+    },
+
+    {
+      id: "amount",
+      name: "Net Amount",
+      width: 150,
+    },
+    {
+      id: "add",
+      name: "",
+      width: 50,
+    },
+    {
+      id: "delete",
+      name: "",
+      width: 50,
+    },
+  ];
+
   //currentdate
   useEffect(() => {
     const today = new Date();
@@ -207,7 +213,7 @@ export const SalesOrderCreateForm = (props) => {
         setAccessToken(accessToken);
       } catch (error) {
         console.error(error);
-       setTimeout(fetchData, 500);
+        setTimeout(fetchData, 500);
       }
     };
 
@@ -437,19 +443,19 @@ export const SalesOrderCreateForm = (props) => {
       return total + sgstAmount;
     }, 0);
 
- const calcTotalCost = updatedRows.reduce((total, row) => {
-   const discountFactor =
-     row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
-   const discountedPrice = row.price * discountFactor;
-   const cost = row.quantity * discountedPrice;
-   return total + cost;
- }, 0);
+    const calcTotalCost = updatedRows.reduce((total, row) => {
+      const discountFactor =
+        row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+      const discountedPrice = row.price * discountFactor;
+      const cost = row.quantity * discountedPrice;
+      return total + cost;
+    }, 0);
 
- setTotalAmount(calculatedTotalAmount);
- setTotalCgst(calcTotalCgst);
- setTotalIgst(calcTotalIgst);
- setTotalSgst(calcTotalSgst);
- setTotalCost(calcTotalCost);
+    setTotalAmount(calculatedTotalAmount);
+    setTotalCgst(calcTotalCgst);
+    setTotalIgst(calcTotalIgst);
+    setTotalSgst(calcTotalSgst);
+    setTotalCost(calcTotalCost);
   };
 
   const toggleForm = () => {
@@ -489,7 +495,14 @@ export const SalesOrderCreateForm = (props) => {
       return;
     }
 
-    if (quantity && price && inventoryId && description && weight && (cgst && sgst || igst)) {
+    if (
+      quantity &&
+      price &&
+      inventoryId &&
+      description &&
+      weight &&
+      ((cgst && sgst) || igst)
+    ) {
       const newRow = {
         //inventoryId: inventoryId,
         inventory: { id: inventoryId },
@@ -562,7 +575,7 @@ export const SalesOrderCreateForm = (props) => {
         const discountFactor =
           row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
         const discountedPrice = row.price * discountFactor;
-        const cost = (row.quantity * discountedPrice)
+        const cost = row.quantity * discountedPrice;
         return total + cost;
       }, 0);
 
@@ -570,7 +583,7 @@ export const SalesOrderCreateForm = (props) => {
       setTotalCgst(calcTotalCgst);
       setTotalIgst(calcTotalIgst);
       setTotalSgst(calcTotalSgst);
-      setTotalCost(calcTotalCost)
+      setTotalCost(calcTotalCost);
     } else {
       notify("error", "Please fill all the fields marked with *.");
     }
@@ -1034,7 +1047,9 @@ export const SalesOrderCreateForm = (props) => {
                         <Grid xs={12} md={6}>
                           <TextField
                             fullWidth
-                            label="Part Name"
+                            label={
+                              modifyLabel ? "Model Weight Range" : "Part Name"
+                            }
                             name="name"
                             select
                             SelectProps={{
@@ -1131,7 +1146,7 @@ export const SalesOrderCreateForm = (props) => {
                           <TextField
                             fullWidth
                             required
-                            label="Quantity"
+                            label={modifyLabel ? "Piece" : "Quantity"}
                             name="quantity"
                             type="number"
                             value={quantity}
@@ -1158,7 +1173,7 @@ export const SalesOrderCreateForm = (props) => {
                         <Grid xs={12} md={6}>
                           <TextField
                             fullWidth
-                            label="Size"
+                            label={modifyLabel ? "Unit" : "Size"}
                             name="size"
                             required
                             value={size}

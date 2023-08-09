@@ -20,7 +20,7 @@ import {
 import { DatePicker } from "antd";
 import "./purchase-order.css";
 import IconWithPopup from "../user/user-icon";
-import { useState, useEffect } from "react";
+import { useState, useEffect ,useContext} from "react";
 import axios from "axios";
 import { primaryColor } from "src/primaryColor";
 import EditIcon from "@mui/icons-material/Edit";
@@ -33,6 +33,7 @@ import "moment-timezone";
 import { apiUrl } from "src/config";
 import Logo from "../logo/logo";
 import { ToastContainer, toast } from "react-toastify";
+  import { LogoContext } from "src/utils/logoContext";
 
 //get userId
 const userId = parseInt(
@@ -146,8 +147,11 @@ export const AmcCreateForm = (props) => {
 
   const [totalAmount, setTotalAmount] = useState(0);
   const [totalIgst, setTotalIgst] = useState(0);
-    const [totalCost, setTotalCost] = useState(0);
+  const [totalCost, setTotalCost] = useState(0);
   const [touched, setTouched] = useState(false);
+  //change label based on company name
+  const { logo } = useContext(LogoContext);
+  const modifyLabel = logo?.company === "Alumentica";
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -188,18 +192,18 @@ export const AmcCreateForm = (props) => {
     }
   };
 
-    const notify = (type, message) => {
-      toast[type](message, {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-    };
+  const notify = (type, message) => {
+    toast[type](message, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  };
   //email validation
   const handleBlur = () => {
     setTouched(true);
@@ -272,19 +276,19 @@ export const AmcCreateForm = (props) => {
       return total + igstAmount;
     }, 0);
 
-           const calcTotalCost = updatedRows.reduce((total, row) => {
-             const discountFactor =
-               row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
-             const discountedPrice = row.unitPrice * discountFactor;
+    const calcTotalCost = updatedRows.reduce((total, row) => {
+      const discountFactor =
+        row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+      const discountedPrice = row.unitPrice * discountFactor;
 
-             const cost = row.workstationcount * discountedPrice;
+      const cost = row.workstationcount * discountedPrice;
 
-             return total + cost;
-           }, 0);
+      return total + cost;
+    }, 0);
 
-           setTotalAmount(calculatedTotalAmount);
-           setTotalIgst(calcTotalIgst);
-           setTotalCost(calcTotalCost);
+    setTotalAmount(calculatedTotalAmount);
+    setTotalIgst(calcTotalIgst);
+    setTotalCost(calcTotalCost);
   };
 
   //show/hide popup form
@@ -353,21 +357,21 @@ export const AmcCreateForm = (props) => {
         return total + igstAmount;
       }, 0);
 
-       const calcTotalCost = updatedRows.reduce((total, row) => {
-         const discountFactor =
-           row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
-         const discountedPrice = row.unitPrice * discountFactor;
+      const calcTotalCost = updatedRows.reduce((total, row) => {
+        const discountFactor =
+          row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+        const discountedPrice = row.unitPrice * discountFactor;
 
-         const cost = row.workstationcount * discountedPrice;
+        const cost = row.workstationcount * discountedPrice;
 
-         return total + cost;
-       }, 0);
+        return total + cost;
+      }, 0);
 
-       setTotalAmount(calculatedTotalAmount);
-       setTotalIgst(calcTotalIgst);
-       setTotalCost(calcTotalCost);
+      setTotalAmount(calculatedTotalAmount);
+      setTotalIgst(calcTotalIgst);
+      setTotalCost(calcTotalCost);
     } else {
-       notify("error", "Please fill all the fields marked with *.");
+      notify("error", "Please fill all the fields marked with *.");
     }
   };
 
@@ -431,7 +435,6 @@ export const AmcCreateForm = (props) => {
       technician &&
       updatedRows &&
       status &&
-
       deliveryIST &&
       deliveryIST2 &&
       tempId
@@ -480,8 +483,8 @@ export const AmcCreateForm = (props) => {
           // Redirect to home page upon successful submission
 
           response.json().then((data) => {
-              const updatedData = { ...data, showpaid: true };
-              navigate("/dashboard/services/amcDetail", { state: updatedData });
+            const updatedData = { ...data, showpaid: true };
+            navigate("/dashboard/services/amcDetail", { state: updatedData });
           });
         }
       } catch (error) {
@@ -497,7 +500,6 @@ export const AmcCreateForm = (props) => {
       adminEmail &&
       type &&
       technician &&
-
       status &&
       updatedRows &&
       deliveryIST &&
@@ -821,7 +823,9 @@ export const AmcCreateForm = (props) => {
                         <Grid xs={12} md={6}>
                           <TextField
                             fullWidth
-                            label="Part Name"
+                            label={
+                              modifyLabel ? "Model Weight Range" : "Part Name"
+                            }
                             name="name"
                             select
                             SelectProps={{

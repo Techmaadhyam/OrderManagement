@@ -21,7 +21,7 @@ import {
 import { DatePicker } from 'antd';
 import './sales-order.css'
 import IconWithPopup from '../user/user-icon';
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useContext } from 'react';
 import axios from 'axios';
 import moment from 'moment';
 import { primaryColor } from 'src/primaryColor';
@@ -37,6 +37,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { apiUrl } from 'src/config';
 import Logo from '../logo/logo';
+import { LogoContext } from "src/utils/logoContext";
 
 
 
@@ -69,148 +70,148 @@ const userOptions = [
  
 ];
 
-const tableHeader=[
-  {
-      id:'product_name',
-      name:'Part Description',
-      width: 200,
-      
-  },
-  {
-      id:'quantity',
-      name:'Quantity',
-      width: 200,
-  },
-  {
-      id:'weight',
-      name:'Weight',
-      width: 150,
-  },
-  {
-    id:'size',
-    name:'Size',
-    width: 150,
-},
-  {
-      id:'cost',
-      name:'Cost',
-      width: 150,
-  },
-  {
-      id:'cgst',
-      name:'CGST',
-      width: 150,
-  },
-  {
-    id:'sgst',
-    name:'SCGST',
-    width: 150,
-},
-  {
-    id:'igst',
-    name:'IGST',
-    width: 150,
-},
-  {
-    id:'amount',
-    name:'Net Amount',
-    width: 150,
-},
-  {
-      id:'add',
-      name:'',
-      width: 50,
-  },
-  {
-      id:'delete',
-      name:'',
-      width: 50,
-  }
-];
+
 
 export const SalesOrderEditForm = (props) => {
-
   const location = useLocation();
   const state = location.state;
 
-  console.log(state)
+  console.log(state);
 
-
-
-  const [userData, setUserData]= useState([])
+  const [userData, setUserData] = useState([]);
   const navigate = useNavigate();
-//form state handeling
+  //form state handeling
 
-const [type, setType] = useState(state?.type||"");
-const [quotation, setQuotation] = useState(state?.quotid||'');
-const [deliveryDate, setDeliveryDate] = useState(dayjs(state?.originalDeliveryDate|| ''));
-const [status, setStatus] = useState(state?.status || "");
-const [contactName,setContactName] = useState(state?.contactPerson||'')
-const [phone, setPhone] = useState(state?.contactPhone||'');
-const [address, setAddress] = useState(state?.deliveryAddress || "");
-const [tempId, setTempId] = useState(state?.tempUser?.id);
-const [userState, setUserState] = useState(state?.companyuser?.id);
-const [terms, setTerms] = useState(state?.termsAndCondition || '');
-const [comment, setComment] = useState(state?.comments||'');
-const [user, setUser] = useState(state?.tempUser?.id ||state?.companyuser?.id||'')
-const [payment, setPayment]= useState(state?.paymentMode||'')
-const [deliveryMode, setDeliveryMode]= useState(state?.modeofdelivery||'')
+  const [type, setType] = useState(state?.type || "");
+  const [quotation, setQuotation] = useState(state?.quotid || "");
+  const [deliveryDate, setDeliveryDate] = useState(
+    dayjs(state?.originalDeliveryDate || "")
+  );
+  const [status, setStatus] = useState(state?.status || "");
+  const [contactName, setContactName] = useState(state?.contactPerson || "");
+  const [phone, setPhone] = useState(state?.contactPhone || "");
+  const [address, setAddress] = useState(state?.deliveryAddress || "");
+  const [tempId, setTempId] = useState(state?.tempUser?.id);
+  const [userState, setUserState] = useState(state?.companyuser?.id);
+  const [terms, setTerms] = useState(state?.termsAndCondition || "");
+  const [comment, setComment] = useState(state?.comments || "");
+  const [user, setUser] = useState(
+    state?.tempUser?.id || state?.companyuser?.id || ""
+  );
+  const [payment, setPayment] = useState(state?.paymentMode || "");
+  const [deliveryMode, setDeliveryMode] = useState(state?.modeofdelivery || "");
 
+  const [currentDate, setCurrentDate] = useState("");
 
-const [currentDate, setCurrentDate] = useState('');
-
-//add product state
-const [productName, setProductName] = useState('');
-  const [weight, setWeight] = useState('');
+  //add product state
+  const [productName, setProductName] = useState("");
+  const [weight, setWeight] = useState("");
   const [sgst, setSgst] = useState();
   const [igst, setIgst] = useState();
   const [quantity, setQuantity] = useState();
   const [price, setPrice] = useState();
   const [cgst, setCgst] = useState();
   const [size, setSize] = useState();
-  const [description, setDescription] = useState('');
+  const [description, setDescription] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
-    const [netAmount, setNetAmount] = useState();
+  const [netAmount, setNetAmount] = useState();
   const [discount, setDiscount] = useState();
-  
 
-  const [userData2, setUserData2] = useState([])
-  const [productId, setProductId] = useState()
-  const [Id, setId] = useState()
+  const [userData2, setUserData2] = useState([]);
+  const [productId, setProductId] = useState();
+  const [Id, setId] = useState();
 
   const [totalAmount, setTotalAmount] = useState(0);
-    const [totalCgst, setTotalCgst] = useState(0);
-    const [totalIgst, setTotalIgst] = useState(0);
+  const [totalCgst, setTotalCgst] = useState(0);
+  const [totalIgst, setTotalIgst] = useState(0);
   const [totalSgst, setTotalSgst] = useState(0);
-     const [totalCost, setTotalCost] = useState(0);
- 
+  const [totalCost, setTotalCost] = useState(0);
 
-  const [rowData, setRowData] =useState()
-  const [dDate, setDDate] =useState(state?.deliveryDate)
+  const [rowData, setRowData] = useState();
+  const [dDate, setDDate] = useState(state?.deliveryDate);
   //deleted row
   const [deletedRows, setDeletedRows] = useState([]);
 
-  const [inventoryData, setInventoryData] =useState()
+  const [inventoryData, setInventoryData] = useState();
 
-  const [inventoryId, setInventoryId] = useState()
-  const [productDescription, setProductDescription] = useState('');
-  const [allQuotation, setAllQuotation] = useState([])
+  const [inventoryId, setInventoryId] = useState();
+  const [productDescription, setProductDescription] = useState("");
+  const [allQuotation, setAllQuotation] = useState([]);
 
+  // country, state, city API access token
+  const [accessToken, setAccessToken] = useState(null);
 
-      // country, state, city API access token
-      const [accessToken, setAccessToken] = useState(null);
+  //state management for countries,states and cities
+  const [countries, setCountries] = useState([]);
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [currentCountry, setCurrentCountry] = useState(state?.country || "");
+  const [currentState, setCurrentState] = useState(state?.state || "");
+  const [currentCity, setCurrentCity] = useState(state?.city || "");
+  const [zipcode, setZipcode] = useState(state?.pinCode || "");
 
+  const tableHeader = [
+    {
+      id: "product_name",
+      name: "Part Description",
+      width: 200,
+    },
+    {
+      id: "quantity",
+      name: modifyLabel ? "Piece" : "Quantity",
+      width: 200,
+    },
+    {
+      id: "weight",
+      name: "Weight",
+      width: 150,
+    },
+    {
+      id: "size",
+      name: modifyLabel ? "Unit" : "Size",
+      width: 150,
+    },
+    {
+      id: "cost",
+      name: "Cost",
+      width: 150,
+    },
+    {
+      id: "cgst",
+      name: "CGST",
+      width: 150,
+    },
+    {
+      id: "sgst",
+      name: "SGST",
+      width: 150,
+    },
+    {
+      id: "igst",
+      name: "IGST",
+      width: 150,
+    },
+    {
+      id: "amount",
+      name: "Net Amount",
+      width: 150,
+    },
+    {
+      id: "add",
+      name: "",
+      width: 50,
+    },
+    {
+      id: "delete",
+      name: "",
+      width: 50,
+    },
+  ];
 
-
-      //state management for countries,states and cities
-      const [countries, setCountries] = useState([]);
-      const [states, setStates]= useState([])
-      const [cities, setCities]= useState([])
-      const [currentCountry, setCurrentCountry]= useState(state?.country ||'')
-      const [currentState, setCurrentState]= useState(state?.state ||'')
-      const [currentCity, setCurrentCity] =useState(state?.city ||'')
-      const [zipcode, setZipcode]= useState(state?.pinCode ||'')
+  //change label based on company name
+  const { logo } = useContext(LogoContext);
+  const modifyLabel = logo?.company === "Alumentica";
 
   useEffect(() => {
     axios
@@ -251,7 +252,7 @@ const [productName, setProductName] = useState('');
         setTotalCgst(state?.totalcgst);
         setTotalIgst(state?.totaligst);
         setTotalSgst(state?.totalsgst);
-        setTotalCost(state?.totalcost)
+        setTotalCost(state?.totalcost);
 
         console.log(updatedData);
       })
@@ -265,73 +266,75 @@ const [productName, setProductName] = useState('');
     state?.totalcgst,
     state?.totaligst,
     state?.totalsgst,
-    state?.totalCost
+    state?.totalCost,
   ]);
-//inventory 
+  //inventory
   useEffect(() => {
-    axios.get(apiUrl +`getInventoryByUserId/${userId}`)
-      .then(response => {
+    axios
+      .get(apiUrl + `getInventoryByUserId/${userId}`)
+      .then((response) => {
         setInventoryData(response.data);
         console.log(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
   }, []);
 
-
   // const parsedInventory = JSON.parse(rowData.inventory);
-
-
 
   //currentdate
   useEffect(() => {
     const today = new Date();
     const year = today.getFullYear().toString();
-    const month = (today.getMonth() + 1).toString().padStart(2, '0');
-    const day = today.getDate().toString().padStart(2, '0');
+    const month = (today.getMonth() + 1).toString().padStart(2, "0");
+    const day = today.getDate().toString().padStart(2, "0");
     const formattedDate = `${year}/${month}/${day}`;
     setCurrentDate(formattedDate);
   }, []);
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('https://www.universal-tutorial.com/api/getaccesstoken', {
-          headers: {
-            'Accept': 'application/json',
-            'api-token': '8HWETQvEFegKi6tGPUkSWDiQKfW8UdZxPqbzHX6JdShA3YShkrgKuHUbnTMkd11QGkE',
-            'user-email': 'mithesh.dev.work@gmail.com'
+        const response = await fetch(
+          "https://www.universal-tutorial.com/api/getaccesstoken",
+          {
+            headers: {
+              Accept: "application/json",
+              "api-token":
+                "8HWETQvEFegKi6tGPUkSWDiQKfW8UdZxPqbzHX6JdShA3YShkrgKuHUbnTMkd11QGkE",
+              "user-email": "mithesh.dev.work@gmail.com",
+            },
           }
-        });
-  
+        );
+
         if (!response.ok) {
-          throw new Error('Failed to fetch access token');
+          throw new Error("Failed to fetch access token");
         }
-  
+
         const data = await response.json();
-  
+
         setAccessToken(data.auth_token);
-  
       } catch (error) {
         console.error(error);
-  
       }
     };
-  
+
     fetchData();
   }, []);
-  //fetches country list for dropdown and pushesh it to state which is later mapped 
+  //fetches country list for dropdown and pushesh it to state which is later mapped
   const fetchCountries = useCallback(async () => {
     try {
-      const response = await fetch("https://www.universal-tutorial.com/api/countries/", {
-        headers: {
-          "Authorization": "Bearer " + accessToken,
-          "Accept": "application/json"
+      const response = await fetch(
+        "https://www.universal-tutorial.com/api/countries/",
+        {
+          headers: {
+            Authorization: "Bearer " + accessToken,
+            Accept: "application/json",
+          },
         }
-      });
-  
+      );
+
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -341,47 +344,50 @@ const [productName, setProductName] = useState('');
       console.error("Error fetching countries:", error);
     }
   }, [accessToken]);
-  
+
   //using useeffect to prevent fetch request being called on render
-  useEffect(()=>{
-    fetchCountries()
-  },[fetchCountries])
-  
+  useEffect(() => {
+    fetchCountries();
+  }, [fetchCountries]);
+
   //mapping countries to MUI select input field
   const userOptionsCountry = useMemo(() => {
-    return countries.map(country => ({
+    return countries.map((country) => ({
       label: country.country_name,
-      value: country.country_name
+      value: country.country_name,
     }));
   }, [countries]);
-  
+
   //mapping states to MUI select input field
   const userOptionsState = useMemo(() => {
-    return states.map(state => ({
+    return states.map((state) => ({
       label: state.state_name,
-      value: state.state_name
+      value: state.state_name,
     }));
   }, [states]);
-  
+
   //mapping cities to MUI select input field
   const userOptionsCities = useMemo(() => {
-    return cities.map(city => ({
+    return cities.map((city) => ({
       label: city.city_name,
-      value: city.city_name
+      value: city.city_name,
     }));
   }, [cities]);
-  
-  //fetches states list for dropdown and pushesh it to setStates which is later mapped 
+
+  //fetches states list for dropdown and pushesh it to setStates which is later mapped
   const handleCountry = async (event) => {
     try {
       setCurrentCountry(event.target.value);
-      const response = await fetch(`https://www.universal-tutorial.com/api/states/${event.target.value}`, {
-        headers: {
-          "Authorization": "Bearer " + accessToken,
-          "Accept": "application/json"
+      const response = await fetch(
+        `https://www.universal-tutorial.com/api/states/${event.target.value}`,
+        {
+          headers: {
+            Authorization: "Bearer " + accessToken,
+            Accept: "application/json",
+          },
         }
-      });
-  
+      );
+
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -391,18 +397,21 @@ const [productName, setProductName] = useState('');
       console.error("Error fetching states:", error);
     }
   };
-  
-  //fetches cities list for dropdown and pushesh it to setCities which is later mapped 
+
+  //fetches cities list for dropdown and pushesh it to setCities which is later mapped
   const handleState = async (event) => {
     try {
       setCurrentState(event.target.value);
-      const response = await fetch(`https://www.universal-tutorial.com/api/cities/${event.target.value}`, {
-        headers: {
-          "Authorization": "Bearer " + accessToken,
-          "Accept": "application/json"
+      const response = await fetch(
+        `https://www.universal-tutorial.com/api/cities/${event.target.value}`,
+        {
+          headers: {
+            Authorization: "Bearer " + accessToken,
+            Accept: "application/json",
+          },
         }
-      });
-  
+      );
+
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -416,21 +425,24 @@ const [productName, setProductName] = useState('');
   useEffect(() => {
     const fetchStates = async () => {
       try {
-        const response = await axios.get(`https://www.universal-tutorial.com/api/states/${currentCountry}`, {
-          headers: {
-            'Authorization': 'Bearer ' + accessToken,
-            'Accept': 'application/json'
+        const response = await axios.get(
+          `https://www.universal-tutorial.com/api/states/${currentCountry}`,
+          {
+            headers: {
+              Authorization: "Bearer " + accessToken,
+              Accept: "application/json",
+            },
           }
-        });
+        );
 
         if (response.status === 200) {
           const data = response.data;
           setStates(data);
         } else {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
       } catch (error) {
-        console.error('Error fetching states:', error);
+        console.error("Error fetching states:", error);
       }
     };
 
@@ -442,21 +454,24 @@ const [productName, setProductName] = useState('');
   useEffect(() => {
     const fetchCities = async () => {
       try {
-        const response = await axios.get(`https://www.universal-tutorial.com/api/cities/${currentState}`, {
-          headers: {
-            'Authorization': 'Bearer ' + accessToken,
-            'Accept': 'application/json'
+        const response = await axios.get(
+          `https://www.universal-tutorial.com/api/cities/${currentState}`,
+          {
+            headers: {
+              Authorization: "Bearer " + accessToken,
+              Accept: "application/json",
+            },
           }
-        });
+        );
 
         if (response.status === 200) {
           const data = response.data;
           setCities(data);
         } else {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
       } catch (error) {
-        console.error('Error fetching states:', error);
+        console.error("Error fetching states:", error);
       }
     };
 
@@ -464,122 +479,125 @@ const [productName, setProductName] = useState('');
       fetchCities();
     }
   }, [currentState, accessToken]);
-  
+
   //sets default country to India and fetches state list for India and is pushed to setStates
   const handleDefaultState = async () => {
-  try {;
-  if (currentCountry === 'India') {
-    const response = await fetch('https://www.universal-tutorial.com/api/states/India', {
-      headers: {
-        "Authorization": "Bearer " + accessToken,
-        "Accept": "application/json"
+    try {
+      if (currentCountry === "India") {
+        const response = await fetch(
+          "https://www.universal-tutorial.com/api/states/India",
+          {
+            headers: {
+              Authorization: "Bearer " + accessToken,
+              Accept: "application/json",
+            },
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        setStates(data);
       }
-    });
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
+    } catch (error) {
+      console.error("Error fetching states:", error);
     }
-    const data = await response.json();
-    setStates(data);
-  }
-  } catch (error) {
-  console.error("Error fetching states:", error);
-  }
   };
-  
+
   //sets current city value in MUI select field onchange event
   const handleCities = async (event) => {
-  setCurrentCity(event.target.value);
-  }
+    setCurrentCity(event.target.value);
+  };
 
- const handleInputChange = (event) => {
-  const { name, value } = event.target;
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
 
-  switch (name) {
-  
-      case 'user':
+    switch (name) {
+      case "user":
         setUser(value);
-          break;
-      case 'contactName':
+        break;
+      case "contactName":
         setContactName(value);
         break;
-      case 'quotation':
+      case "quotation":
         setQuotation(value);
         break;
-      case 'mobileno':
+      case "mobileno":
         setPhone(value);
         break;
-      case 'type':
+      case "type":
         setType(value);
         break;
-      case 'delivery':
-          setDeliveryMode(value);
-          break;
-      case 'payment':
+      case "delivery":
+        setDeliveryMode(value);
+        break;
+      case "payment":
         setPayment(value);
         break;
-        case 'zipcode':
-          setZipcode(value);
-          break;
-      case 'status':
+      case "zipcode":
+        setZipcode(value);
+        break;
+      case "status":
         setStatus(value);
         break;
-    case 'address':
-      setAddress(value);
+      case "address":
+        setAddress(value);
         break;
-    default:
-      break;
-  }
-};
+      default:
+        break;
+    }
+  };
 
-   //get temp user
-   useEffect(() => {
-    const request1 = axios.get(apiUrl +`getAllTempUsers/${userId}`);
-    const request2 = axios.get(apiUrl +`getAllUsersBasedOnType/${userId}`);
-  
+  //get temp user
+  useEffect(() => {
+    const request1 = axios.get(apiUrl + `getAllTempUsers/${userId}`);
+    const request2 = axios.get(apiUrl + `getAllUsersBasedOnType/${userId}`);
+
     Promise.all([request1, request2])
       .then(([response1, response2]) => {
         const tempUsersData = response1.data;
         const usersData = response2.data;
         const combinedData = [...tempUsersData, ...usersData];
         setUserData(combinedData);
-  
-        const selecteduserId = combinedData.find((option) => (option.id !== 0 && option.id === state?.tempUserId) || option.id === state?.userId);
-        const selecteduser = selecteduserId ? selecteduserId.companyName : '';
-   
+
+        const selecteduserId = combinedData.find(
+          (option) =>
+            (option.id !== 0 && option.id === state?.tempUserId) ||
+            option.id === state?.userId
+        );
+        const selecteduser = selecteduserId ? selecteduserId.companyName : "";
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
   }, [state?.tempUserId, state?.userId]);
 
+  const deliveryDateAntd = deliveryDate;
+  const deliveryDateJS = deliveryDateAntd ? deliveryDateAntd.toDate() : null;
 
+  const deliveryIST = deliveryDateJS;
 
-const deliveryDateAntd = deliveryDate;
-const deliveryDateJS = deliveryDateAntd ? deliveryDateAntd.toDate() : null;
-
-const deliveryIST = deliveryDateJS;
-
-
-console.log(deliveryDate)
-console.log(deliveryIST)
+  console.log(deliveryDate);
+  console.log(deliveryIST);
 
   useEffect(() => {
-    axios.get(apiUrl +`getAllQuotations/${userId}`)
-      .then(response => {
+    axios
+      .get(apiUrl + `getAllQuotations/${userId}`)
+      .then((response) => {
         const filteredQuotations = response.data.filter(
           (item) =>
             item.status === "Delivered" && item.category === "Sales Quotation"
         );
         setAllQuotation(filteredQuotations);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
   }, []);
-  
-  const approvedQuotation = allQuotation.map(item => ({
+
+  const approvedQuotation = allQuotation.map((item) => ({
     value: item.id,
-    label: item.id
+    label: item.id,
   }));
 
   const handleDateChange = (date) => {
@@ -590,59 +608,57 @@ console.log(deliveryIST)
   //add product//
   /////////////
 
-
   const handleRemoveRow = (idx, row) => () => {
-
-  const deletedRow = { ...row }; 
-  setDeletedRows((prevDeletedRows) => [...prevDeletedRows, deletedRow]);
+    const deletedRow = { ...row };
+    setDeletedRows((prevDeletedRows) => [...prevDeletedRows, deletedRow]);
 
     const updatedRows = rowData?.filter((_, index) => index !== idx);
     setRowData(updatedRows);
-  
-        const calculatedTotalAmount = updatedRows.reduce(
-          (total, row) => total + row.netAmount,
-          0
-        );
 
-     const calcTotalCgst = updatedRows.reduce((total, row) => {
-       const discountFactor =
-         row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
-       const discountedPrice = row.price * discountFactor;
-       console.log(discountedPrice);
-       const cgstAmount = (row.quantity * discountedPrice * row.cgst) / 100;
-       return total + cgstAmount;
-     }, 0);
+    const calculatedTotalAmount = updatedRows.reduce(
+      (total, row) => total + row.netAmount,
+      0
+    );
 
-     const calcTotalIgst = updatedRows.reduce((total, row) => {
-       const discountFactor =
-         row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
-       const discountedPrice = row.price * discountFactor;
-       console.log(discountedPrice);
-       const igstAmount = (row.quantity * discountedPrice * row.igst) / 100;
-       return total + igstAmount;
-     }, 0);
-     const calcTotalSgst = updatedRows.reduce((total, row) => {
-       const discountFactor =
-         row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
-       const discountedPrice = row.price * discountFactor;
-       console.log(discountedPrice);
-       const sgstAmount = (row.quantity * discountedPrice * row.sgst) / 100;
-       return total + sgstAmount;
-     }, 0);
+    const calcTotalCgst = updatedRows.reduce((total, row) => {
+      const discountFactor =
+        row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+      const discountedPrice = row.price * discountFactor;
+      console.log(discountedPrice);
+      const cgstAmount = (row.quantity * discountedPrice * row.cgst) / 100;
+      return total + cgstAmount;
+    }, 0);
 
-       const calcTotalCost = updatedRows.reduce((total, row) => {
-         const discountFactor =
-           row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
-         const discountedPrice = row.price * discountFactor;
-         const cost = row.quantity * discountedPrice;
-         return total + cost;
-       }, 0);
+    const calcTotalIgst = updatedRows.reduce((total, row) => {
+      const discountFactor =
+        row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+      const discountedPrice = row.price * discountFactor;
+      console.log(discountedPrice);
+      const igstAmount = (row.quantity * discountedPrice * row.igst) / 100;
+      return total + igstAmount;
+    }, 0);
+    const calcTotalSgst = updatedRows.reduce((total, row) => {
+      const discountFactor =
+        row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+      const discountedPrice = row.price * discountFactor;
+      console.log(discountedPrice);
+      const sgstAmount = (row.quantity * discountedPrice * row.sgst) / 100;
+      return total + sgstAmount;
+    }, 0);
 
-       setTotalAmount(calculatedTotalAmount);
-       setTotalCgst(calcTotalCgst);
-       setTotalIgst(calcTotalIgst);
-       setTotalSgst(calcTotalSgst);
-       setTotalCost(calcTotalCost);
+    const calcTotalCost = updatedRows.reduce((total, row) => {
+      const discountFactor =
+        row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+      const discountedPrice = row.price * discountFactor;
+      const cost = row.quantity * discountedPrice;
+      return total + cost;
+    }, 0);
+
+    setTotalAmount(calculatedTotalAmount);
+    setTotalCgst(calcTotalCgst);
+    setTotalIgst(calcTotalIgst);
+    setTotalSgst(calcTotalSgst);
+    setTotalCost(calcTotalCost);
   };
 
   const toggleForm = () => {
@@ -652,55 +668,50 @@ console.log(deliveryIST)
   };
 
   const handleModalClick = (event) => {
-    if (event.target.classList.contains('modal')) {
+    if (event.target.classList.contains("modal")) {
       toggleForm();
     }
   };
-    useEffect(() => {
-      const calculatedNetAmount =
-        quantity * price +
-        (quantity * price * cgst) / 100 +
-        (quantity * price * igst) / 100 +
-        (quantity * price * sgst) / 100;
-      const discountedAmount =
-        calculatedNetAmount - (calculatedNetAmount * discount) / 100;
-      setNetAmount(discountedAmount.toFixed(2));
-    }, [quantity, price, cgst, igst, sgst, discount]);
+  useEffect(() => {
+    const calculatedNetAmount =
+      quantity * price +
+      (quantity * price * cgst) / 100 +
+      (quantity * price * igst) / 100 +
+      (quantity * price * sgst) / 100;
+    const discountedAmount =
+      calculatedNetAmount - (calculatedNetAmount * discount) / 100;
+    setNetAmount(discountedAmount.toFixed(2));
+  }, [quantity, price, cgst, igst, sgst, discount]);
 
-        //toast notification from toastify library
-const notify = (type, message) => {
-  toast[type](message, {
-    position: "top-right",
-    autoClose: 2000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "light",
-  });
-};
+  //toast notification from toastify library
+  const notify = (type, message) => {
+    toast[type](message, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  
-    if (
-      quantity &&
-      price &&
-      productName &&
-      description &&
-      weight &&
-      size
-    ) {
-     const selectedOption = inventoryData.find((option) => option.id === inventoryId);
-  
-    if (parseInt(quantity) > selectedOption.quantity) {
-      notify(
-        "error",
-        `Insufficient Quantity in Inventory. Quantity must be below ${selectedOption.quantity}`
+
+    if (quantity && price && productName && description && weight && size) {
+      const selectedOption = inventoryData.find(
+        (option) => option.id === inventoryId
       );
-      return;
-    }
+
+      if (parseInt(quantity) > selectedOption.quantity) {
+        notify(
+          "error",
+          `Insufficient Quantity in Inventory. Quantity must be below ${selectedOption.quantity}`
+        );
+        return;
+      }
 
       const newRow = {
         id: Id,
@@ -723,9 +734,9 @@ const notify = (type, message) => {
         createdDate: new Date(),
         lastModifiedDate: new Date(),
       };
-  
+
       let updatedRows;
-  
+
       if (editIndex !== null) {
         updatedRows = [...rowData];
         updatedRows[editIndex] = newRow;
@@ -735,115 +746,108 @@ const notify = (type, message) => {
         setRowData(updatedRows);
       }
 
-    
-  
       clearFormFields();
       setShowForm(false);
       setEditIndex(null);
-  
-          const calculatedTotalAmount = updatedRows.reduce(
-            (total, row) => total + row.netAmount,
-            0
-          );
 
-        const calcTotalCgst = updatedRows.reduce((total, row) => {
-          const discountFactor =
-            row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
-          const discountedPrice = row.price * discountFactor;
-          console.log(discountedPrice);
-          const cgstAmount = (row.quantity * discountedPrice * row.cgst) / 100;
-          return total + cgstAmount;
-        }, 0);
+      const calculatedTotalAmount = updatedRows.reduce(
+        (total, row) => total + row.netAmount,
+        0
+      );
 
-        const calcTotalIgst = updatedRows.reduce((total, row) => {
-          const discountFactor =
-            row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
-          const discountedPrice = row.price * discountFactor;
-          console.log(discountedPrice);
-          const igstAmount = (row.quantity * discountedPrice * row.igst) / 100;
-          return total + igstAmount;
-        }, 0);
-        const calcTotalSgst = updatedRows.reduce((total, row) => {
-          const discountFactor =
-            row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
-          const discountedPrice = row.price * discountFactor;
-          console.log(discountedPrice);
-          const sgstAmount = (row.quantity * discountedPrice * row.sgst) / 100;
-          return total + sgstAmount;
-        }, 0);
+      const calcTotalCgst = updatedRows.reduce((total, row) => {
+        const discountFactor =
+          row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+        const discountedPrice = row.price * discountFactor;
+        console.log(discountedPrice);
+        const cgstAmount = (row.quantity * discountedPrice * row.cgst) / 100;
+        return total + cgstAmount;
+      }, 0);
 
-        const calcTotalCost = updatedRows.reduce((total, row) => {
-          const discountFactor =
-            row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
-          const discountedPrice = row.price * discountFactor;
-          const cost = row.quantity * discountedPrice;
-          return total + cost;
-        }, 0);
+      const calcTotalIgst = updatedRows.reduce((total, row) => {
+        const discountFactor =
+          row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+        const discountedPrice = row.price * discountFactor;
+        console.log(discountedPrice);
+        const igstAmount = (row.quantity * discountedPrice * row.igst) / 100;
+        return total + igstAmount;
+      }, 0);
+      const calcTotalSgst = updatedRows.reduce((total, row) => {
+        const discountFactor =
+          row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+        const discountedPrice = row.price * discountFactor;
+        console.log(discountedPrice);
+        const sgstAmount = (row.quantity * discountedPrice * row.sgst) / 100;
+        return total + sgstAmount;
+      }, 0);
 
-        setTotalAmount(calculatedTotalAmount);
-        setTotalCgst(calcTotalCgst);
-        setTotalIgst(calcTotalIgst);
-        setTotalSgst(calcTotalSgst);
-        setTotalCost(calcTotalCost);
+      const calcTotalCost = updatedRows.reduce((total, row) => {
+        const discountFactor =
+          row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+        const discountedPrice = row.price * discountFactor;
+        const cost = row.quantity * discountedPrice;
+        return total + cost;
+      }, 0);
+
+      setTotalAmount(calculatedTotalAmount);
+      setTotalCgst(calcTotalCgst);
+      setTotalIgst(calcTotalIgst);
+      setTotalSgst(calcTotalSgst);
+      setTotalCost(calcTotalCost);
     }
   };
 
-
   const handleEditRow = (idx, row) => {
+    const selectedOption = inventoryData.find(
+      (option) => option.productName === row.productName
+    );
+    const selectedProductId = selectedOption ? selectedOption.productId : "";
 
-
-  const selectedOption = inventoryData.find((option) => option.productName === row.productName);
-  const selectedProductId = selectedOption ? selectedOption.productId : '';
-
-
-
-  setId(row.id)
-  setProductId(selectedProductId);
-  setInventoryId(row.inventory.id)
-  setProductName(row.inventory.id);
-  setWeight(row.weight);
-  setQuantity(row.quantity);
-  setPrice(row.price);
-  setCgst(row.cgst);
-  setIgst(row.igst)
-  setSgst(row.sgst)
-    setSize(row.size)
-     setDiscount(row.discountpercent);
-     setNetAmount(row.netAmount);
-  setDescription(row.description);
-  setEditIndex(idx);
-  setShowForm(true);
-};
-  
+    setId(row.id);
+    setProductId(selectedProductId);
+    setInventoryId(row.inventory.id);
+    setProductName(row.inventory.id);
+    setWeight(row.weight);
+    setQuantity(row.quantity);
+    setPrice(row.price);
+    setCgst(row.cgst);
+    setIgst(row.igst);
+    setSgst(row.sgst);
+    setSize(row.size);
+    setDiscount(row.discountpercent);
+    setNetAmount(row.netAmount);
+    setDescription(row.description);
+    setEditIndex(idx);
+    setShowForm(true);
+  };
 
   const clearFormFields = () => {
-    setProductName('');
-    setWeight('');
-    setQuantity('');
-    setPrice('');
-    setCgst('');
-    setSize('')
-    setIgst('')
-    setSgst('')
-    setDescription('');
-        setDiscount("");
-        setNetAmount("");
-    setId(undefined)
+    setProductName("");
+    setWeight("");
+    setQuantity("");
+    setPrice("");
+    setCgst("");
+    setSize("");
+    setIgst("");
+    setSgst("");
+    setDescription("");
+    setDiscount("");
+    setNetAmount("");
+    setId(undefined);
   };
 
   //get all parts
   useEffect(() => {
-    axios.get(apiUrl +`getAllItem/${userId}`)
-      .then(response => {
+    axios
+      .get(apiUrl + `getAllItem/${userId}`)
+      .then((response) => {
         setUserData2(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
   }, []);
 
-
-  
   const updatedRows = rowData?.map(
     ({ productName, productDescription, productId, netAmount, ...rest }) => rest
   );
@@ -852,71 +856,77 @@ const notify = (type, message) => {
   );
   //post request
   const handleClick = async (event) => {
-    let finalAmount = parseFloat(totalAmount.toFixed(2))
+    let finalAmount = parseFloat(totalAmount.toFixed(2));
 
-    
-    
     event.preventDefault();
-    
-      if (contactName && address && userId && phone && status && address && comment && terms && updatedRows) {
-        try {
-          const response = await fetch(apiUrl + "createSalesOrder", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
+
+    if (
+      contactName &&
+      address &&
+      userId &&
+      phone &&
+      status &&
+      address &&
+      comment &&
+      terms &&
+      updatedRows
+    ) {
+      try {
+        const response = await fetch(apiUrl + "createSalesOrder", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            salesOrder: {
+              id: state?.id,
+              ...(quotation && { quotid: quotation }),
+              ...(tempId && { tempUser: { id: tempId } }),
+              ...(userState && { companyuser: { id: userState } }),
+              contactPerson: contactName,
+              contactPhone: phone,
+              status: status,
+              paymentMode: payment,
+              type: type,
+              deliveryDate: deliveryIST,
+              deliveryAddress: address,
+              city: currentCity,
+              state: currentState,
+              country: currentCountry,
+              pinCode: zipcode,
+              createdBy: userId,
+              lastModifiedDate: new Date(),
+              createdDate: state?.originalcreatedDate,
+              comments: comment,
+              termsAndCondition: terms,
+              paidamount: state?.paidamount,
+              totalcgst: totalCgst,
+              totalsgst: totalSgst,
+              totaligst: totalIgst,
+              totalcost: totalCost,
+              modeofdelivery: deliveryMode,
+              totalAmount: finalAmount,
+              lastModifiedByUser: { id: userId },
             },
-            body: JSON.stringify({
-              salesOrder: {
-                id: state?.id,
-                ...(quotation && { quotid: quotation }),
-                ...(tempId && { tempUser: { id: tempId } }),
-                ...(userState && { companyuser: { id: userState } }),
-                contactPerson: contactName,
-                contactPhone: phone,
-                status: status,
-                paymentMode: payment,
-                type: type,
-                deliveryDate: deliveryIST,
-                deliveryAddress: address,
-                city: currentCity,
-                state: currentState,
-                country: currentCountry,
-                pinCode: zipcode,
-                createdBy: userId,
-                lastModifiedDate: new Date(),
-                createdDate: state?.originalcreatedDate,
-                comments: comment,
-                termsAndCondition: terms,
-                paidamount: state?.paidamount,
-                totalcgst: totalCgst,
-                totalsgst: totalSgst,
-                totaligst: totalIgst,
-                totalcost: totalCost,
-                modeofdelivery: deliveryMode,
-                totalAmount: finalAmount,
-                lastModifiedByUser: { id: userId },
-              },
-              salesOrderDetails: updatedRows,
-              deletedSODetails: deleteRows,
-            }),
+            salesOrderDetails: updatedRows,
+            deletedSODetails: deleteRows,
+          }),
+        });
+
+        if (response.ok) {
+          // Redirect to home page upon successful submission
+          response.json().then((data) => {
+            navigate(`/dashboard/orders/viewDetail/${state?.id}`, {
+              state: data,
+            });
+            console.log(data);
           });
-          
-          if (response.ok) {
-            // Redirect to home page upon successful submission
-           response.json().then(data => {
-
-          
-            navigate(`/dashboard/orders/viewDetail/${state?.id}`, { state: data });
-            console.log(data)
-    });
-          } 
-        } catch (error) {
-          console.error('API call failed:', error);
         }
-      } 
-    
-    };
-
+      } catch (error) {
+        console.error("API call failed:", error);
+      }
+    }
+  };
 
   return (
     <div style={{ minWidth: "100%" }}>
@@ -1239,7 +1249,9 @@ const notify = (type, message) => {
                         <Grid xs={12} md={6}>
                           <TextField
                             fullWidth
-                            label="Part Name"
+                            label={
+                              modifyLabel ? "Model Weight Range" : "Part Name"
+                            }
                             name="name"
                             select
                             SelectProps={{
@@ -1331,7 +1343,7 @@ const notify = (type, message) => {
                         <Grid xs={12} md={6}>
                           <TextField
                             fullWidth
-                            label="Quantity"
+                            label={modifyLabel ? "Piece" : "Quantity"}
                             name="quantity"
                             type="number"
                             value={quantity}
@@ -1358,7 +1370,7 @@ const notify = (type, message) => {
                         <Grid xs={12} md={6}>
                           <TextField
                             fullWidth
-                            label="Size"
+                            label={modifyLabel ? "Unit" : "Size"}
                             name="size"
                             value={size}
                             onChange={(e) => setSize(e.target.value)}

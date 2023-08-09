@@ -20,7 +20,7 @@ import {
 import { DatePicker } from "antd";
 import "./purchase-order.css";
 import IconWithPopup from "../user/user-icon";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { primaryColor } from "src/primaryColor";
 import EditIcon from "@mui/icons-material/Edit";
@@ -32,7 +32,8 @@ import { useNavigate } from "react-router-dom";
 import "moment-timezone";
 import { apiUrl } from "src/config";
 import Logo from "../logo/logo";
-  import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
+    import { LogoContext } from "src/utils/logoContext";
 
 //get userId
 const userId = parseInt(
@@ -147,6 +148,10 @@ export const WorkOrderCreateForm = (props) => {
   const [touched, setTouched] = useState(false);
   const [allQuotation, setAllQuotation] = useState([]);
 
+  //change label based on company name
+  const { logo } = useContext(LogoContext);
+  const modifyLabel = logo?.company === "Alumentica";
+
   const handleInputChange = (event) => {
     const { name, value } = event.target;
 
@@ -189,18 +194,18 @@ export const WorkOrderCreateForm = (props) => {
     }
   };
 
-    const notify = (type, message) => {
-      toast[type](message, {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-    };
+  const notify = (type, message) => {
+    toast[type](message, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  };
 
   //email validation
   const handleBlur = () => {
@@ -424,7 +429,7 @@ export const WorkOrderCreateForm = (props) => {
     let finalAmount = totalAmount.toFixed(2);
 
     event.preventDefault();
-debugger
+    debugger;
     if (
       contactName &&
       userId &&
@@ -495,7 +500,7 @@ debugger
       }
       debugger;
     } else if (
-    contactName &&
+      contactName &&
       userId &&
       phone &&
       inchargeEmail &&
@@ -507,7 +512,6 @@ debugger
       status &&
       updatedRows &&
       userState
- 
     ) {
       try {
         const response = await fetch(apiUrl + "addWorkOrderWithItems", {
@@ -551,19 +555,19 @@ debugger
           // Redirect to home page upon successful submission
 
           response.json().then((data) => {
-           const updatedData = { ...data, showpaid: true };
+            const updatedData = { ...data, showpaid: true };
 
-           // Navigate to the desired page with the updated data
-           navigate("/dashboard/services/workorderDetail", {
-             state: updatedData,
-           });
+            // Navigate to the desired page with the updated data
+            navigate("/dashboard/services/workorderDetail", {
+              state: updatedData,
+            });
           });
         }
       } catch (error) {
         console.error("API call failed:", error);
       }
     } else {
-       notify("error", "Please fill all the fields marked with *.");
+      notify("error", "Please fill all the fields marked with *.");
     }
   };
 
@@ -834,14 +838,15 @@ debugger
                         <Grid xs={12} md={6}>
                           <TextField
                             fullWidth
-                            label="Part Name"
+                            label={
+                              modifyLabel ? "Model Weight Range" : "Part Name"
+                            }
                             name="name"
                             select
                             SelectProps={{
                               MenuProps: {
                                 style: {
                                   maxHeight: 300,
-                                  
                                 },
                               },
                             }}

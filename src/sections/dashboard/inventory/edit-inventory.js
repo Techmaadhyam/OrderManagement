@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import {
   Button,
   Card,
@@ -7,28 +7,26 @@ import {
   Divider,
   TextField,
   MenuItem,
-  Unstable_Grid2 as Grid
-} from '@mui/material';
-import './inventory.css'
-import { Box } from '@mui/system';
-import IconWithPopup from '../user/user-icon';
-import axios from 'axios';
-import { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
-import { apiUrl } from 'src/config';
-import Logo from '../logo/logo';
+  Unstable_Grid2 as Grid,
+} from "@mui/material";
+import "./inventory.css";
+import { Box } from "@mui/system";
+import IconWithPopup from "../user/user-icon";
+import axios from "axios";
+import { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { apiUrl } from "src/config";
+import Logo from "../logo/logo";
 import { LogoContext } from "src/utils/logoContext";
 
-const userId = sessionStorage.getItem('user') || localStorage.getItem('user');
+const userId = sessionStorage.getItem("user") || localStorage.getItem("user");
 
 const userOptions = [
-
   {
-    label: 'Add New Rack',
-    value: 'others'
+    label: "Add New Rack",
+    value: "others",
   },
-  
 ];
 export const EditInventory = (props) => {
   const location = useLocation();
@@ -58,6 +56,7 @@ export const EditInventory = (props) => {
   const [weight, setWeight] = useState(state.weight || "");
   const [createdDate, setCreatedDate] = useState("");
   const [quantity, setQuantity] = useState(state.quantity || "");
+  const [bundle, setBundle] = useState("");
   const [cost, setCost] = useState(state.price || "");
   const [sgst, setSgst] = useState(state.sgst || "");
   const [igst, setIgst] = useState(state.igst || "");
@@ -292,7 +291,7 @@ export const EditInventory = (props) => {
         price: parseFloat(cost),
         description: description,
         createdBy: parseFloat(userId),
-        //productId: selectedId,
+        //bundleno: bundle,
         product: { id: selectedId },
         purchaseOrderId: purchaseId,
 
@@ -326,7 +325,7 @@ export const EditInventory = (props) => {
         price: parseFloat(cost),
         description: description,
         createdBy: parseFloat(userId),
-        //productId: selectedId,
+        //bundleno: bundle,
         product: { id: selectedId },
         purchaseOrderId: purchaseId,
 
@@ -501,7 +500,7 @@ export const EditInventory = (props) => {
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
-                  label="Model"
+                  label={modifyLabel ? "Model Cutting Length" : "Model"}
                   name="category"
                   required
                   select
@@ -640,7 +639,7 @@ export const EditInventory = (props) => {
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
-                  label={modifyLabel ? "Model cutting length" : "Size"}
+                  label={modifyLabel ? "Unit" : "Size"}
                   name="size"
                   value={size}
                   onChange={handleInputChange}
@@ -659,7 +658,7 @@ export const EditInventory = (props) => {
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
-                  label="Quantity"
+                  label={modifyLabel ? "Peice" : "Quantity"}
                   name="quantity"
                   type="number"
                   required
@@ -667,6 +666,18 @@ export const EditInventory = (props) => {
                   onChange={handleInputChange}
                 />
               </Grid>
+              {modifyLabel && (
+                <Grid xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label="Bundle No"
+                    name="bundle"
+                    required
+                    value={bundle}
+                    onChange={handleInputChange}
+                  />
+                </Grid>
+              )}
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
@@ -761,5 +772,5 @@ export const EditInventory = (props) => {
 };
 
 EditInventory.propTypes = {
-  customer: PropTypes.object.isRequired
+  customer: PropTypes.object.isRequired,
 };

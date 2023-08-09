@@ -20,7 +20,7 @@ import {
 import { DatePicker } from "antd";
 import "./purchase-order.css";
 import IconWithPopup from "../user/user-icon";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import moment from "moment/moment";
 import { primaryColor } from "src/primaryColor";
@@ -36,6 +36,7 @@ import "./customTable.css";
 import "moment-timezone";
 import { apiUrl } from "src/config";
 import Logo from "../logo/logo";
+  import { LogoContext } from "src/utils/logoContext";
 
 const userId = parseInt(
   sessionStorage.getItem("user") || localStorage.getItem("user")
@@ -165,7 +166,7 @@ export const AmcEditForm = (props) => {
 
   const [totalAmount, setTotalAmount] = useState(0);
   const [totalIgst, setTotalIgst] = useState(0);
-    const [totalCost, setTotalCost] = useState(0);
+  const [totalCost, setTotalCost] = useState(0);
 
   const [rowData, setRowData] = useState();
   const [dDate, setDDate] = useState(state?.startdate);
@@ -177,6 +178,9 @@ export const AmcEditForm = (props) => {
 
   //deleted row
   const [deletedRows, setDeletedRows] = useState([]);
+  //change label based on company name
+  const { logo } = useContext(LogoContext);
+  const modifyLabel = logo?.company === "Alumentica";
 
   const handleBlur = () => {
     setTouched(true);
@@ -212,13 +216,18 @@ export const AmcEditForm = (props) => {
         );
         setTotalAmount(totalNetAmount);
         setTotalIgst(state?.totaligst);
-        setTotalCost(state?.totalcost)
-        
+        setTotalCost(state?.totalcost);
       })
       .catch((error) => {
         console.error(error);
       });
-  }, [state?.id, state?.quotation?.id, state?.totalAmount, state?.totaligst, state?.totalcost]);
+  }, [
+    state?.id,
+    state?.quotation?.id,
+    state?.totalAmount,
+    state?.totaligst,
+    state?.totalcost,
+  ]);
   console.log(rowData);
 
   //currentdate
@@ -342,19 +351,19 @@ export const AmcEditForm = (props) => {
 
       return total + igstAmount;
     }, 0);
-       const calcTotalCost = updatedRows.reduce((total, row) => {
-         const discountFactor =
-           row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
-         const discountedPrice = row.unitPrice * discountFactor;
+    const calcTotalCost = updatedRows.reduce((total, row) => {
+      const discountFactor =
+        row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+      const discountedPrice = row.unitPrice * discountFactor;
 
-         const cost = row.workstationcount * discountedPrice;
+      const cost = row.workstationcount * discountedPrice;
 
-         return total + cost;
-       }, 0);
+      return total + cost;
+    }, 0);
 
-       setTotalAmount(calculatedTotalAmount);
-       setTotalIgst(calcTotalIgst);
-       setTotalCost(calcTotalCost);
+    setTotalAmount(calculatedTotalAmount);
+    setTotalIgst(calcTotalIgst);
+    setTotalCost(calcTotalCost);
   };
 
   const toggleForm = () => {
@@ -379,7 +388,7 @@ export const AmcEditForm = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (productName && workstation  && description) {
+    if (productName && workstation && description) {
       const newRow = {
         id: Id,
         product: { id: productId },
@@ -426,19 +435,19 @@ export const AmcEditForm = (props) => {
         return total + igstAmount;
       }, 0);
 
-       const calcTotalCost = updatedRows.reduce((total, row) => {
-         const discountFactor =
-           row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
-         const discountedPrice = row.unitPrice * discountFactor;
+      const calcTotalCost = updatedRows.reduce((total, row) => {
+        const discountFactor =
+          row.discountpercent !== 0 ? 1 - row.discountpercent / 100 : 1;
+        const discountedPrice = row.unitPrice * discountFactor;
 
-         const cost = row.workstationcount * discountedPrice;
+        const cost = row.workstationcount * discountedPrice;
 
-         return total + cost;
-       }, 0);
+        return total + cost;
+      }, 0);
 
-       setTotalAmount(calculatedTotalAmount);
-       setTotalIgst(calcTotalIgst);
-       setTotalCost(calcTotalCost);
+      setTotalAmount(calculatedTotalAmount);
+      setTotalIgst(calcTotalIgst);
+      setTotalCost(calcTotalCost);
     }
   };
 
@@ -564,10 +573,10 @@ export const AmcEditForm = (props) => {
           // Redirect to home page upon successful submission
 
           response.json().then((data) => {
-                const updatedData = { ...data, showpaid: true };
-                navigate("/dashboard/services/amcDetail", {
-                  state: updatedData,
-                });
+            const updatedData = { ...data, showpaid: true };
+            navigate("/dashboard/services/amcDetail", {
+              state: updatedData,
+            });
           });
         }
       } catch (error) {
@@ -627,10 +636,10 @@ export const AmcEditForm = (props) => {
           // Redirect to home page upon successful submission
 
           response.json().then((data) => {
-                const updatedData = { ...data, showpaid: true };
-                navigate("/dashboard/services/amcDetail", {
-                  state: updatedData,
-                });
+            const updatedData = { ...data, showpaid: true };
+            navigate("/dashboard/services/amcDetail", {
+              state: updatedData,
+            });
           });
         }
       } catch (error) {
@@ -886,7 +895,9 @@ export const AmcEditForm = (props) => {
                         <Grid xs={12} md={6}>
                           <TextField
                             fullWidth
-                            label="Part Name"
+                            label={
+                              modifyLabel ? "Model Weight Range" : "Part Name"
+                            }
                             name="name"
                             select
                             SelectProps={{

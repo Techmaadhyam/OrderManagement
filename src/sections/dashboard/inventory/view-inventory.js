@@ -212,7 +212,9 @@ const ViewInventory = () => {
         >
           {!isSearching ? (
             <>
-              <Typography variant="subtitle2">Part Name</Typography>
+              <Typography variant="subtitle2">
+                {modifyLabel ? "Model Weight Range" : "Part Name"}
+              </Typography>
               <IconButton onClick={handleProductClick}>
                 <SearchIcon />
               </IconButton>
@@ -303,7 +305,9 @@ const ViewInventory = () => {
         <div style={{ display: "flex", alignItems: "center" }}>
           {!isSearchingCategory ? (
             <>
-              <Typography variant="subtitle2">Model</Typography>
+              <Typography variant="subtitle2">
+                {modifyLabel ? "Model Cutting Length" : "Model"}
+              </Typography>
               <IconButton onClick={handleCategoryClick}>
                 <SearchIcon />
               </IconButton>
