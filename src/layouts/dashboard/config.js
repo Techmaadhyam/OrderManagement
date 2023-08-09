@@ -7,6 +7,7 @@ import Upload04Icon from 'src/icons/untitled-ui/duocolor/upload-04';
 import { tokens } from 'src/locales/tokens';
 import { paths } from 'src/paths';
 import useAuthStore from 'src/store/store';
+
 // Add icon options imports here
 import BusinessTwoToneIcon from '@mui/icons-material/BusinessTwoTone';
 import WarehouseOutlinedIcon from "@mui/icons-material/WarehouseOutlined";
@@ -15,6 +16,18 @@ import StoreMallDirectoryTwoToneIcon from "@mui/icons-material/StoreMallDirector
 import FactoryTwoToneIcon from "@mui/icons-material/FactoryTwoTone";
 import AddTwoToneIcon from "@mui/icons-material/AddTwoTone";
 import ProductionQuantityLimitsTwoToneIcon from "@mui/icons-material/ProductionQuantityLimitsTwoTone";
+import AddchartIcon from '@mui/icons-material/Addchart';
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
+import HomeIcon from '@mui/icons-material/Home';
+import StorefrontIcon from '@mui/icons-material/Storefront';
+import GroupIcon from '@mui/icons-material/Group';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import AddBusinessIcon from '@mui/icons-material/AddBusiness';
+import BusinessIcon from '@mui/icons-material/Business';
+import ApartmentIcon from '@mui/icons-material/Apartment';
+import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService';
+import MiscellaneousServicesIcon from '@mui/icons-material/MiscellaneousServices';
+import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 export const useSections = () => {
   const { t } = useTranslation();
   const tabsData = useAuthStore((state) => state.tabs);
@@ -29,6 +42,18 @@ export const useSections = () => {
     FactoryTwoToneIcon: <FactoryTwoToneIcon />,
     AddTwoToneIcon: <AddTwoToneIcon />,
     ProductionQuantityLimitsTwoToneIcon: <ProductionQuantityLimitsTwoToneIcon />,
+    AddchartIcon: <AddchartIcon />,
+    AccountBalanceIcon: <AccountBalanceIcon />,
+    HomeIcon: <HomeIcon />,
+    StorefrontIcon: <StorefrontIcon />,
+    GroupIcon: <GroupIcon />,
+    ManageAccountsIcon: <ManageAccountsIcon />,
+    AddBusinessIcon: <AddBusinessIcon />,
+    BusinessIcon: <BusinessIcon />,
+    ApartmentIcon: <ApartmentIcon />,
+    HomeRepairServiceIcon: <HomeRepairServiceIcon />,
+    MiscellaneousServicesIcon: <MiscellaneousServicesIcon />,
+    SupportAgentIcon: <SupportAgentIcon />,
     // Add other icons to the mapping as needed
   };
 
