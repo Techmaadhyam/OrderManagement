@@ -38,6 +38,7 @@ export const CreateProduct = (props) => {
   const [sgst, setSgst] = useState("");
   const [igst, setIgst] = useState("");
   const [cgst, setCgst] = useState("");
+  const [categoryName, setCategoryName] = useState("");
 
   //change label based on company name
   const { logo } = useContext(LogoContext);
@@ -46,14 +47,16 @@ export const CreateProduct = (props) => {
   //handle category change
   const handleCategoryChange = (event) => {
     const selectedCategory = event.target.value;
-    //console.log(selectedCategory)
+    // console.log(selectedCategory);
+    let categoryName = selectedCategory.split("#")[0];
+    setCategoryName(categoryName);
     setCategory(selectedCategory);
 
     if (
       selectedCategory &&
-      selectedCategory !== "none" &&
-      selectedCategory !== "other" &&
-      isNaN(Number(selectedCategory))
+      // selectedCategory !== "none" &&
+      selectedCategory === "Add New Model"
+      // isNaN(Number(selectedCategory))
     ) {
       setShowAdditionalFields(true);
     } else {
@@ -88,6 +91,7 @@ export const CreateProduct = (props) => {
       .get(apiUrl + `getAllCategorys/${userId}`)
       .then((response) => {
         setData(response.data);
+        console.log(response.data);
       })
       .catch((error) => {
         console.error(error);
@@ -100,7 +104,7 @@ export const CreateProduct = (props) => {
       value: "none",
     },
     {
-      label: modifyLabel ? "Add New Model Cutting Length" : "Add New Model",
+      label: modifyLabel ? "Add New Model Description" : "Add New Model",
       value: "Add New Model",
     },
     // {
@@ -137,9 +141,9 @@ export const CreateProduct = (props) => {
 
   // ];
 
-  const mappedOptions = data.map(({ id, name }) => ({
-    label: name,
-    value: id,
+  const mappedOptions = data.map(({ id, name, description }) => ({
+    label: `${name} ${description}`,
+    value: `${name} ${description}#${id}`,
   }));
 
   const updatedUserOptions = userOptions.concat(mappedOptions);
@@ -169,11 +173,13 @@ export const CreateProduct = (props) => {
   let requestBody;
 
   const handleSave = () => {
+    // debugger;
+
     if (
       showAdditionalFields &&
       product &&
       partNumber &&
-      desc2 &&
+      (desc2 || desc1) &&
       userId &&
       ((sgst && cgst) || igst) &&
       newCategory &&
@@ -203,12 +209,15 @@ export const CreateProduct = (props) => {
     } else if (
       showAdditionalFields === false &&
       product &&
-      desc2 &&
+      // desc2 &&
       userId &&
       category &&
       ((sgst && cgst) || igst) &&
       partNumber
     ) {
+      let categoryId = category.split("#")[1];
+
+      console.log(categoryId);
       requestBody = {
         product: {
           productName: product,
@@ -224,12 +233,14 @@ export const CreateProduct = (props) => {
           igst: parseFloat(igst) || 0,
         },
         category: {
-          id: category,
+          id: categoryId,
         },
       };
     } else {
       notify("error", "Please fill all the fields marked with *.");
+
     }
+
 
     const config = {
       headers: {
@@ -322,7 +333,7 @@ export const CreateProduct = (props) => {
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
-                  label={modifyLabel ? "Model Cutting Length" : "Model"}
+                  label={modifyLabel ? "Model Description" : "Model"}
                   name="category"
                   required
                   select
@@ -353,7 +364,7 @@ export const CreateProduct = (props) => {
                       fullWidth
                       label={
                         modifyLabel
-                          ? "Add New Model Cutting Length"
+                          ? "Add New Model Description"
                           : "Add New Model"
                       }
                       name="new category"
@@ -367,7 +378,7 @@ export const CreateProduct = (props) => {
                       fullWidth
                       label={
                         modifyLabel
-                          ? "Model Cutting Length Description"
+                          ? "Model Cutting Length"
                           : "Model Description"
                       }
                       name="description"
@@ -435,7 +446,7 @@ export const CreateProduct = (props) => {
                   label="IGST"
                   name="igst"
                   type="number"
-                  required
+                  // required
                   value={igst}
                   onChange={(e) => {
                     setIgst(e.target.value);
@@ -448,17 +459,38 @@ export const CreateProduct = (props) => {
                 />
               </Grid>
             </Grid>
-            <Grid xs={12} md={6} style={{ marginTop: "20px" }}>
-              <TextField
-                fullWidth
-                label="Description"
-                multiline
-                required
-                rows={4}
-                value={desc2}
-                onChange={handleDescription2}
-              />
-            </Grid>
+            {
+              modifyLabel ? (
+                <Grid xs={12} md={6} style={{ marginTop: "20px" }}>
+                  <TextField
+                    fullWidth
+                    label="Description"
+                    multiline
+                    // required
+                    rows={4}
+                    value={
+                      category === "Add New Model"
+                        ? `${newCategory} ${desc1} ${product}`
+                        : category === "none" ? "" :
+                          `${categoryName} ${product}`
+                    }
+                  />
+                </Grid>
+              ) : (
+                <Grid xs={12} md={6} style={{ marginTop: "20px" }}>
+                  <TextField
+                    fullWidth
+                    label="Description"
+                    multiline
+                    required
+                    rows={4}
+                    value={desc2}
+                    onChange={handleDescription2}
+                  />
+                </Grid>
+              )
+
+            }
           </CardContent>
           <Divider />
         </Card>

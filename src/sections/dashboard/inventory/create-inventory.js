@@ -55,7 +55,7 @@ export const CreateInventory = (props) => {
   const [weight, setWeight] = useState("");
   const [createdDate, setCreatedDate] = useState("");
   const [quantity, setQuantity] = useState("");
-  const [bundle, setBundle]=useState("")
+  const [bundle, setBundle] = useState("")
   const [cost, setCost] = useState("");
   const [sgst, setSgst] = useState("");
   const [igst, setIgst] = useState("");
@@ -512,7 +512,7 @@ export const CreateInventory = (props) => {
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
-                  label={modifyLabel ? "Model Cutting Length" : "Model"}
+                  label={modifyLabel ? "Model Description" : "Model"}
                   name="category"
                   required
                   select
@@ -587,32 +587,36 @@ export const CreateInventory = (props) => {
                     ))}
                 </TextField>
               </Grid>
-              <Grid xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  label="Rack"
-                  name="rack"
-                  required
-                  select
-                  SelectProps={{
-                    MenuProps: {
-                      style: {
-                        maxHeight: 300,
+              {modifyLabel ? (
+                ""
+              ) :
+                (<Grid xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label="Rack"
+                    name="rack"
+                    required
+                    select
+                    SelectProps={{
+                      MenuProps: {
+                        style: {
+                          maxHeight: 300,
+                        },
                       },
-                    },
-                  }}
-                  value={rack}
-                  onChange={(event) => {
-                    handleCategoryChange(event);
-                  }}
-                >
-                  {updatedUserOptions.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Grid>
+                    }}
+                    value={rack}
+                    onChange={(event) => {
+                      handleCategoryChange(event);
+                    }}
+                  >
+                    {updatedUserOptions.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>)}
+
               {showAdditionalFields && (
                 <>
                   <Grid />
@@ -654,7 +658,7 @@ export const CreateInventory = (props) => {
                   fullWidth
                   label={modifyLabel ? "Unit" : "Size"}
                   name="size"
-              
+
                   value={size}
                   onChange={handleInputChange}
                 />

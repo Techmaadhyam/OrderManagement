@@ -10,7 +10,7 @@ import { Box } from '@mui/system';
 import React from 'react';
 import { Scrollbar } from 'src/components/scrollbar';
 import EditIcon from '@mui/icons-material/Edit';
-import {  Delete } from '@mui/icons-material';
+import { Delete } from '@mui/icons-material';
 import IconWithPopup from '../user/user-icon';
 import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
@@ -27,21 +27,21 @@ import { LogoContext } from "src/utils/logoContext";
 
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, MenuItem, InputBase } from '@mui/material';
 
-  //get userid 
-  const userId = sessionStorage.getItem('user') || localStorage.getItem('user');
+//get userid 
+const userId = sessionStorage.getItem('user') || localStorage.getItem('user');
 
-  
-  const typeDropdown = [
-    {
-      label: 'Parts',
-      value: 'Parts'
-    },
-    {
-      label: 'Spare Parts',
-      value: 'Spare Parts'
-    },
-    
-  ];
+
+const typeDropdown = [
+  {
+    label: 'Parts',
+    value: 'Parts'
+  },
+  {
+    label: 'Spare Parts',
+    value: 'Spare Parts'
+  },
+
+];
 
 const ViewProduct = () => {
   const [userData, setUserData] = useState([]);
@@ -345,7 +345,7 @@ const ViewProduct = () => {
           {!isSearchingCategory ? (
             <>
               <Typography variant="subtitle2">
-                {modifyLabel ? "Model cutting length" : "Model"}
+                {modifyLabel ? "Model Description" : "Model"}
               </Typography>
               <IconButton onClick={handleCategoryClick}>
                 <SearchIcon />
@@ -372,7 +372,7 @@ const ViewProduct = () => {
       render: (category) => category?.name,
     },
     {
-      title: modifyLabel ? "Cutting Length Description" : "Model Description",
+      title: modifyLabel ? "Model Length Description" : "Model Description",
       key: "category",
       dataIndex: "category",
       render: (category) => category?.description,
@@ -454,7 +454,7 @@ const ViewProduct = () => {
             </Grid>
             <Grid xs={12} md={6}>
               <TextField
-                label={modifyLabel ? "Model Cutting Length" : "Model"}
+                label={modifyLabel ? "Model Description" : "Model"}
                 name="category"
                 value={editedRecord.category.name}
                 fullWidth
@@ -486,7 +486,7 @@ const ViewProduct = () => {
               <TextField
                 label={
                   modifyLabel
-                    ? "Cutting Length Description"
+                    ? "Model Length Description"
                     : "Model Description"
                 }
                 name="description"
@@ -593,5 +593,5 @@ const ViewProduct = () => {
     </div>
   );
 };
-    
-    export default ViewProduct;
+
+export default ViewProduct;

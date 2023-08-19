@@ -13,7 +13,7 @@ import {
   Grid,
   Icon
 } from '@mui/material';
-import {Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { PropertyList } from 'src/components/property-list';
 import { PropertyListItem } from 'src/components/property-list-item';
 import { useState } from 'react';
@@ -102,7 +102,7 @@ export const ViewProductDetail = (props) => {
         });
 
         if (response.ok || response === 200) {
-          response.json().then((data) => {});
+          response.json().then((data) => { });
 
           window.location.reload();
         }
@@ -180,7 +180,7 @@ export const ViewProductDetail = (props) => {
                     <Grid container spacing={0}>
                       <Grid item xs={12} md={12}>
                         <TextField
-                          label={modifyLabel ? "Model Cutting Length" : "Model"}
+                          label={modifyLabel ? "Model Description" : "Model"}
                           name="model"
                           value={editedCategory}
                           onChange={(e) => setEditedCategory(e.target.value)}
@@ -192,7 +192,7 @@ export const ViewProductDetail = (props) => {
                       <TextField
                         label={
                           modifyLabel
-                            ? "Cutting Length Description"
+                            ? "Model Length Description"
                             : "Model Description"
                         }
                         name="desc"
@@ -227,7 +227,7 @@ export const ViewProductDetail = (props) => {
             <div style={{ marginRight: "8px" }}>
               <PropertyListItem
                 align={align}
-                label={modifyLabel ? "Model Cutting Length" : "Model"}
+                label={modifyLabel ? "Model Description" : "Model"}
                 value={state?.category?.name || state?.category}
               />
             </div>
@@ -248,7 +248,7 @@ export const ViewProductDetail = (props) => {
           <PropertyListItem
             align={align}
             label={
-              modifyLabel ? "Cutting Length Description" : "Model Description"
+              modifyLabel ? "Model Length Description" : "Model Description"
             }
             value={state?.category?.description || state?.description}
           />
