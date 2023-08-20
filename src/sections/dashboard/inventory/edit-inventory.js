@@ -500,7 +500,7 @@ export const EditInventory = (props) => {
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
-                  label={modifyLabel ? "Model Cutting Length" : "Model"}
+                  label={modifyLabel ? "Model Description" : "Model"}
                   name="category"
                   required
                   select

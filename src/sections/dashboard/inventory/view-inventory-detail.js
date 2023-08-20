@@ -178,7 +178,7 @@ export const ViewInventoryDetail = (props) => {
             <Grid item xs={12} md={6}>
               <PropertyListItem
                 align={align}
-                label={modifyLabel ? "Model Cutting Length" : "Model"}
+                label={modifyLabel ? "Model Description" : "Model"}
                 value={
                   state?.categoryName ||
                   state?.category?.name ||
@@ -244,7 +244,7 @@ export const ViewInventoryDetail = (props) => {
                 <PropertyListItem
                   align={align}
                   label="Bundle No"
-                  //value={state?.size}
+                //value={state?.size}
                 />
                 <Divider />
               </Grid>

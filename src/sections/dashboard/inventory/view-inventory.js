@@ -18,7 +18,7 @@ import { Box } from '@mui/system';
 import React from 'react';
 import { Scrollbar } from 'src/components/scrollbar';
 import EditIcon from '@mui/icons-material/Edit';
-import {  Delete } from '@mui/icons-material';
+import { Delete } from '@mui/icons-material';
 import IconWithPopup from '../user/user-icon';
 import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
@@ -33,20 +33,20 @@ import Logo from '../logo/logo';
 import CircularProgress from "@mui/material/CircularProgress";
 import { LogoContext } from "src/utils/logoContext";
 
-  //get userid 
-  const userId = sessionStorage.getItem('user') || localStorage.getItem('user');
+//get userid 
+const userId = sessionStorage.getItem('user') || localStorage.getItem('user');
 
-  // const typeDropdown = [
-  //   {
-  //     label: 'Parts',
-  //     value: 'Parts'
-  //   },
-  //   {
-  //     label: 'Spare Parts',
-  //     value: 'Spare Parts'
-  //   },
-    
-  // ];
+// const typeDropdown = [
+//   {
+//     label: 'Parts',
+//     value: 'Parts'
+//   },
+//   {
+//     label: 'Spare Parts',
+//     value: 'Spare Parts'
+//   },
+
+// ];
 
 const ViewInventory = () => {
   const [userData, setUserData] = useState([]);
@@ -306,7 +306,7 @@ const ViewInventory = () => {
           {!isSearchingCategory ? (
             <>
               <Typography variant="subtitle2">
-                {modifyLabel ? "Model Cutting Length" : "Model"}
+                {modifyLabel ? "Model Description" : "Model"}
               </Typography>
               <IconButton onClick={handleCategoryClick}>
                 <SearchIcon />
@@ -453,5 +453,5 @@ const ViewInventory = () => {
     </div>
   );
 };
-    
-    export default ViewInventory;
+
+export default ViewInventory;

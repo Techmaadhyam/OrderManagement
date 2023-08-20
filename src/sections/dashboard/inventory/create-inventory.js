@@ -529,6 +529,8 @@ export const CreateInventory = (props) => {
                       (option) => option.id === e.target.value
                     );
                     setCategoryId(selectedOption?.id || "");
+                    console.log(category);
+                    console.log(selectedOption);
                     setCategoryName(e.target.value);
                   }}
                   style={{ marginBottom: 10 }}
@@ -676,7 +678,7 @@ export const CreateInventory = (props) => {
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
-                  label={modifyLabel ? "Peice" : "Quantity"}
+                  label={modifyLabel ? "Piece" : "Quantity"}
                   name="quantity"
                   type="number"
                   required
