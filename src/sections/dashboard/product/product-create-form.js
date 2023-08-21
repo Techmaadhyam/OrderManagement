@@ -474,6 +474,7 @@ export const CreateProduct = (props) => {
                         : category === "none" ? "" :
                           `${categoryName} ${product}`
                     }
+                    onChange={handleDescription2}
                   />
                 </Grid>
               ) : (
