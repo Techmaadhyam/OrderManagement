@@ -41,7 +41,7 @@ import {
 } from "src/utils/api-service";
 import { ToastContainer, toast } from "react-toastify";
 import Autocomplete from "@mui/material/Autocomplete";
-  import { LogoContext } from "src/utils/logoContext";
+import { LogoContext } from "src/utils/logoContext";
 
 //get userId from session storage
 const userId = parseInt(
@@ -585,6 +585,7 @@ export const PurchaseOrderCreateForm = (props) => {
       .get(apiUrl + `getAllItem/${userId}`)
       .then((response) => {
         setUserData2(response.data);
+        console.log(response.data);
         if (response.data.length > 0) {
           const loginUser = response.data[0].createdByUser.userName;
           const loginPhone = response.data[0].createdByUser.mobile;
@@ -1191,7 +1192,7 @@ export const PurchaseOrderCreateForm = (props) => {
                           <TextField
                             fullWidth
                             label={
-                              modifyLabel ? "Model Weight Range" : "Part Name"
+                              modifyLabel ? "Model Description" : "Part Name"
                             }
                             name="name"
                             required
@@ -1207,7 +1208,7 @@ export const PurchaseOrderCreateForm = (props) => {
                             onChange={(e) => {
                               const selectedOption = userData2.find(
                                 (option) =>
-                                  option.productName === e.target.value
+                                  option.category.name === e.target.value
                               );
                               setProductId(selectedOption.id);
                               setProductName(e.target.value);
@@ -1221,9 +1222,9 @@ export const PurchaseOrderCreateForm = (props) => {
                             {userData2?.map((option) => (
                               <MenuItem
                                 key={option.id}
-                                value={option.productName}
+                                value={option.category.name}
                               >
-                                {option.productName}
+                                {option.category.name}
                               </MenuItem>
                             ))}
                           </TextField>
@@ -1384,7 +1385,7 @@ export const PurchaseOrderCreateForm = (props) => {
                 {rows.map((row, idx) => (
                   <TableRow hover key={idx}>
                     <TableCell>
-                      <div>{row.description}</div>
+                      <div>{row.productName}</div>
                     </TableCell>
                     <TableCell>
                       <div>{row.quantity}</div>

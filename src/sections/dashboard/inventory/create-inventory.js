@@ -46,6 +46,7 @@ export const CreateInventory = (props) => {
   //product name
   const [selectedName, setSelectedName] = useState();
   const [selectedId, setSelectedId] = useState();
+  const [selectedLength, setSelectedLength] = useState();
   const [product, setProduct] = useState([]);
   //remaining form states
 
@@ -589,6 +590,28 @@ export const CreateInventory = (props) => {
                     ))}
                 </TextField>
               </Grid>
+              {
+                modifyLabel ? (
+                  <Grid xs={12} md={6}>
+                    <TextField
+                      fullWidth
+                      label="Model Cutting Length"
+                      name="product"
+                      contentEditable={false}
+                      value={product
+                        .filter((option) => option.category.id === categoryId)
+                        .map((option) => (
+                          option.category.description
+                        ))}
+                      style={{ marginBottom: 10 }}
+                    >
+                    </TextField>
+                  </Grid>
+                ) : (
+                  ""
+                )
+              }
+
               {modifyLabel ? (
                 ""
               ) :

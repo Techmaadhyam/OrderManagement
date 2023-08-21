@@ -1048,7 +1048,7 @@ export const SalesOrderCreateForm = (props) => {
                           <TextField
                             fullWidth
                             label={
-                              modifyLabel ? "Model Weight Range" : "Part Name"
+                              modifyLabel ? "Model Description" : "Part Name"
                             }
                             name="name"
                             select
@@ -1089,7 +1089,7 @@ export const SalesOrderCreateForm = (props) => {
                           >
                             {userData2.map((option) => (
                               <MenuItem key={option.id} value={option.id}>
-                                {option.product.productName}
+                                {option.product.category.name}
                               </MenuItem>
                             ))}
                           </TextField>
@@ -1260,7 +1260,7 @@ export const SalesOrderCreateForm = (props) => {
                 {rows.map((row, idx) => (
                   <TableRow hover key={idx}>
                     <TableCell>
-                      <div>{row.productDescription}</div>
+                      <div>{row.productName}</div>
                     </TableCell>
                     <TableCell>
                       <div>{row.quantity}</div>
