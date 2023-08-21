@@ -484,7 +484,10 @@ export const CreateProduct = (props) => {
                     multiline
                     required
                     rows={4}
-                    value={desc2}
+                    value={category === "Add New Model"
+                      ? `${newCategory} ${desc1} ${product}`
+                      : category === "none" ? "" :
+                        `${categoryName} ${product}`}
                     onChange={handleDescription2}
                   />
                 </Grid>
