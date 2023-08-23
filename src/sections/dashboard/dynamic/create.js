@@ -86,7 +86,7 @@ const Create = () => {
       }
     };
     try{
-      const response = await fetch(apiUrl+"createSch",{
+      const response = await fetch(apiUrl+"createUpdateSchemaRecordFieldValue",{
       method: "POST",
       headers: {
         "Content-Type": "application/json",
