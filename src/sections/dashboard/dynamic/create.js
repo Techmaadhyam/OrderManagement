@@ -24,7 +24,7 @@ const Create = () => {
   // Use effect to fetch the data
   useEffect(() => {
     const fetchData = async () => {
-      axios.get(apiUrl + `getSchemaObjFields/${user.company.id}/${user.profile.id}/${id}`)
+      axios.get(apiUrl + `getSchemaObjFields/${user.company.id}/${user.profile.id}/${id }`)
         .then((response) => {
           setFormFields(response.data);
           setFormValues(Object.fromEntries(response.data.map((field) => [field.fieldname, ""])));
@@ -64,20 +64,41 @@ const Create = () => {
   //   }
   // };
   //sample submit
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    const  current_date = new Date().toLocaleDateString();
+    // console.log(current_date); 
     // console.log(formValues);
     const formData = {
-      formValues: {
-        ...formValues,
-      },
-      companyId: user.company.id,
-      profileId: user.profile.id,
-      id: id,
-    };
+      schemaRecord:{
+        'recordid':'abc',
+        'company':{'id':user.company.id},
+        'profile':{'id':user.profile.id},
+        'appobject':{'id':3},
+        'createdby':{'id':user.id},
+        'lastmodifiedby':{'id':user.id},
+        'createddate':current_date,
+        'lastmodifieddate':"date",
 
-    // Log the final JSON object
-    console.log(formData);
+      },
+      'fieldValues': {
+        ...formValues,
+      }
+    };
+    try{
+      const response = await fetch(apiUrl+"createSch",{
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    })
+    const result = await response.json()
+    console.log(result);
+    } catch(error){
+      console.log(error);
+    }
+    
   }
   return (
     <div style={{ minWidth: "100%", marginBottom: "1rem" }}>
@@ -91,7 +112,7 @@ const Create = () => {
         }}
       >
         <div style={{ flex: 1 }}>
-          <h2 style={{ margin: 0 }}>Add</h2>
+          <h2 style={{ margin: 0 }}>Create </h2>
         </div>
         <div style={{ flex: 1, textAlign: "center" }}>
           <Logo />
